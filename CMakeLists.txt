@@ -60,18 +60,23 @@ IF (WIN32)
 	set(USE_SDL OFF CACHE BOOL "Builds with SDL rather than the Win32 code.")
 	SET(D3_GAMEDIR "c:/games/Descent3/")	
 	set (CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} "lib/win" "lib/win/directx" "thirdparty/OpenAL/libs/Win32") 
-	SET(CMAKE_CXX_FLAGS_DEBUG "/Od /EHsc /RTC1 /MTd /MP /W3 /nologo /c /Zi /errorReport:prompt")
-	SET(CMAKE_CXX_FLAGS_RELEASE "/O2 /FD /EHsc /MT /MP /W3 /nologo /c /Zi /errorReport:prompt")
-	
-	set(CMAKE_MODULE_LINKER_FLAGS "/SAFESEH:NO /SUBSYSTEM:WINDOWS /NODEFAULTLIB:LIBC")
-	set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "/DEBUG")
-	set(CMAKE_EXE_LINKER_FLAGS_RELEASE " /DEBUG") #[ISB] Generate debug information
+	if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+		SET(CMAKE_CXX_FLAGS_DEBUG "/Od /EHsc /RTC1 /MTd /MP /W3 /nologo /c /Zi /errorReport:prompt")
+		SET(CMAKE_CXX_FLAGS_RELEASE "/O2 /FD /EHsc /MT /MP /W3 /nologo /c /Zi /errorReport:prompt")
+
+		set(CMAKE_MODULE_LINKER_FLAGS "/SAFESEH:NO /SUBSYSTEM:WINDOWS /NODEFAULTLIB:LIBC")
+		set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "/DEBUG")
+		set(CMAKE_EXE_LINKER_FLAGS_RELEASE " /DEBUG") #[ISB] Generate debug information
+	else()
+		add_compile_options(-Wno-write-strings -Wno-register -fpermissive -Wno-multichar -Wno-delete-incomplete)
+		#add_compile_options(-Werror -Wno-permissive)
+		#set_property(SOURCE Descent3/newrender.cpp APPEND PROPERTY COMPILE_OPTIONS -fno-permissive)
+	endif()
 	ADD_DEFINITIONS (-DIS_WINDOWS -D_CRT_SECURE_NO_WARNINGS -DWIN32 -D_CRT_SECURE_NO_WARNINGS -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE)
 	if (USE_SDL)
 		find_package(sdl3 CONFIG REQUIRED)
 		add_definitions(-DSDL3)
 	endif()
-	
 	SET(PLATFORM_INCLUDES "lib/win/directx" "lib/win" "thirdparty/OpenAL/include" )
 	#if (USE_SDL)
 	#	set(PLATFORM_INCLUDES ${PLATFORM_INCLUDES} SDL3::SDL3)
@@ -242,7 +247,7 @@ ENDIF()
 
 add_executable(PiccuEngine ${DESCENT3_SOURCES})
 	
-IF (WIN32)
+IF (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 	if (USE_SDL) #for convenience SDL will compile as a console app, and dump mono there
 		target_link_options(PiccuEngine PUBLIC /SAFESEH:NO /NODEFAULTLIB:LIBC)
 	else()

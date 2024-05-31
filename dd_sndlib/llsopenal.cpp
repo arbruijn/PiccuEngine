@@ -17,6 +17,7 @@
 */
 #include <string.h>
 #include <stdlib.h>
+#include <math.h>
 #include <algorithm>
 #include "mono.h"
 #include "pserror.h"
@@ -431,7 +432,11 @@ void llsOpenAL::AdjustSound(int sound_uid, pos_state* cur_pos, float adjusted_vo
 	int id = sound_uid & 255;
 	if (!Initalized) return;
 	//gotta trap nans because apparently sometimes objects exist at undefined locations nice
-	if (!SoundEntries || id < 0 || id >= NumSoundChannels || SoundEntries[id].soundUID != sound_uid || isnan<float>(cur_pos->position->x)) return;
+	if (!SoundEntries || id < 0 || id >= NumSoundChannels || SoundEntries[id].soundUID != sound_uid || isnan
+#ifdef _MSC_VER
+		<float>
+#endif		
+		(cur_pos->position->x)) return;
 
 	ALuint handle = SoundEntries[id].handle;
 	//Undo the source relative hack. 

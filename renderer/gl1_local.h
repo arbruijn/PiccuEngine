@@ -19,7 +19,7 @@
 #pragma once
 
 //can't figure out which one of these little jokers is including Windows.h.. (for reference when SDL3 is defined)
-#define NOMINMAX
+#define NOMINMAX 1
 #ifdef SDL3
 #include <SDL3/SDL_video.h>
 #elif WIN32

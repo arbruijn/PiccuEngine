@@ -22,8 +22,8 @@
 #define MAX_MSG_FUNCTIONS			64
 
 /*	Basic Application Win32 data types */
-typedef unsigned int HWnd;
-typedef unsigned int HInstance;
+typedef uintptr_t HWnd;
+typedef uintptr_t HInstance;
 
 //	This structure is used to retrieve and set 
 struct tWin32AppInfo 

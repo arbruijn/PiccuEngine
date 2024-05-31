@@ -330,6 +330,7 @@
 	#ifdef Int3
 		#undef Int3
 	#endif
+	#ifdef _MSC_VER
 	#define Int3() do { \
 		mprintf((0, "Int3 at %s line %d.\n", __FILE__, __LINE__));	\
 		if (DLLDebugBreak_callback_stop)  \
@@ -338,6 +339,16 @@
 		if (DLLDebugBreak_callback_resume) \
 			DLLDebugBreak_callback_resume(); \
 	} while (0)
+	#else
+	#define Int3() do { \
+		mprintf((0, "Int3 at %s line %d.\n", __FILE__, __LINE__));	\
+		if (DLLDebugBreak_callback_stop)  \
+			DLLDebugBreak_callback_stop(); \
+		asm("int $3"); \
+		if (DLLDebugBreak_callback_resume) \
+			DLLDebugBreak_callback_resume(); \
+	} while (0)
+	#endif
 #elif defined (__LINUX__)
 	//For some reason Linux doesn't like the \ continuation character, so I have to uglify this
 	#define DLLmprintf(args)	DLLDebug_ConsolePrintf args

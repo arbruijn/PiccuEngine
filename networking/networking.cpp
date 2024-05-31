@@ -187,7 +187,7 @@ NetworkReceiveCallback Netcallbacks[16];
 
 #define R_NET_PACKET_QUEUE_TIME	.1f
 
-int Net_connect_socket_id = INVALID_SOCKET;
+int Net_connect_socket_id = -1;
 int Net_connect_sequence = R_NET_SEQUENCE_NONE;
 
 // ------------------------------------------------------------------------------------------------------
@@ -426,7 +426,7 @@ void nw_InitNetworking (int iReadBufSizeOverride)
 			strcpy(ourargs,"");
 		}
 		strncpy(exewithpath,p,a);
-		exewithpath[a]=NULL;
+		exewithpath[a]=0;
 		ddio_SplitPath(exewithpath, exedir, exefile,exeext);
 		if(exedir[0]=='\"')
 		{
@@ -444,7 +444,7 @@ void nw_InitNetworking (int iReadBufSizeOverride)
 
 		if(exeext[pos]=='\"')
 		{
-			exeext[pos] = NULL;
+			exeext[pos] = 0;
 		}
 		strcat(exefile,exeext);
 		//dp_RegisterLobbyApplication("Descent 3",exefile,fixdir,ourargs,Base_directory,"Descent 3");
@@ -1105,7 +1105,7 @@ int nw_CheckListenSocket(network_address *from_addr)
 			return i;
 		}
 	}
-	return INVALID_SOCKET;
+	return -1;
 }
 
 
@@ -1756,7 +1756,7 @@ void nw_HandleConnectResponse(ubyte *data,int len,network_address *server_addr)
 						//int rcode = sendto(typeless_sock,(char *)&conn_header,RELIABLE_PACKET_HEADER_ONLY_SIZE,0,addr,sizeof(SOCKADDR));
 						if(rcode == SOCKET_ERROR)
 						{
-							Net_connect_socket_id = INVALID_SOCKET;
+							Net_connect_socket_id = -1;
 							reliable_sockets[i].status = RNF_UNUSED;
 							memset(&reliable_sockets[i],0,sizeof(reliable_socket));
 							mprintf((0,"Unable to send packet in nw_ConnectToServer()\n"));

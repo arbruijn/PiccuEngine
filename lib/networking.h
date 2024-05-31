@@ -23,7 +23,7 @@
 
 #if defined(WIN32)
 //Windows includes
-#define NOMINMAX //why do I have to include windows.h in half the project..
+#define NOMINMAX 1 //why do I have to include windows.h in half the project..
 #include <winsock.h>
 
 //helper macros for working with SOCKADDR_IN to make it look nicer between windows and Linux
