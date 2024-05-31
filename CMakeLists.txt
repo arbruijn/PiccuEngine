@@ -193,7 +193,7 @@ SET (PLATFORM_LIBS ${SDL_LIBRARY} ncurses )
 SET(CMAKE_EXE_LINKER_FLAGS "-framework IOKit -framework Cocoa -framework OpenGL -framework Carbon")
 ENDIF()
 
-add_executable(PiccuEngine ${DESCENT3_SOURCES})
+add_executable(PiccuEngine WIN32 ${DESCENT3_SOURCES})
 target_link_libraries(PiccuEngine 
 	${PLATFORM_LIBS})
 	
