@@ -392,6 +392,36 @@ void UIEdit::DrawText()
 	}
 }
 
+#ifdef WIN32
+#include <Windows.h>
+#include <string>
+
+// From https://stackoverflow.com/questions/14762456/getclipboarddatacf-text
+std::string GetClipboardText()
+{
+	// Try opening the clipboard
+	if (!OpenClipboard(nullptr))
+		return "";
+
+	// Get handle of clipboard object for ANSI text
+	HANDLE hData = GetClipboardData(CF_TEXT);
+	if (!hData)
+		return "";
+
+	char* pszText = static_cast<char*>(GlobalLock(hData));
+	if (!pszText) {
+		CloseClipboard();
+		return "";
+	}
+
+	std::string text(pszText);
+
+	GlobalUnlock(hData);
+	CloseClipboard();
+
+	return text;
+}
+#endif
 
 //	behavior when key is pressed.
 void UIEdit::OnKeyDown(int key)
@@ -404,9 +434,9 @@ void UIEdit::OnKeyDown(int key)
 		UIEdit::Activate();
 	}
 
-	if (key == KEY_ESC || key == KEY_ENTER) {
+	if (key == KEY_ESC || key == KEY_ENTER || key == KEY_PADENTER) {
 		UIEdit::Deactivate();
-		if (key == KEY_ENTER) {
+		if (key == KEY_ENTER || key == KEY_PADENTER) {
 			UIGadget::OnSelect();						// do this to enforce pressing enter ONLY causes OnSelect to work.
 		}
 	}
@@ -414,6 +444,18 @@ void UIEdit::OnKeyDown(int key)
 		for (i = m_CurPos; i< len; i++)
 			m_TextBuf[i] = m_TextBuf[i+1];
 	}
+#ifdef WIN32
+	else if (key == (KEY_CTRLED | KEY_V)) {
+		std::string text = GetClipboardText();
+		if (text.length() < m_BufSize) {
+			strcpy(m_TextBuf, text.c_str());
+			m_CurPos = len = strlen(m_TextBuf);
+			//memmove(m_TextBuf + m_CurPos + text.length(), m_TextBuf + m_CurPos, len - m_CurPos + 1);
+			//memcpy(m_TextBuf + m_CurPos, text.c_str(), text.length());
+			//m_CurPos += text.length();
+		}
+	}
+#endif
 	else {
 		if (m_CurPos < m_BufSize) {
 			if (CHECK_FLAG(m_Flags, UIED_NUMBERS)) {
