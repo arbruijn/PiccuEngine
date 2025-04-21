@@ -909,7 +909,7 @@ void Cinematic_Frame(void)
 	}
 
 	//check for keyboard quick exit
-	if (Gametime >= GameCinema.exit_start && Gametime <= GameCinema.exit_end)
+	if (1 || Gametime >= GameCinema.exit_start && Gametime <= GameCinema.exit_end)
 	{
 		if (Cinematic_IsKeyPressed())
 		{
