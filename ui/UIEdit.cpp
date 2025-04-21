@@ -404,9 +404,9 @@ void UIEdit::OnKeyDown(int key)
 		UIEdit::Activate();
 	}
 
-	if (key == KEY_ESC || key == KEY_ENTER) {
+	if (key == KEY_ESC || key == KEY_ENTER || key == KEY_PADENTER) {
 		UIEdit::Deactivate();
-		if (key == KEY_ENTER) {
+		if (key == KEY_ENTER || key == KEY_PADENTER) {
 			UIGadget::OnSelect();						// do this to enforce pressing enter ONLY causes OnSelect to work.
 		}
 	}

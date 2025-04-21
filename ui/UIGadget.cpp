@@ -252,6 +252,7 @@ void UIGadget::Process(bool do_keys, bool do_mouse, bool do_user)
 		switch (UI_input.key)
 		{
 			case KEY_ENTER:
+			case KEY_PADENTER:
 				if ((UI_input.key_status == UIKEY_PRESSED) || 
 					(UI_input.key_status == UIKEY_CLICKED)) {
 					OnSelect();

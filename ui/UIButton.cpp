@@ -473,7 +473,7 @@ void UIRadioButton::OnGainFocus()
 // behavior when key is pressed.
 void UIRadioButton::OnKeyDown(int key)
 {
-	if (key == KEY_SPACEBAR || key == KEY_ENTER)
+	if (key == KEY_SPACEBAR || key == KEY_ENTER || key == KEY_PADENTER)
 		ActivateButton();
 }
 
@@ -634,7 +634,7 @@ void UICheckBox::OnGainFocus()
 // behavior when key is pressed.
 void UICheckBox::OnKeyDown(int key)
 {
-	if (key == KEY_SPACEBAR || key == KEY_ENTER) {
+	if (key == KEY_SPACEBAR || key == KEY_ENTER || key == KEY_PADENTER) {
 		SetCheck((m_State==UI_BTS_ACTIVATED) ? false : true);
 		OnSelect();
 	}
