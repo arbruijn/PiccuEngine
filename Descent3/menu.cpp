@@ -870,7 +870,7 @@ redo_level_choose:
 	if (res == UID_OK || res == IDV_QUIT)
 	{
 		chosen_level = atoi(input_text);
-		if (chosen_level<1 || chosen_level>highest_allowed)
+		if (chosen_level<1/* || chosen_level>highest_allowed*/)
 		{
 			sprintf(buffer, TXT_CHOOSELEVEL, highest_allowed);
 			DoMessageBox(TXT_ERROR, buffer, MSGBOX_OK);
