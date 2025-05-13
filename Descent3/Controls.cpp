@@ -394,7 +394,7 @@ void DoMovement(game_controls *controls)
 // controller
 	DoControllerMovement(controls);
 
-	if (Cruise)
+	if (Cruise && controls->forward_thrust >= 0)
 		controls->forward_thrust += 1.0f;
 
 //	clip controller values
