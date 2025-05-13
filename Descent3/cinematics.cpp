@@ -96,6 +96,10 @@ bool PlayMovie(const char* moviename)
 		Sound_system.StopAllSounds(); //kill eveyrthing
 		mve_SetSoundSystem(Sound_system.m_ll_sound_ptr);
 	}
+	else
+	{
+		mve_SetSoundSystem(nullptr);
+	}
 
 	// check extension
 	const char* extension = strrchr(filename, '.');
