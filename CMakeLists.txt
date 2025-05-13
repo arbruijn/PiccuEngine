@@ -60,7 +60,7 @@ IF (WIN32)
 	set(USE_SDL OFF CACHE BOOL "Builds with SDL rather than the Win32 code.")
 	SET(D3_GAMEDIR "c:/games/Descent3/")	
 	set (CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} "lib/win" "lib/win/directx" "thirdparty/OpenAL/libs/Win32") 
-	SET(CMAKE_CXX_FLAGS_DEBUG "/Od /EHsc /RTC1 /MT /MP /W3 /nologo /c /Zi /errorReport:prompt")
+	#SET(CMAKE_CXX_FLAGS_DEBUG "/Od /EHsc /RTC1 /MT /MP /W3 /nologo /c /Zi /errorReport:prompt")
 	SET(CMAKE_CXX_FLAGS_RELEASE "/O2 /FD /EHsc /MT /MP /W3 /nologo /c /Zi /errorReport:prompt")
 	
 	set(CMAKE_MODULE_LINKER_FLAGS "/SAFESEH:NO /SUBSYSTEM:WINDOWS /NODEFAULTLIB:LIBC")
