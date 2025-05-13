@@ -44,6 +44,8 @@
 //	Setup of config screens.
 #define CCITEM_WPN_X					0
 #define CCITEM_WPN_Y					20
+#define CCITEM_CRUISE_X					0
+#define CCITEM_CRUISE_Y					110
 #define CCITEM_AUX_X					0
 #define CCITEM_AUX_Y					160
 #define CCITEM_THRUST_X					295
@@ -60,6 +62,9 @@ t_cfg_element Cfg_key_elements[] =
 	{ ctfFIREFLARE_KEY,				CtlText_FireFlare,		0, 0 },
 	{ ctfWPNSEL_PCYCLEKEY,			CtlText_WpnCycP,		0, 0 },
 	{ ctfWPNSEL_SCYCLEKEY,			CtlText_WpnCycS,		0, 0 },
+	{ -1,							CtlText_CruiseGroup,	CCITEM_CRUISE_X, CCITEM_CRUISE_Y },
+	{ ctfCRUISE_ON_KEY,				CtlText_CruiseOn,		0, 0 },
+	{ ctfCRUISE_OFF_KEY,			CtlText_CruiseOff,		0, 0 },
 	{ -1,							CtlText_MiscGroup,		CCITEM_AUX_X, CCITEM_AUX_Y },
 	{ ctfHEADLIGHT_KEY,				CtlText_Headlight,		0, 0 },
 	{ ctfREARVIEW_KEY,				CtlText_Rearview,		0, 0 },
@@ -94,6 +99,8 @@ t_cfg_element Cfg_key_elements[] =
 };
 #define CCITEM_WPN_X2				0
 #define CCITEM_WPN_Y2				20
+#define CCITEM_CRUISE_X2			0
+#define CCITEM_CRUISE_Y2			110
 #define CCITEM_AUX_X2				0
 #define CCITEM_AUX_Y2				160
 #define CCITEM_THRUST_X2			295
@@ -108,6 +115,9 @@ t_cfg_element Cfg_joy_elements[] =
 	{ ctfFIREFLARE_BUTTON,			CtlText_FireFlare,		0, 0 },
 	{ ctfWPNSEL_PCYCLEBTN,			CtlText_WpnCycP,		0, 0 },
 	{ ctfWPNSEL_SCYCLEBTN,			CtlText_WpnCycS,		0, 0 },
+	{ -1,							CtlText_CruiseGroup,	CCITEM_CRUISE_X2, CCITEM_CRUISE_Y2 },
+	{ ctfCRUISE_ON_BTN,				CtlText_CruiseOn,		0, 0 },
+	{ ctfCRUISE_OFF_BTN,			CtlText_CruiseOff,		0, 0 },
 	{ -1,							CtlText_MiscGroup,		CCITEM_AUX_X2, CCITEM_AUX_Y2 },
 	{ ctfHEADLIGHT_BUTTON,			CtlText_Headlight,		0, 0 },
 	{ ctfREARVIEW_BTN,				CtlText_Rearview,		0, 0 },

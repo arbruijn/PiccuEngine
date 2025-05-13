@@ -80,6 +80,8 @@ static float Key_heading_ramp_time = 0.0f;
 
 static tSpace Key_ramp;
 
+bool Cruise;
+
 
 //	PROTOTYPES
 
@@ -172,7 +174,11 @@ ct_function Controller_needs[NUM_CONTROLLER_FUNCTIONS] = {
 	{ ctfAUDIOTAUNT3_KEY,		ctDownCount,ctKey,		ctKey,			0,				0 ,0,0},
 	{ ctfAUDIOTAUNT3_BTN,		ctDownCount,ctButton,	ctButton,		0,				0 ,0,0},
 	{ ctfAUDIOTAUNT4_KEY,		ctDownCount,ctKey,		ctKey,			0,				0 ,0,0},
-	{ ctfAUDIOTAUNT4_BTN,		ctDownCount,ctButton,	ctButton,		0,				0 ,0,0}
+	{ ctfAUDIOTAUNT4_BTN,		ctDownCount,ctButton,	ctButton,		0,				0 ,0,0},
+	{ ctfCRUISE_ON_KEY,			ctDownCount,ctKey,		ctKey,			0,				0 ,0,0},
+	{ ctfCRUISE_ON_BTN,			ctDownCount,ctButton,	ctButton,		0,				0 ,0,0},
+	{ ctfCRUISE_OFF_KEY,		ctDownCount,ctKey,		ctKey,			0,				0 ,0,0},
+	{ ctfCRUISE_OFF_BTN,		ctDownCount,ctButton,	ctButton,		0,				0 ,0,0},
 };
 
 // ramping macros
@@ -387,6 +393,9 @@ void DoMovement(game_controls *controls)
 
 // controller
 	DoControllerMovement(controls);
+
+	if (Cruise)
+		controls->forward_thrust += 1.0f;
 
 //	clip controller values
 	if (controls->pitch_thrust > LIMIT_PITCH) controls->pitch_thrust = LIMIT_PITCH;
@@ -742,6 +751,7 @@ void DoKeyboardMisc(game_controls *controls)
 	ct_packet toggle_headlight;
 	ct_packet toggle_rearview, toggle_rearview_switch;
 	ct_packet key_slide1, key_bank;
+	ct_packet cruise_on, cruise_off;
 
 //	read controls
 	Controller->get_packet(ctfPREV_INVKEY, &prev_inv_key);
@@ -761,6 +771,9 @@ void DoKeyboardMisc(game_controls *controls)
 
 	Controller->get_packet(ctfTOGGLE_SLIDEKEY, &key_slide1);
 	Controller->get_packet(ctfTOGGLE_BANKKEY, &key_bank);
+
+	Controller->get_packet(ctfCRUISE_ON_KEY, &cruise_on);
+	Controller->get_packet(ctfCRUISE_OFF_KEY, &cruise_off);
 
 //	check modifiers like toggles
 	if (key_slide1.value)
@@ -836,6 +849,11 @@ void DoKeyboardMisc(game_controls *controls)
 // rear view toggling.
 	controls->rearview_down_count += toggle_rearview.value;
 	controls->rearview_down_state = toggle_rearview_switch.value ? true : false;
+
+	if (cruise_on.value)
+		Cruise = true;
+	if (cruise_off.value)
+		Cruise = false;
 }
 
 
@@ -850,6 +868,7 @@ void DoControllerMisc(game_controls *controls)
 	ct_packet toggle_headlight;
 	ct_packet toggle_rearview, toggle_rearview_switch;
 	ct_packet ctl_bank, ctl_slide, use_taunt[4];
+	ct_packet cruise_on, cruise_off;
 
 //	read controls
 	Controller->get_packet(ctfPREV_INVBTN, &prev_inv);
@@ -868,7 +887,10 @@ void DoControllerMisc(game_controls *controls)
 
 	Controller->get_packet(ctfTOGGLE_SLIDEBUTTON, &ctl_slide);
 	Controller->get_packet(ctfTOGGLE_BANKBUTTON, &ctl_bank);
-   
+
+	Controller->get_packet(ctfCRUISE_ON_BTN, &cruise_on);
+	Controller->get_packet(ctfCRUISE_OFF_BTN, &cruise_off);
+
 //	check modifiers like toggles
 	if (ctl_slide.value)
 		controls->toggle_slide = true;
@@ -937,6 +959,11 @@ void DoControllerMisc(game_controls *controls)
 	controls->rearview_down_count += toggle_rearview.value;
 	if (!controls->rearview_down_state) 
 		controls->rearview_down_state = toggle_rearview_switch.value ? true : false;
+
+	if (cruise_on.value)
+		Cruise = true;
+	if (cruise_off.value)
+		Cruise = false;
 }
 
 

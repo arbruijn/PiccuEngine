@@ -27,6 +27,7 @@
 #include "localization.h"
 #include "mem.h"
 #include "ddio.h"
+#include "stringtable.h"
 
 struct tLangTag
 {
@@ -120,6 +121,9 @@ int LoadStringTables(void)
 		}
 	}
 
+	if (string_count <= TXT_CRUISE_OFF)
+		string_count = TXT_CRUISE_OFF + 1;
+
 	String_table_size = 0;
 
 	//malloc our array of char *
@@ -158,6 +162,12 @@ int LoadStringTables(void)
 		Localization_language = old_language;
 		return 0;
 	}
+
+	String_table[TXT_CRUISE] = "Cruise";
+	String_table[TXT_CRUISE_ON] = "Cruise On";
+	String_table[TXT_CRUISE_OFF] = "Cruise Off";
+	if (runcount <= TXT_CRUISE_OFF)
+		runcount = TXT_CRUISE_OFF + 1;
 
 	String_table_size = runcount;
 	Localization_language = old_language;

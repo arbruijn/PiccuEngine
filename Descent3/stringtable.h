@@ -922,6 +922,9 @@ char *GetStringFromTable(int index);
 #define TXI_F9								892	//"F9"
 #define TXI_HLP_MULTIMSG				893	//	"Send message in multiplayer"
 #define TXI_F8								894	// "F8"
+#define TXT_CRUISE						895
+#define TXT_CRUISE_ON					896
+#define TXT_CRUISE_OFF					897
 #ifdef MACINTOSH
 #define	TXT_TEXTURE_QUALITY				TXT(895)	// "Texture Quality"
 #define TXT_JOYSTICK_DEADZONE			TXT(896)	// "Joystick Deadzone"

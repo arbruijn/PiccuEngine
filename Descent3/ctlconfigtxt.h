@@ -63,3 +63,7 @@
 #define CtlText_MiscGroup		TXI_KB_MISCGRP
 #define CtlText_ThrustGroup		TXI_KB_THRUSTGRP
 #define CtlText_TurningGroup	TXI_KB_TURNINGGRP
+
+#define CtlText_CruiseGroup		TXT_CRUISE
+#define CtlText_CruiseOn		TXT_CRUISE_ON
+#define CtlText_CruiseOff		TXT_CRUISE_OFF
