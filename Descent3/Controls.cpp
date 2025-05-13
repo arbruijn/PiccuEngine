@@ -394,8 +394,8 @@ void DoMovement(game_controls *controls)
 // controller
 	DoControllerMovement(controls);
 
-	if (Cruise && controls->forward_thrust >= 0)
-		controls->forward_thrust += 1.0f;
+	if (Cruise && !controls->forward_thrust)
+		controls->forward_thrust = 1.0f;
 
 //	clip controller values
 	if (controls->pitch_thrust > LIMIT_PITCH) controls->pitch_thrust = LIMIT_PITCH;
