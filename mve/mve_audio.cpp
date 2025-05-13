@@ -1,4 +1,5 @@
 #include <atomic>
+#include <Windows.h>
 #include "mve_audio.h"
 #include "ssl_lib.h"
 #include "mono.h"
@@ -73,7 +74,7 @@ void mvesnd_wait_for_frame_start(int frame_num)
 {
     //mprintf((0, "frame %d, playhead %llu framestart %llu\n", g_framedebug, g_playhead.load() + 10000, g_framestart.load()));
     uint64_t target = (((uint64_t)frame_num * g_audio_timerrate * g_bytespersample) * g_samplerate / 1000000) + g_slackbytes;
-    while (g_playhead < target) {}
+    while (g_playhead < target)  Sleep(0);
 }
 
 static int mvesnd_callback(void* userptr, void* sampledata, int numbytes)
