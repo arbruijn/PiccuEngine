@@ -480,6 +480,7 @@ bool ddio_FindNextFile(char* namebuf)
     }
 
     ddio_FindFileFetchResult(DDIO_next_glob++, namebuf);
+    return true;
 }
 
 void ddio_FindFileClose()
