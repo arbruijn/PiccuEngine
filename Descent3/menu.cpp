@@ -798,7 +798,7 @@ redo_newgame_menu:
 			highest = Current_mission.num_levels;
 #else
 			highest = PilotGetHighestLevelAchieved(&Current_pilot, Current_mission.name);
-			highest = min(highest + 1, Current_mission.num_levels);
+			highest = D3_MIN(highest + 1, Current_mission.num_levels);
 #endif		
 			if (highest > 1)
 			{

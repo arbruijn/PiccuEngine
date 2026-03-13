@@ -18,8 +18,10 @@
 
 #include "Controller.h"
 
+#ifdef WIN32
 #include <windows.h>
 #include <process.h>
+#endif
 
 #include <math.h>
 
@@ -27,7 +29,7 @@
 #include "ddio.h"
 #include "joystick.h"
 #include "Macros.h"
-#include "inffile.h"
+#include "InfFile.h"
 
 //Sorry! This is needed for the semi-hacky mouselook support
 #include "descent.h"

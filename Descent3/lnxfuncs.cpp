@@ -1,59 +1,60 @@
-/* 
-* Descent 3 
-* Copyright (C) 2024 Parallax Software
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <malloc.h>
+#include <ctype.h>
+#include <sys/time.h>
+#include <unistd.h>
+#include "pstypes.h"
+#include "linux/linux_fix.h"
 
-/*
-// Create an audio decoder
-// You supply a function for reading bytes from the compressed data via a
-// void *data handle, and the handle itself (typically a FILE *).
-// Create_AudioDecoder returns a new AudioDecoder which can be used to
-// read uncompressed decoded data from the compressed stream,
-// and also returns the number of channels (1 or 2), the sample rate
-// (e.g. 22050), and the number of samples contained in the compressed file
-// (in case you want to pre-allocate a buffer to load them all into memory).
-typedef unsigned ReadFunction(void *data, void *buf, unsigned qty);
-typedef struct {bool empty;} AudioDecoder;
-AudioDecoder *Create_AudioDecoder(ReadFunction *reader, void *data,unsigned *pChannels, unsigned *pSampleRate,long *pSampleCount)
+void GlobalFree(void *mptr)
 {
-	return malloc(sizeof(AudioDecoder));	
+	if(mptr)
+		free(mptr);
+}
+	
+void *GlobalAlloc(int flags,int size)
+{
+	if(size<=0)
+		return NULL;
+	return malloc(size);
 }
 
-// Read from audio decoder at most the specified qty of bytes
-// (each sample takes two bytes).
-// Returns zero when the end of file is reached.
-unsigned AudioDecoder_Read(AudioDecoder *ad, void *buf, unsigned qty)
+void *GlobalLock(HGLOBAL hMem)
 {
+	return hMem;
 }
 
-// Close audio decoder
-void AudioDecoder_Close(AudioDecoder *ad)
+void Sleep(int millis)
 {
-	if(ad) free(ad);
+	struct timeval tv;
+	tv.tv_sec = millis / 1000;
+	tv.tv_usec = (millis % 1000) * 1000;
+	select(0,NULL,NULL,NULL,&tv);
 }
 
-// Optional interface for supplying your own malloc and free functions
-// Default is to use standard malloc and free.
-typedef void *(*ad_malloc)(unsigned size);
-typedef void (*ad_free)(void *p);
-void AudioDecoder_MallocFree(ad_malloc *fn_malloc, ad_free *fn_free)
+char *strupr(char *string)
 {
+	char *p = string;
+	while(p && *p)
+	{
+		*p = toupper(*p);
+		p++;
+	}
+	return string;
 }
-*/
+
+char *itoa(int value,char *string,int radix)
+{
+	if(radix==10)
+	{
+		sprintf(string,"%d",value);
+	}else if(radix==16)
+	{
+		sprintf(string,"%x",value);
+	}else
+	{
+		sprintf(string,"%d",value);
+	}
+	return string;
+}

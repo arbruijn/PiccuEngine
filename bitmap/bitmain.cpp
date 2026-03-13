@@ -1455,7 +1455,7 @@ bool bm_CreateChunkedBitmap(int bm_handle, chunked_bitmap* chunk)
 	float fopt = 128.0f;
 	int iopt;
 	//find the smallest dimension and base off that
-	int smallest = min(bw, bh);
+	int smallest = D3_MIN(bw, bh);
 	if (smallest <= 32)
 		fopt = 32;
 	else

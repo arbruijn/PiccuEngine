@@ -36,7 +36,7 @@ bool mod_FindRealFileNameCaseInsenstive(const char *directory,const char *filena
 #endif
 #if defined(WIN32) //INSTEAD OF MAKING MODULE HAVE DEPENDENCIES, PUT THE 2 DDIO FUNCTIONS I NEED HERE
 // Split a pathname into its component parts
-void dd_SplitPath(const char* srcPath, char* path, char* filename, char* ext)
+void ddio_SplitPath(const char* srcPath, char* path, char* filename, char* ext)
 {
 	char drivename[_MAX_DRIVE], dirname[_MAX_DIR];
 	_splitpath(srcPath, drivename, dirname, filename, ext);
@@ -49,7 +49,7 @@ void dd_SplitPath(const char* srcPath, char* path, char* filename, char* ext)
 //						(specified in local file system syntax)
 //  takes a variable number of subdirectories which will be concatenated on to the path
 //		the last argument in the list of sub dirs *MUST* be NULL to terminate the list
-void dd_MakePath(char* newPath, const char* absolutePathHeader, const char* subDir, ...)
+void ddio_MakePath(char* newPath, const char* absolutePathHeader, const char* subDir, ...)
 {
 	const char	delimiter = '\\';
 	va_list		args;
@@ -96,7 +96,7 @@ int ModLastError = MODERR_NOERROR;
 void mod_GetRealModuleName(const char *modfilename,char *realmodfilename)
 {
 	char pathname[_MAX_PATH],filename[_MAX_FNAME],extension[_MAX_EXT];
-	dd_SplitPath(modfilename,pathname,filename,extension);
+	ddio_SplitPath(modfilename,pathname,filename,extension);
 	if(*extension=='\0')
 #if		defined (WIN32)	
 		strcat(filename,".dll");
@@ -127,7 +127,7 @@ void mod_GetRealModuleName(const char *modfilename,char *realmodfilename)
 #endif
 	}
 	if(*pathname!='\0')
-		dd_MakePath(realmodfilename,pathname,filename,NULL);
+		ddio_MakePath(realmodfilename,pathname,filename,NULL);
 	else
 		strcpy(realmodfilename,filename);
 }
@@ -184,7 +184,7 @@ bool mod_LoadModule(module *handle,char *imodfilename,int flags)
 	{
 		// ok we couldn't find the given name...try other ways
 		char dir[_MAX_PATH],fname[_MAX_PATH],nname[_MAX_PATH],ext[64];
-		dd_SplitPath(modfilename,dir,fname,ext);
+		ddio_SplitPath(modfilename,dir,fname,ext);
 		strcat(fname,ext);
 
 		if(!mod_FindRealFileNameCaseInsenstive(dir,fname,nname))
@@ -195,7 +195,7 @@ bool mod_LoadModule(module *handle,char *imodfilename,int flags)
 		}else
 		{
 			// ok we have a different filename
-			dd_MakePath(modfilename,dir,nname,NULL);
+			ddio_MakePath(modfilename,dir,nname,NULL);
 			mprintf((0,"MOD: Attempting to open %s instead of %s\n",modfilename,fname));
 			handle->handle = dlopen(modfilename,f);
 			if(!handle->handle)
@@ -398,7 +398,7 @@ bool CModFindFiles::Start(const char *wildcard, char *namebuf)
 
 	globindex = 0;
 	char ext[256];
-	dd_SplitPath(ffres.gl_pathv[0],NULL,namebuf,ext);
+	ddio_SplitPath(ffres.gl_pathv[0],NULL,namebuf,ext);
 	strcat(namebuf,ext);
 	return true;
 }
@@ -413,7 +413,7 @@ bool CModFindFiles::Next(char *namebuf)
 		return false;
 
 	char ext[256];
-	dd_SplitPath(ffres.gl_pathv[globindex],NULL,namebuf,ext);
+	ddio_SplitPath(ffres.gl_pathv[globindex],NULL,namebuf,ext);
 	strcat(namebuf,ext);
 	return true;
 }
@@ -447,7 +447,7 @@ bool mod_FindRealFileNameCaseInsenstive(const char *directory,const char *fname,
 		char t_dir[_MAX_PATH];
 		char t_filename[_MAX_PATH];
 		
-		dd_SplitPath(fname,t_dir,t_filename,t_ext);
+		ddio_SplitPath(fname,t_dir,t_filename,t_ext);
 		if(strlen(t_dir)>0)
 		{
 			use_dir = true;
@@ -547,7 +547,7 @@ bool mod_FindRealFileNameCaseInsenstive(const char *directory,const char *fname,
 		char fullpath[_MAX_PATH];
 		if(use_dir)
 		{
-			dd_MakePath(fullpath,real_dir,wildcard_pattern,NULL);
+			ddio_MakePath(fullpath,real_dir,wildcard_pattern,NULL);
 			wpattern = fullpath;
 		}else
 		{

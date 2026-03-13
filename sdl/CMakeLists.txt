@@ -21,7 +21,9 @@ else()
 		sdl/sdlcontroller.cpp
 		sdl/sdlcon.cpp
 		sdl/sdldatabase.cpp
-		sdl/sdlmono.cpp
+		linux/lnxmono.cpp
+		linux/lnxdebug.cpp
+		Descent3/lnxfuncs.cpp
 		sdl/sdlcontroller.h
 		sdl/registry.cpp
 		sdl/registry.h

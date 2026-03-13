@@ -259,7 +259,7 @@ void gspy_DoFrame()
 #ifndef OEM
 	SOCKADDR_IN fromaddr;
 	int bytesin;
-	int fromsize = sizeof(SOCKADDR_IN);
+	socklen_t fromsize = sizeof(SOCKADDR_IN);
 	char inbuffer[MAX_GAMESPY_BUFFER];
 
 	if(!gspy_game_running)
@@ -625,7 +625,7 @@ int gspy_GetGamePort(unsigned int ipv4adr, int portnum)
 
 	//Should be ready to send and recieve
 	sockaddr_in addr = {};
-	int addrSize = sizeof(addr);
+	socklen_t addrSize = sizeof(addr);
 
 	//Prepare the request
 	addr.sin_family = AF_INET;
