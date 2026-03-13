@@ -48,8 +48,8 @@ IF (UNIX AND NOT APPLE)
     add_definitions(-DCHECKSUM=2273873307UL -D__32BIT__)
   endif()
 
-  add_compile_options(-Wno-write-strings -Wno-register -fpermissive -Wno-multichar -Wno-delete-incomplete)
-  add_compile_options(-Wno-format-overflow)
+  add_compile_options(-Wno-write-strings -Wno-multichar -Wno-format-overflow -Wno-format-security)
+  add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wno-register$<SEMICOLON>-fpermissive$<SEMICOLON>-Wno-delete-incomplete>)
 ENDIF()
 
 IF (APPLE)
@@ -269,7 +269,6 @@ target_compile_definitions(PiccuEngine PUBLIC -DSDLKEY) #non-main projects see t
 add_library(dmfc SHARED ${DMFC_SOURCES})
 target_compile_definitions(dmfc PUBLIC -DOUTRAGE_VERSION -DDMFC_DLL)
 target_include_directories(dmfc PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/netgames/includes")
-target_link_libraries(dmfc PRIVATE SDL3::SDL3)
 add_dependencies(PiccuEngine revision_check piccuengine_hog TCP-IP Tracker dmfc)
 	
 install(TARGETS PiccuEngine DESTINATION ${D3_GAMEDIR})

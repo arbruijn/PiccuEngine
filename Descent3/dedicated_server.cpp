@@ -839,7 +839,7 @@ void PrintDedicatedMessage(const char* fmt, ...)
 #include "linux/linux_fix.h"
 #include "errno.h"
 #define BOOL bool
-#define SOCKET unsigned int
+#define SOCKET int
 #define SOCKADDR_IN sockaddr_in
 #define SOCKADDR sockaddr
 #define INVALID_SOCKET -1

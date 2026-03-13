@@ -112,7 +112,7 @@ void GL3Renderer::SetDefaults()
 #if defined(SDL3)
 static GLADapiproc opengl_GLADLoad(const char* name)
 {
-	void* ptr = SDL_GL_GetProcAddress(name);
+	SDL_FunctionPointer ptr = SDL_GL_GetProcAddress(name);
 	return (GLADapiproc)ptr;
 }
 
