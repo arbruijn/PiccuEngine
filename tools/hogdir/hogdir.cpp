@@ -30,12 +30,17 @@ SOFTWARE.
 #include <wchar.h>
 #include <vector>
 #include <stdexcept>
+#include <algorithm>
 
 constexpr int FILENAME_LEN = 36;
 constexpr int DIRENTRY_LEN = FILENAME_LEN + 12;
 const char* sig = "HOG2";
 
 FILE* hogfile;
+
+#ifndef WIN32
+#define stricmp strcasecmp
+#endif
 
 struct fileinfo_data
 {
@@ -138,6 +143,11 @@ void add_dir(const char* directory)
 			pathlist.push_back(file);
 		}
 	}
+
+	std::sort(pathlist.begin(), pathlist.end(),
+		[](fileinfo_data const& a, fileinfo_data const& b) -> bool {
+			return stricmp(a.name, b.name) < 0;
+		});
 
 	//Generate the header
 	generate_header(pathlist);
