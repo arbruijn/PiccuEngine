@@ -387,7 +387,7 @@ int LoadMultiDLL(char* name)
 	{
 		ddio_MakePath(tmp_dll_name, Base_directory, "online", name, NULL);
 		strcat(tmp_dll_name, ".piccucon");
-		Multi_conn_dll_name[0] = NULL;
+		Multi_conn_dll_name[0] = 0;
 		goto loaddll;
 	}
 	//get a temp file name
