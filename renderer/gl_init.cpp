@@ -22,7 +22,7 @@
 #ifdef SDL3
 #include <SDL3/SDL_video.h>
 #elif WIN32
-#define NOMINMAX
+#define NOMINMAX 1
 #include <Windows.h>
 #endif
 
@@ -112,7 +112,7 @@ void GL3Renderer::SetDefaults()
 #if defined(SDL3)
 static GLADapiproc opengl_GLADLoad(const char* name)
 {
-	void* ptr = SDL_GL_GetProcAddress(name);
+	SDL_FunctionPointer ptr = SDL_GL_GetProcAddress(name);
 	return (GLADapiproc)ptr;
 }
 
@@ -157,7 +157,7 @@ static GLADapiproc opengl_GLADLoad(const char* name)
 		if (!glDllhandle)
 			Error("opengl_GLADLoad: failed to load opengl32.dll!");
 	}
-	void* ptr = wglGetProcAddress(name);
+	PROC ptr = wglGetProcAddress(name);
 	//I love OpenGL btw
 	if (!ptr)
 	{
@@ -238,6 +238,7 @@ bool GL_GetWGLExtensionProcs()
 {
 	HWND DummyHWND = InitDummy();
 	HDC DummyDC = GetDC(DummyHWND);
+	HGLRC DummyResourceContext = nullptr;
 
 	// Finds an acceptable pixel format to render to
 	PIXELFORMATDESCRIPTOR pfd, pfd_copy;
@@ -289,7 +290,7 @@ bool GL_GetWGLExtensionProcs()
 	}
 
 	// Create an OpenGL context, and make it the current context
-	HGLRC DummyResourceContext = wglCreateContext(DummyDC);
+	DummyResourceContext = wglCreateContext(DummyDC);
 	if (DummyResourceContext == nullptr)
 	{
 		DWORD ret = GetLastError();
@@ -356,7 +357,7 @@ int GL3Renderer::Setup(HDC glhdc)
 	{
 		Int3();
 		//FreeLibrary(opengl_dll_handle);
-		return NULL;
+		return 0;
 	}
 
 	mprintf((0, "Choose pixel format successful!\n"));
@@ -367,7 +368,7 @@ int GL3Renderer::Setup(HDC glhdc)
 		DWORD ret = GetLastError();
 		Int3();
 		//FreeLibrary(opengl_dll_handle);
-		return NULL;
+		return 0;
 	}
 
 	mprintf((0, "SetPixelFormat successful!\n"));
@@ -377,7 +378,7 @@ int GL3Renderer::Setup(HDC glhdc)
 	{
 		Int3();
 		//FreeLibrary(opengl_dll_handle);
-		return NULL;
+		return 0;
 	}
 
 	// Check the returned PFD to see if it is hardware accelerated
@@ -385,7 +386,7 @@ int GL3Renderer::Setup(HDC glhdc)
 	{
 		Int3();
 		//FreeLibrary(opengl_dll_handle);
-		return NULL;
+		return 0;
 	}
 
 	GLint attribs[] =
@@ -407,7 +408,7 @@ int GL3Renderer::Setup(HDC glhdc)
 		DWORD ret = GetLastError();
 		//FreeLibrary(opengl_dll_handle);
 		Int3();
-		return NULL;
+		return 0;
 	}
 
 	ASSERT(ResourceContext != NULL);
@@ -502,7 +503,7 @@ int GL3Renderer::Init(oeApplication* app, renderer_preferred_state* pref_state)
 	*               WINDOWS OPENGL
 	***********************************************************
 	*/
-	static HWnd hwnd = NULL;
+	static HWnd hwnd = 0;
 	if (ParentApplication != NULL)
 	{
 		hwnd = static_cast<HWnd>(reinterpret_cast<oeWin32Application*>(ParentApplication)->m_hWnd);

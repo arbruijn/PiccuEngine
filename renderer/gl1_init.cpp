@@ -19,7 +19,7 @@
 #include "gl1_local.h"
 #include "args.h"
 #ifdef WIN32
-#define NOMINMAX
+#define NOMINMAX 1
 #include <Windows.h>
 #endif
 
@@ -125,7 +125,7 @@ void GLCompatibilityRenderer::SetDefaults()
 #if defined(SDL3)
 static GLADapiproc opengl_GLADLoad(const char* name)
 {
-	void* ptr = SDL_GL_GetProcAddress(name);
+	SDL_FunctionPointer ptr = SDL_GL_GetProcAddress(name);
 	return (GLADapiproc)ptr;
 }
 
@@ -164,7 +164,7 @@ static GLADapiproc opengl_GLADLoad(const char* name)
 		if (!glDllhandle)
 			Error("opengl_GLADLoad: failed to load opengl32.dll!");
 	}
-	void* ptr = wglGetProcAddress(name);
+	PROC ptr = wglGetProcAddress(name);
 	//I love OpenGL btw
 	if (!ptr)
 	{
@@ -192,7 +192,7 @@ int GLCompatibilityRenderer::Setup(HDC glhdc)
 	{
 		Int3();
 		//FreeLibrary(opengl_dll_handle);
-		return NULL;
+		return 0;
 	}
 
 	mprintf((0, "Choose pixel format successful!\n"));
@@ -203,7 +203,7 @@ int GLCompatibilityRenderer::Setup(HDC glhdc)
 		DWORD ret = GetLastError();
 		Int3();
 		//FreeLibrary(opengl_dll_handle);
-		return NULL;
+		return 0;
 	}
 
 	mprintf((0, "SetPixelFormat successful!\n"));
@@ -213,7 +213,7 @@ int GLCompatibilityRenderer::Setup(HDC glhdc)
 	{
 		Int3();
 		//FreeLibrary(opengl_dll_handle);
-		return NULL;
+		return 0;
 	}
 
 	// Check the returned PFD to see if it is hardware accelerated
@@ -221,7 +221,7 @@ int GLCompatibilityRenderer::Setup(HDC glhdc)
 	{
 		Int3();
 		//FreeLibrary(opengl_dll_handle);
-		return NULL;
+		return 0;
 	}
 
 	// Create an OpenGL context, and make it the current context
@@ -230,7 +230,7 @@ int GLCompatibilityRenderer::Setup(HDC glhdc)
 		DWORD ret = GetLastError();
 		//FreeLibrary(opengl_dll_handle);
 		Int3();
-		return NULL;
+		return 0;
 	}
 
 	ASSERT(ResourceContext != NULL);
@@ -312,7 +312,7 @@ int GLCompatibilityRenderer::Init(oeApplication* app, renderer_preferred_state* 
 	*               WINDOWS OPENGL
 	***********************************************************
 	*/
-	static HWnd hwnd = NULL;
+	static HWnd hwnd = 0;
 	if (ParentApplication != NULL)
 	{
 		hwnd = static_cast<HWnd>(reinterpret_cast<oeWin32Application*>(ParentApplication)->m_hWnd);
