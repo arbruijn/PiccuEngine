@@ -1183,7 +1183,7 @@ hashTableIndex hash(T data) {
    /***********************************
     *  hash function applied to data  *
     ***********************************/
-	unsigned int hval = (unsigned int)data->ptr;
+	uintptr_t hval = (uintptr_t)data->ptr;
     return (hval % MEM_MAX_MALLOCS);
 }
 Node *insertNode(T data) 
