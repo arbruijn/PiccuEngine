@@ -25,14 +25,20 @@
 #include <Windows.h>
 #include <io.h>
 #include <sys/utime.h>
-#elif defined(UNIX)
+#elif defined(__LINUX__)
 #include <unistd.h>
 #include <utime.h>
+#include <signal.h>
 #endif
 
 #include "pserror.h"
 #include "ddio.h"
 #include "mem.h"
+#include "Macros.h"
+
+#ifndef _MAX_DIR
+#define _MAX_DIR 256
+#endif
 
 //	---------------------------------------------------------------------------
 //	File operations
@@ -62,12 +68,13 @@ bool ddio_SetWorkingDir(const char* path)
 #ifdef WIN32
 	return (SetCurrentDirectory(path)) ? true : false;
 #else
-#error "ddio_SetWorkingDir: Not implemented for current platform"
+	return (chdir(path) == 0);
 #endif
 }
 
 bool ddio_FileDiff(const char* path1, const char* path2)
 {
+#ifdef WIN32
 	struct _stat abuf, bbuf;
 
 	if (_stat(path1, &abuf))
@@ -75,6 +82,15 @@ bool ddio_FileDiff(const char* path1, const char* path2)
 
 	if (_stat(path2, &bbuf))
 		Int3();		//error getting stat info
+#else
+	struct stat abuf, bbuf;
+
+	if (stat(path1, &abuf))
+		Int3();		//error getting stat info
+
+	if (stat(path2, &bbuf))
+		Int3();		//error getting stat info
+#endif
 
 	if ((abuf.st_size != bbuf.st_size) || (abuf.st_mtime != bbuf.st_mtime))
 		return true;
@@ -248,7 +264,7 @@ bool ddio_DirExists(const char* path)
 //		the last argument in the list of sub dirs *MUST* be NULL to terminate the list
 void ddio_MakePath(char* newPath, const char* absolutePathHeader, const char* subDir, ...)
 {
-    const char	delimiter = '\\';
+    const char	delimiter = '/';
     va_list		args;
     char* currentDir = NULL;
     int			pathLength = 0;
@@ -476,6 +492,9 @@ char* ddio_GetUserDir(const char* extraname)
 {
     const char* savepath = SDL_GetUserFolder(SDL_FOLDER_SAVEDGAMES);
 
+    if (savepath == nullptr) // for XDG (linux)
+        savepath = SDL_GetUserFolder(SDL_FOLDER_DOCUMENTS);
+        
     if (savepath == nullptr)
         Error("ddio_GetUserDir: SDL_GetUserFolder failed!");
 
@@ -522,6 +541,7 @@ void ddio_GetRootFromPath(const char* srcPath, char* root_path)
 //	retrieve root names, free up roots array (allocated with malloc) after use
 int ddio_GetFileSysRoots(char** roots, int max_roots)
 {
+#ifdef WIN32
     char buffer[100];
 
     int ret = GetLogicalDriveStrings(100, buffer);
@@ -558,6 +578,14 @@ int ddio_GetFileSysRoots(char** roots, int max_roots)
             done = true;
     }
     return count;
+#else
+    if (max_roots > 0) {
+        roots[0] = (char*)mem_malloc(2);
+        strcpy(roots[0], "/");
+        return 1;
+    }
+    return 0;
+#endif
 }
 
 //	given a path, it cleans it up (if the path is c:\windows\..\dos it would make it c:\dos)
@@ -737,7 +765,21 @@ bool ddio_CopyFile(const char* srcfile, const char* destfile)
 
     return false;
 #else
-#error "ddio_CopyFile: Not implemented for this platform!"
+    FILE *src = fopen(srcfile, "rb");
+    if (!src) return false;
+    FILE *dest = fopen(destfile, "wb");
+    if (!dest) {
+        fclose(src);
+        return false;
+    }
+    char buffer[4096];
+    size_t bytes;
+    while ((bytes = fread(buffer, 1, sizeof(buffer), src)) > 0) {
+        fwrite(buffer, 1, bytes, dest);
+    }
+    fclose(src);
+    fclose(dest);
+    return true;
 #endif
 }
 
