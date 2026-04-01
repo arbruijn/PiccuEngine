@@ -318,14 +318,14 @@ bool ProcessCommandLine()
 		char* tokp;
 		strcpy(szurl, GameArgs[urlarg]);
 #ifdef DEMO
-		szurl[strlen("d3demo2://") - 1] = NULL; //Should make the string "d3demo:/"
+		szurl[strlen("d3demo2://") - 1] = 0; //Should make the string "d3demo:/"
 		p = szurl + strlen("d3demo2://");  //pointer to the first character of the url after the //
 		if (strcmpi(szurl, "d3demo2:/") == 0)
 		{
 			mprintf((0, "Got a url passed: %s\n", p));
 		}
 #else
-		szurl[strlen("descent3://") - 1] = NULL; //Should make the string "descent3:/"
+		szurl[strlen("descent3://") - 1] = 0; //Should make the string "descent3:/"
 		p = szurl + strlen("descent3://");  //pointer to the first character of the url after the //
 		if (strcmpi(szurl, "descent3:/") == 0)
 		{
@@ -336,7 +336,7 @@ bool ProcessCommandLine()
 		if (strcmpi(tokp, "ip") == 0)
 		{
 			tokp = strtok(NULL, "/");
-			Auto_login_port[0] = NULL;
+			Auto_login_port[0] = 0;
 			strcpy(Auto_login_addr, tokp);
 
 			if (LoadMultiDLL("Direct TCP~IP"))
@@ -360,7 +360,7 @@ bool ProcessCommandLine()
 		else if (strcmpi(tokp, "pxo") == 0)
 		{
 			tokp = strtok(NULL, "/");
-			Auto_login_port[0] = NULL;
+			Auto_login_port[0] = 0;
 			strcpy(Auto_login_addr, tokp);
 			//		char seldll[_MAX_PATH*2];
 					//ddio_MakePath(seldll,Base_directory,"online","parallax online.d3c",NULL);
@@ -406,7 +406,7 @@ bool ProcessCommandLine()
 		if (port)
 		{
 			//terminate the hostname
-			*port = NULL;
+			*port = 0;
 			//Increment to the first character of the port name
 			port++;
 			//get the port number
