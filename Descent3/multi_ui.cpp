@@ -506,7 +506,7 @@ void DoMultiAllowed(void)
 	bool shipsallowed[MAX_SHIPS];
 	bool objsallowed[MAX_OBJECTS];
 	ConfigItem** ship_list = NULL;
-	char* str = (char*)mem_malloc(max(strlen(TXT_ALLOW), strlen(TXT_DISALLOW)) + 3);
+	char* str = (char*)mem_malloc(D3_MAX(strlen(TXT_ALLOW), strlen(TXT_DISALLOW)) + 3);
 
 	// Create Text Items and Window
 	UITextItem cancel_on_text(TXT_CANCEL, UICOL_HOTSPOT_HI);

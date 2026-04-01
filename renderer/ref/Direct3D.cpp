@@ -3362,7 +3362,7 @@ void d3d_DrawSpecialLine (g3Point *p0,g3Point *p1)
 
 		FlatVerts[i].x=pnt->p3_sx+D3D_state.clip_x1;
 		FlatVerts[i].y=pnt->p3_sy+D3D_state.clip_y1;
-		//FlatVerts[i].z=min(1.0,(pnt->p3_z+(Z_bias+d3d_WBias))/D3D_state.cur_far_z);
+		//FlatVerts[i].z=D3_MIN(1.0,(pnt->p3_z+(Z_bias+d3d_WBias))/D3D_state.cur_far_z);
 		FlatVerts[i].z = max (0,1.0-(1.0/(pnt->p3_z+(Z_bias+d3d_WBias))));
 		FlatVerts[i].w=1.0/(pnt->p3_z+Z_bias+d3d_WBias);
 
@@ -3522,8 +3522,8 @@ void d3d_SetGammaValue (float val)
 
 		newval*=65535;
 		
-		newval=min(65535,newval);
-		newval=max(0,newval);
+		newval=D3_MIN(65535,newval);
+		newval=D3_MAX(0,newval);
 		
 		rampvals.red[i]=newval;
 		rampvals.green[i]=newval;
