@@ -2093,7 +2093,7 @@ void newuiSheet::AddBitmap(int bm_handle)
 char* newuiSheet::AddChangeableText(int buflen)
 {
 	newuiSheet::t_gadget_desc* gadget = AddGadget(-1, GADGET_CHANGEABLE_TXT, NULL);
-	gadget->internal = (void*)buflen;
+	gadget->internal = (void*)(intptr_t)buflen;
 	gadget->parm.p = mem_malloc(buflen);
 	return (char*)gadget->parm.p;
 }

@@ -32,7 +32,7 @@ oeWin32AppDatabase::oeWin32AppDatabase()
 
 	hCurKey = 0;
 
-	hBaseKey = (unsigned)HKEY_CURRENT_USER;
+	hBaseKey = (uintptr_t)HKEY_CURRENT_USER;
 
 //	create outrage entertainment key
 	lstrcpy(m_Basepath, "SOFTWARE\\Outrage");

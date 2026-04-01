@@ -28,8 +28,8 @@
 
 class oeWin32AppDatabase: public oeAppDatabase
 {
-	unsigned hBaseKey;							// look up from this key.
-	unsigned hCurKey;							// current key for lookup
+	uintptr_t hBaseKey;							// look up from this key.
+	uintptr_t hCurKey;							// current key for lookup
 
 protected:
 	char m_Basepath[256];
