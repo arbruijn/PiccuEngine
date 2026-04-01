@@ -29,7 +29,7 @@ SET (RENDERER_SOURCES
 		
 		#GLAD gl loader
 		renderer/gl.c
-		renderer/wgl.c
+		$<$<BOOL:${WIN32}>:renderer/wgl.c>
 		
 		#3D system
 		renderer/clipper.cpp
