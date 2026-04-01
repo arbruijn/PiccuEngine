@@ -41,7 +41,7 @@
 
 #ifdef __LINUX__
 
-#include "SDL_thread.h"
+#include <SDL3/SDL.h>
 
 inline void Sleep(int millis)
 {
@@ -212,7 +212,7 @@ void ChttpGet::GetFile(const char *URL,const char *localfile)
 	}
 
 //	if(df_pthread_create(&thread,NULL,HTTPObjThread,this)!=0)
-    thread = SDL_CreateThread(HTTPObjThread, this);
+    thread = SDL_CreateThread(HTTPObjThread, "HTTPWorker", this);
     if (thread == NULL)
 	{
 		m_State = HTTP_STATE_INTERNAL_ERROR;
@@ -799,53 +799,49 @@ unsigned int ChttpGet::ReadDataChannel()
     #ifdef __LINUX__
     SDL_Thread *threadId;
     #endif
-}async_dns_lookup;
+    }async_dns_lookup;
 
-async_dns_lookup httpaslu;
-async_dns_lookup *http_lastaslu = NULL;
+    async_dns_lookup httpaslu;
+    async_dns_lookup *http_lastaslu = NULL;
 
-#ifndef __LINUX__
-void __cdecl http_gethostbynameworker(void *parm);
-#else
-int http_gethostbynameworker(void *parm);
-#endif
+    int http_gethostbynameworker(void *parm);
 
-int http_Asyncgethostbyname(unsigned int *ip,int command, char *hostname)
-{
-	
-	if(command==NW_AGHBN_LOOKUP)
-	{
-		if(http_lastaslu)
-			http_lastaslu->abort = true;
+    int http_Asyncgethostbyname(unsigned int *ip,int command, char *hostname)
+    {
 
-		async_dns_lookup *newaslu;
-		newaslu = (async_dns_lookup *)mem_malloc(sizeof(async_dns_lookup));
-		memset(&newaslu->ip,0,sizeof(unsigned int));
-		newaslu->host = hostname;
-		newaslu->done = false;
-		newaslu->error = false;
-		newaslu->abort = false;
-		http_lastaslu = newaslu;
-		httpaslu.done = false;
+    if(command==NW_AGHBN_LOOKUP)
+    {
+    if(http_lastaslu)
+    http_lastaslu->abort = true;
 
-#ifdef WIN32
-		_beginthread(http_gethostbynameworker,0,newaslu);
-#elif defined(__LINUX__)
-//		pthread_t thread;
-		if(!inet_LoadThreadLib())
-		{
-			return 0;
-		}
+    async_dns_lookup *newaslu;
+    newaslu = (async_dns_lookup *)mem_malloc(sizeof(async_dns_lookup));
+    memset(&newaslu->ip,0,sizeof(unsigned int));
+    newaslu->host = hostname;
+    newaslu->done = false;
+    newaslu->error = false;
+    newaslu->abort = false;
+    http_lastaslu = newaslu;
+    httpaslu.done = false;
 
-//		df_pthread_create(&thread,NULL,http_gethostbynameworker,newaslu);
-        newaslu->threadId = SDL_CreateThread(http_gethostbynameworker,newaslu);
-#endif
-		return 1;
-	}
-	else if(command==NW_AGHBN_CANCEL)
-	{
-		if(http_lastaslu)
-			http_lastaslu->abort = true;
+    #ifdef WIN32
+    _beginthread(http_gethostbynameworker,0,newaslu);
+    #elif defined(__LINUX__)
+    //		pthread_t thread;
+    if(!inet_LoadThreadLib())
+    {
+    return 0;
+    }
+
+    //		df_pthread_create(&thread,NULL,http_gethostbynameworker,newaslu);
+        newaslu->threadId = SDL_CreateThread(http_gethostbynameworker, "HTTPDNSWorker", newaslu);
+    #endif
+    return 1;
+    }
+    else if(command==NW_AGHBN_CANCEL)
+    {
+    if(http_lastaslu)
+    http_lastaslu->abort = true;
 
         #ifdef __LINUX__
             SDL_WaitThread(http_lastaslu->threadId, NULL);
