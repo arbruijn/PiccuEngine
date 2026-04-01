@@ -369,6 +369,7 @@ bool SupportsCPUID ()
 {
 	bool enabled=true;
 
+	#ifdef _MSC_VER
 	__try
 	{
 		_asm{
@@ -382,6 +383,7 @@ bool SupportsCPUID ()
 	{
 		enabled=false;
 	}
+	#endif
 
 	return enabled;
 }
@@ -514,6 +516,7 @@ end_win32_check:
 	return retval;
 }
 
+#ifdef _MSC_VER
 __declspec(no_sanitize_address)
 void getcpudata(cpuinfo *info)
 {
@@ -600,6 +603,7 @@ void getcpudata(cpuinfo *info)
 		info->vendor = VENDOR_UNKNOWN;
 	}
 }
+#endif
 
 //	---------------------------------------------------------------------------
 //	WinMain
@@ -691,14 +695,18 @@ int PASCAL WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR szCmdLine, int nC
 {
 	int result =-1;
 	
+#ifdef _MSC_VER
 	__try
 	{
+#endif
 		result = HandledWinMain(hInst,hPrevInst,szCmdLine,nCmdShow);
+#ifdef _MSC_VER
 	}
 	__except(RecordExceptionInfo(GetExceptionInformation(), "WinMain()"))
 	{
 
 	}
+#endif
 	return result;
 }
 
