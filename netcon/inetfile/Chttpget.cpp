@@ -707,10 +707,10 @@ unsigned int ChttpGet::ReadDataChannel()
 		select(m_DataSock+1,&wfds,NULL,NULL,&timeout);
 
     		if(m_Aborting)
-		{
-			fclose(LOCALFILE);
-			return 0;		
-		}
+    {
+    fclose(LOCALFILE);
+    return 0;		
+    }
 
     nBytesRecv = recv(m_DataSock, (char *)&sDataBuffer,sizeof(sDataBuffer), 0);
 
@@ -847,36 +847,36 @@ unsigned int ChttpGet::ReadDataChannel()
             SDL_WaitThread(http_lastaslu->threadId, NULL);
         #endif
 
-		http_lastaslu = NULL;
-	}
-	else if(command==NW_AGHBN_READ)
-	{
-		if(!http_lastaslu)
-			return -1;
-		if(httpaslu.done)
-		{
-			//free(http_lastaslu);
+    http_lastaslu = NULL;
+    }
+    else if(command==NW_AGHBN_READ)
+    {
+    if(!http_lastaslu)
+    return -1;
+    if(httpaslu.done)
+    {
+    //free(http_lastaslu);
             #ifdef __LINUX__
                 SDL_WaitThread(http_lastaslu->threadId, NULL);
             #endif
 
-			http_lastaslu = NULL;
-			memcpy(ip,&httpaslu.ip,sizeof(unsigned int));
-			return 1;
-		}
-		else if(httpaslu.error)
-		{
+    http_lastaslu = NULL;
+    memcpy(ip,&httpaslu.ip,sizeof(unsigned int));
+    return 1;
+    }
+    else if(httpaslu.error)
+    {
             #ifdef __LINUX__
                 SDL_WaitThread(http_lastaslu->threadId, NULL);
             #endif
 
-			mem_free(http_lastaslu);
-			http_lastaslu = NULL;
-			return -1;
-		}
-		else return 0;
-	}
-	return -2;
+    mem_free(http_lastaslu);
+    http_lastaslu = NULL;
+    return -1;
+    }
+    else return 0;
+    }
+    return -2;
 
     }
 
