@@ -25,7 +25,7 @@
 #include "hlsoundlib.h"
 #include "soundload.h"
 
-#define IGNORE_TABLE(x)	x
+#define IGNORE_TABLE(s)	s
 
 tceffect TCEffects[MAX_TCEFFECTS];
 int Screen_roots[MAX_TELCOM_SCREENS];

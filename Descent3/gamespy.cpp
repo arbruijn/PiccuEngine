@@ -107,8 +107,8 @@ int gspy_Init(void)
 	{
 		gspy_d3_secret[i] = (char)(origstring[i] ^ keychars[i]);
 	}
-	gspy_d3_secret[6] = NULL;
-	gspy_d3_secret[7] = NULL;
+	gspy_d3_secret[6] = 0;
+	gspy_d3_secret[7] = 0;
 
 	//strcpy(gspy_d3_secret,"feWh2G\0\0");
 	//Read the config, resolve the name if needed and setup the server addresses
@@ -180,7 +180,7 @@ int gspy_Init(void)
 				if (port)
 				{
 					//terminate the hostname
-					*port = NULL;
+					*port = 0;
 					//Increment to the first character of the port name
 					port++;
 					//get the port number
@@ -259,7 +259,7 @@ void gspy_DoFrame()
 #ifndef OEM
 	SOCKADDR_IN fromaddr;
 	int bytesin;
-	int fromsize = sizeof(SOCKADDR_IN);
+	socklen_t fromsize = sizeof(SOCKADDR_IN);
 	char inbuffer[MAX_GAMESPY_BUFFER];
 
 	if(!gspy_game_running)
@@ -292,7 +292,7 @@ void gspy_DoFrame()
 		bytesin = recvfrom(gspy_socket,inbuffer,MAX_GAMESPY_BUFFER,0,(SOCKADDR *)&fromaddr,&fromsize);
 		if(bytesin > 0)
 		{
-			*(inbuffer+bytesin) = NULL;
+			*(inbuffer+bytesin) = 0;
 			mprintf((0,"Got a gamespy request:\n%s\n",inbuffer));
 			gspy_ParseReq(inbuffer,&fromaddr);
 		}
@@ -324,7 +324,7 @@ int gspy_SendPacket(SOCKADDR_IN *addr)
 
 	mprintf((0,"GSPYOUT:%s\n",gspy_outgoingbuffer));
 	sendto(gspy_socket,gspy_outgoingbuffer,strlen(gspy_outgoingbuffer)+1,0,(SOCKADDR *)addr,sizeof(SOCKADDR_IN));
-	*gspy_outgoingbuffer = NULL;
+	*gspy_outgoingbuffer = 0;
 	return 0;
 }
 
@@ -625,7 +625,7 @@ int gspy_GetGamePort(unsigned int ipv4adr, int portnum)
 
 	//Should be ready to send and recieve
 	sockaddr_in addr = {};
-	int addrSize = sizeof(addr);
+	socklen_t addrSize = sizeof(addr);
 
 	//Prepare the request
 	addr.sin_family = AF_INET;
