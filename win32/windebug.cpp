@@ -264,7 +264,7 @@ void DumpBuffer :: SetWindowText( HWND hWnd ) const
 
 // Add an offset to a pointer and cast to a given type; may be
 // implemented as a template function but Visual C++ has some problems.
-#define BasedPtr( type, ptr, ofs ) (type)( (DWORD)(ptr) + (DWORD)(ofs) )
+#define BasedPtr( type, ptr, ofs ) (type)( (DWORD_PTR)(ptr) + (DWORD_PTR)(ofs) )
 
 
 PE_Debug :: PE_Debug()
@@ -635,7 +635,7 @@ PIMAGE_COFF_SYMBOLS_HEADER PE_Debug :: GetDebugHeader()
   PIMAGE_SECTION_HEADER debugHeader = SectionHeaderFromName( ".debug" ) ;
   if( debugHeader && debugHeader->VirtualAddress == debugDirRVA )
     {
-    debugDir = (PIMAGE_DEBUG_DIRECTORY)(debugHeader->PointerToRawData + (DWORD)fileBase) ;
+    debugDir = (PIMAGE_DEBUG_DIRECTORY)(debugHeader->PointerToRawData + (DWORD_PTR)fileBase) ;
     size = NT_Header->OptionalHeader.
            DataDirectory[ IMAGE_DIRECTORY_ENTRY_DEBUG ].Size *
            sizeof( IMAGE_DEBUG_DIRECTORY ) ;
@@ -658,7 +658,7 @@ PIMAGE_COFF_SYMBOLS_HEADER PE_Debug :: GetDebugHeader()
   for( DWORD i = 0; i < debugFormats; i++ )
     {
     if( debugDir->Type == IMAGE_DEBUG_TYPE_COFF )
-      return( (PIMAGE_COFF_SYMBOLS_HEADER)((DWORD)fileBase + debugDir->PointerToRawData) ) ;
+      return( (PIMAGE_COFF_SYMBOLS_HEADER)((DWORD_PTR)fileBase + debugDir->PointerToRawData) ) ;
     else
       debugDir++ ;
     }
@@ -777,6 +777,7 @@ int PE_Debug::DumpDebugInfo( DumpBuffer& dumpBuffer, const BYTE* caller, HINSTAN
 
 void DumpCallsStack( DumpBuffer& dumpBuffer )
 {
+#ifdef _MSC_VER
 	const char* separator = "------------------------------------------------------------------\r\n" ;
 	static PE_Debug PE_debug ;
 
@@ -838,6 +839,7 @@ void DumpCallsStack( DumpBuffer& dumpBuffer )
 
 	dumpBuffer.Printf( separator ) ;
 	PE_debug.ClearReport() ;  // Prepare for future calls
+#endif
 }
 
 
@@ -992,6 +994,7 @@ static void PrintFileTime(char *sztime, FILETIME ftime)
 
 static void ShowModuleInfo(HANDLE LogFile, HINSTANCE ModuleHandle)
 {
+#ifdef _MSC_VER
 	char FmtString[2000];
 	unsigned long bytesout;
 	char ModName[MAX_PATH];
@@ -1037,6 +1040,7 @@ static void ShowModuleInfo(HANDLE LogFile, HINSTANCE ModuleHandle)
 	__except(EXCEPTION_EXECUTE_HANDLER)
 	{
 	}
+#endif	
 }
 
 // Scan memory looking for code modules (DLLs or EXEs). VirtualQuery is used
@@ -1150,6 +1154,7 @@ extern char* User_directory;
 
 int __cdecl RecordExceptionInfo(PEXCEPTION_POINTERS data, const char *Message)
 {
+#ifdef _MSC_VER
 	static int BeenHere;
 	if (BeenHere)	// Going recursive! That must mean this routine crashed!
 		return EXCEPTION_CONTINUE_SEARCH;
@@ -1213,6 +1218,7 @@ int __cdecl RecordExceptionInfo(PEXCEPTION_POINTERS data, const char *Message)
 		Debug_ErrorBox(OSMBOX_OK, "Error", topmsg, bottommsg);
 
 	BeenHere = false;
+#endif
 	if(Debug_break)
 		return EXCEPTION_CONTINUE_SEARCH;
 	else 

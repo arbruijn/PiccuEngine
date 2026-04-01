@@ -48,8 +48,6 @@ bool Directplay_lobby_launched_game = false;
 #include "d3music.h"
 #include "newui_core.h"
 #include <string.h>
-#include <thread>
-#include <future>
 #define IDV_QUIT				0xff
 //	Menu Item Defines
 #define IDV_NEWGAME			10

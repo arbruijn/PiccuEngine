@@ -22,7 +22,7 @@
 #ifdef SDL3
 #include <SDL3/SDL_video.h>
 #elif WIN32
-#define NOMINMAX
+#define NOMINMAX 1
 #include <Windows.h>
 #endif
 
@@ -112,7 +112,7 @@ void GL3Renderer::SetDefaults()
 #if defined(SDL3)
 static GLADapiproc opengl_GLADLoad(const char* name)
 {
-	void* ptr = SDL_GL_GetProcAddress(name);
+	SDL_FunctionPointer ptr = SDL_GL_GetProcAddress(name);
 	return (GLADapiproc)ptr;
 }
 
@@ -157,7 +157,7 @@ static GLADapiproc opengl_GLADLoad(const char* name)
 		if (!glDllhandle)
 			Error("opengl_GLADLoad: failed to load opengl32.dll!");
 	}
-	void* ptr = wglGetProcAddress(name);
+	PROC ptr = wglGetProcAddress(name);
 	//I love OpenGL btw
 	if (!ptr)
 	{
@@ -238,6 +238,7 @@ bool GL_GetWGLExtensionProcs()
 {
 	HWND DummyHWND = InitDummy();
 	HDC DummyDC = GetDC(DummyHWND);
+	HGLRC DummyResourceContext = nullptr;
 
 	// Finds an acceptable pixel format to render to
 	PIXELFORMATDESCRIPTOR pfd, pfd_copy;
@@ -289,7 +290,7 @@ bool GL_GetWGLExtensionProcs()
 	}
 
 	// Create an OpenGL context, and make it the current context
-	HGLRC DummyResourceContext = wglCreateContext(DummyDC);
+	DummyResourceContext = wglCreateContext(DummyDC);
 	if (DummyResourceContext == nullptr)
 	{
 		DWORD ret = GetLastError();

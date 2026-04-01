@@ -29,7 +29,9 @@
 #include "pstring.h"
 #include "application.h"
 #include "ddio.h"
+#ifdef WIN32
 #include "dinput.h"
+#endif
 
 #include "forcefeedback.h"
 

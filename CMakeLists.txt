@@ -30,23 +30,26 @@ endfunction()
 IF (UNIX)
 SET (D3_GAMEDIR "~/Descent3/")
 
-  SET(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -Wno-write-strings -m32")
-  SET(CMAKE_CXX_COMPILER "g++")
-  SET(CMAKE_CXX_FLAGS "-O0 -g -Wno-write-strings -Wno-multichar -m32")
-  SET(CMAKE_C_FLAGS "-O0 -g -m32")
-  SET(CMAKE_C_COMPILER "gcc")
-  SET(CMAKE_FIND_LIBRARY_PREFIXES "lib")
-  SET(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
-  FIND_PACKAGE( SDL REQUIRED )
-  FIND_PACKAGE( SDL_image REQUIRED )
-MESSAGE( "SDL Include Dir is " ${SDL_INCLUDE_DIR} )
+  FIND_PACKAGE( SDL3 REQUIRED CONFIG )
+  FIND_PACKAGE( OpenAL REQUIRED )
+MESSAGE( "SDL Include Dir is " ${SDL3_INCLUDE_DIRS} )
 ENDIF()
 
 IF (UNIX AND NOT APPLE)
   MESSAGE("Building for Linux")
 
-  ADD_DEFINITIONS( -D_DEBUG -D__LINUX__ -DLINUX -D_MAX_PATH=260 -D_MAX_FNAME=256 -D_REENRANT -DMONO -D__32BIT__ -DHAVEALLOCA_H -D_USE_OGL_ACTIVE_TEXTURES)
-  SET(PLATFORM_INCLUDES "lib/linux" ${SDL_INCLUDE_DIR} )
+  ADD_DEFINITIONS( -DSDL3 -D_DEBUG -D__LINUX__ -DLINUX -D_MAX_PATH=260 -D_MAX_FNAME=256 -D_REENRANT -DMONO -DHAVEALLOCA_H -D_USE_OGL_ACTIVE_TEXTURES)
+  SET(PLATFORM_INCLUDES "lib/linux" ${SDL3_INCLUDE_DIRS} ${OPENAL_INCLUDE_DIR} )
+
+  # 64 bit machines have a different game checksum than 32 bit machines
+  if (CMAKE_SIZEOF_VOID_P EQUAL 8)
+    add_definitions(-DCHECKSUM=2273889835UL)
+  else()
+    add_definitions(-DCHECKSUM=2273873307UL -D__32BIT__)
+  endif()
+
+  add_compile_options(-Wno-write-strings -Wno-multichar -Wno-format-overflow -Wno-format-security)
+  add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wno-register$<SEMICOLON>-fpermissive$<SEMICOLON>-Wno-delete-incomplete>)
 ENDIF()
 
 IF (APPLE)
@@ -60,18 +63,23 @@ IF (WIN32)
 	set(USE_SDL OFF CACHE BOOL "Builds with SDL rather than the Win32 code.")
 	SET(D3_GAMEDIR "c:/games/Descent3/")	
 	set (CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} "lib/win" "lib/win/directx" "thirdparty/OpenAL/libs/Win32") 
-	SET(CMAKE_CXX_FLAGS_DEBUG "/Od /EHsc /RTC1 /MTd /MP /W3 /nologo /c /Zi /errorReport:prompt")
-	SET(CMAKE_CXX_FLAGS_RELEASE "/O2 /FD /EHsc /MT /MP /W3 /nologo /c /Zi /errorReport:prompt")
-	
-	set(CMAKE_MODULE_LINKER_FLAGS "/SAFESEH:NO /SUBSYSTEM:WINDOWS /NODEFAULTLIB:LIBC")
-	set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "/DEBUG")
-	set(CMAKE_EXE_LINKER_FLAGS_RELEASE " /DEBUG") #[ISB] Generate debug information
+	if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+		SET(CMAKE_CXX_FLAGS_DEBUG "/Od /EHsc /RTC1 /MTd /MP /W3 /nologo /c /Zi /errorReport:prompt")
+		SET(CMAKE_CXX_FLAGS_RELEASE "/O2 /FD /EHsc /MT /MP /W3 /nologo /c /Zi /errorReport:prompt")
+
+		set(CMAKE_MODULE_LINKER_FLAGS "/SAFESEH:NO /SUBSYSTEM:WINDOWS /NODEFAULTLIB:LIBC")
+		set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "/DEBUG")
+		set(CMAKE_EXE_LINKER_FLAGS_RELEASE " /DEBUG") #[ISB] Generate debug information
+	else()
+		add_compile_options(-Wno-write-strings -Wno-register -fpermissive -Wno-multichar -Wno-delete-incomplete)
+		#add_compile_options(-Werror -Wno-permissive)
+		#set_property(SOURCE Descent3/newrender.cpp APPEND PROPERTY COMPILE_OPTIONS -fno-permissive)
+	endif()
 	ADD_DEFINITIONS (-DIS_WINDOWS -D_CRT_SECURE_NO_WARNINGS -DWIN32 -D_CRT_SECURE_NO_WARNINGS -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE)
 	if (USE_SDL)
 		find_package(sdl3 CONFIG REQUIRED)
 		add_definitions(-DSDL3)
 	endif()
-	
 	SET(PLATFORM_INCLUDES "lib/win/directx" "lib/win" "thirdparty/OpenAL/include" )
 	#if (USE_SDL)
 	#	set(PLATFORM_INCLUDES ${PLATFORM_INCLUDES} SDL3::SDL3)
@@ -99,7 +107,7 @@ IF (WIN32)
 	SET (MIN_PLATFORM_LIBS wsock32.lib wininet.lib)
 ENDIF()
 IF (UNIX AND NOT APPLE)
-	SET (PLATFORM_LIBS ${SDL_LIBRARY} caca asound audio esd aa directfb m dl GLU)
+	SET (PLATFORM_LIBS SDL3::SDL3 ${OPENAL_LIBRARY} GLU GL m dl)
 	SET (MIN_PLATFORM_LIBS ${PLATFORM_LIBS}) #todo
 ENDIF()
 IF (APPLE)
@@ -129,10 +137,9 @@ IF (WIN32)
 ENDIF()
 
 IF (UNIX)
-ADD_SUBDIRECTORY(linux)
-ADD_SUBDIRECTORY(dd_lnxsound)
-ADD_SUBDIRECTORY(lnxcontroller)
-ADD_SUBDIRECTORY(ddio_lnx)
+ADD_SUBDIRECTORY(ddio_sdl)
+ADD_SUBDIRECTORY(sdl)
+ADD_SUBDIRECTORY(dd_sndlib)
 ENDIF()
 
 ADD_SUBDIRECTORY (ddio_common)
@@ -224,25 +231,19 @@ SET (DESCENT3_SOURCES
 	${WIN32_SOURCES}
 	Descent3.manifest)
 endif()
-
-#shared sources
-SET (DESCENT3_SOURCES
-	${DESCENT3_SOURCES}
-	${DD_SNDLIB_SOURCES}
-	Descent3.manifest)
 ENDIF()
 
 IF (UNIX)
 SET (DESCENT3_SOURCES
 	${DESCENT3_SOURCES}
-	${LINUX_SOURCES}
-	${DD_LNXSOUND_SOURCES}
-	${DDIO_SOURCES})
+	${DDIO_SDL_SOURCES}
+	${SDL3_SOURCES}
+	${DD_SNDLIB_SOURCES})
 ENDIF()
 
 add_executable(PiccuEngine ${DESCENT3_SOURCES})
 	
-IF (WIN32)
+IF (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 	if (USE_SDL) #for convenience SDL will compile as a console app, and dump mono there
 		target_link_options(PiccuEngine PUBLIC /SAFESEH:NO /NODEFAULTLIB:LIBC)
 	else()
@@ -251,7 +252,7 @@ IF (WIN32)
 ENDIF()
 
 IF (UNIX AND NOT APPLE)
-	target_link_options(PiccuEngine PUBLIC /usr/lib/libpulse-simple.so.0)
+	#target_link_options(PiccuEngine PUBLIC /usr/lib/libpulse-simple.so.0)
 ENDIF()
 	
 IF (APPLE)
@@ -312,4 +313,3 @@ source_group("vecmat" REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/vecmat/.+"
 source_group("win32" REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/win32/.+")
 source_group("sdl" REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/sdl/.+")
 source_group("ddio_sdl" REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/ddio_sdl/.+")
-

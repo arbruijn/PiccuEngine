@@ -131,7 +131,7 @@ int FindArg(char* which)
 		} // if
 	} // for
 
-	mprintf((0, "FindArg: Did not find [%s] on command line.\n", argBuf));
+	//mprintf((0, "FindArg: Did not find [%s] on command line.\n", argBuf));
 	delete[] argBuf;
 	return (0);
 } // FindArg

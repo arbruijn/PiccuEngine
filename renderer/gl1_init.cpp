@@ -19,7 +19,7 @@
 #include "gl1_local.h"
 #include "args.h"
 #ifdef WIN32
-#define NOMINMAX
+#define NOMINMAX 1
 #include <Windows.h>
 #endif
 
@@ -125,7 +125,7 @@ void GLCompatibilityRenderer::SetDefaults()
 #if defined(SDL3)
 static GLADapiproc opengl_GLADLoad(const char* name)
 {
-	void* ptr = SDL_GL_GetProcAddress(name);
+	SDL_FunctionPointer ptr = SDL_GL_GetProcAddress(name);
 	return (GLADapiproc)ptr;
 }
 
@@ -164,7 +164,7 @@ static GLADapiproc opengl_GLADLoad(const char* name)
 		if (!glDllhandle)
 			Error("opengl_GLADLoad: failed to load opengl32.dll!");
 	}
-	void* ptr = wglGetProcAddress(name);
+	PROC ptr = wglGetProcAddress(name);
 	//I love OpenGL btw
 	if (!ptr)
 	{

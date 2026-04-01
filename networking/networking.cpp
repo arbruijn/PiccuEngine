@@ -187,7 +187,7 @@ NetworkReceiveCallback Netcallbacks[16];
 
 #define R_NET_PACKET_QUEUE_TIME	.1f
 
-int Net_connect_socket_id = INVALID_SOCKET;
+int Net_connect_socket_id = -1;
 int Net_connect_sequence = R_NET_SEQUENCE_NONE;
 
 // ------------------------------------------------------------------------------------------------------
@@ -1105,7 +1105,7 @@ int nw_CheckListenSocket(network_address *from_addr)
 			return i;
 		}
 	}
-	return INVALID_SOCKET;
+	return -1;
 }
 
 
@@ -1756,7 +1756,7 @@ void nw_HandleConnectResponse(ubyte *data,int len,network_address *server_addr)
 						//int rcode = sendto(typeless_sock,(char *)&conn_header,RELIABLE_PACKET_HEADER_ONLY_SIZE,0,addr,sizeof(SOCKADDR));
 						if(rcode == SOCKET_ERROR)
 						{
-							Net_connect_socket_id = INVALID_SOCKET;
+							Net_connect_socket_id = -1;
 							reliable_sockets[i].status = RNF_UNUSED;
 							memset(&reliable_sockets[i],0,sizeof(reliable_socket));
 							mprintf((0,"Unable to send packet in nw_ConnectToServer()\n"));
@@ -2339,8 +2339,8 @@ async_dns_lookup *lastaslu = NULL;
 
 #ifdef __LINUX__
 int CDECLCALL gethostbynameworker(void *parm);
-#include "SDL.h"
-#include "SDL_thread.h"
+#include <SDL3/SDL.h>
+//#include "SDL_thread.h"
 
 // rcg06192000 use SDL threads.
 //#include <pthread.h>
@@ -2453,7 +2453,7 @@ int nw_Asyncgethostbyname(unsigned int *ip,int command, char *hostname)
             // rcg06192000 SDLified.
 			//pthread_t thread;
 			//dpthread_create(&thread, NULL, gethostbynameworker,newaslu);
-            aslu.threadId = SDL_CreateThread(gethostbynameworker, &aslu);
+            aslu.threadId = SDL_CreateThread(gethostbynameworker, "DNSLookup", &aslu);
 		}
 #else
 		HOSTENT *he = gethostbyname(lastaslu->host);

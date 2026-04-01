@@ -102,7 +102,7 @@
 //Linux includes/defines
 #if !MACOSX
 #include <linux/types.h>
-#include <linux/ipx.h>
+//#include <linux/ipx.h>
 //#include <linux/if.h>
 #endif
 

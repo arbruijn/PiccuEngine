@@ -57,7 +57,7 @@
 #define LID_COUNTERMEASURES		4
 #define LID_INVENTORY			5
 
-typedef struct tLineInfo
+struct tLineInfo
 {
 	ubyte type;
 	char *name;

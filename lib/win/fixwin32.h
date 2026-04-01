@@ -44,6 +44,8 @@
 // is generated when converting doubles to floats
 // A thousand pardons for the confusion
 
+#ifdef _MSC_VER
+
 #pragma warning (disable:4035)
 
 inline fix FixDiv (fix a,fix b)
@@ -73,6 +75,7 @@ inline fix FixMul (fix a,fix b)
 
 inline fix FixMulDiv (fix a,fix b,fix c)
 {
+	#ifdef _MSC_VER
 	__asm 	
 	{
 		mov eax, a
@@ -81,8 +84,19 @@ inline fix FixMulDiv (fix a,fix b,fix c)
 		imul edx
 		idiv ebx
 	}
+	#else
+	fix ret;
+	asm("imul %0\n\t"
+		"idiv %%ebx"
+		: "=a" (ret)
+		: "a" (a), "g" (b), "b" (c)
+		: "cc", "edx")
+	return ret;
+	#endif
 }
 
 #pragma warning (default:4035)
+
+#endif
 
 #endif

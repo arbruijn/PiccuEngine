@@ -82,14 +82,14 @@ bool compute_dodge_dir(/* vector *dodge_dir, */object *obj, object *dodge_obj);
 
 // Inside walkers will suck resources
 
-extern char *Ai_class_strings[MAX_AI_INIT_CLASSES] =
+char *Ai_class_strings[MAX_AI_INIT_CLASSES] =
 {
 "Static",
 "Pure Path",
 "Fully AIS"
 };
 
-extern char *Ai_type_strings[MAX_AI_INIT_TYPES] =
+char *Ai_type_strings[MAX_AI_INIT_TYPES] =
 {
 "Fly Lander",
 "Stalker",
@@ -102,7 +102,7 @@ extern char *Ai_type_strings[MAX_AI_INIT_TYPES] =
 "Herd 1"
 };
 
-extern char *Ai_movement_type_strings[MAX_AI_INIT_MOVEMENT_TYPES] =
+char *Ai_movement_type_strings[MAX_AI_INIT_MOVEMENT_TYPES] =
 {
 "Standing",
 "Flying",
@@ -111,7 +111,7 @@ extern char *Ai_movement_type_strings[MAX_AI_INIT_MOVEMENT_TYPES] =
 };
 
 // AI Movement flying types
-extern char *Ai_movement_subtype_flying_strings[MAX_AI_INIT_MOVEMENT_SUBTYPES] =
+char *Ai_movement_subtype_flying_strings[MAX_AI_INIT_MOVEMENT_SUBTYPES] =
 {
 "Normal",
 "Path",
@@ -124,7 +124,7 @@ extern char *Ai_movement_subtype_flying_strings[MAX_AI_INIT_MOVEMENT_SUBTYPES] =
 
 // AI Movement walking types
 
-extern char *Ai_movement_subtype_walking_strings[MAX_AI_INIT_MOVEMENT_SUBTYPES] =
+char *Ai_movement_subtype_walking_strings[MAX_AI_INIT_MOVEMENT_SUBTYPES] =
 {
 "Restricted Flat",
 "Restricted Low-angle",
