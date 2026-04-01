@@ -762,7 +762,21 @@ bool ddio_CopyFile(const char* srcfile, const char* destfile)
 
     return false;
 #else
-#error "ddio_CopyFile: Not implemented for this platform!"
+    FILE *src = fopen(srcfile, "rb");
+    if (!src) return false;
+    FILE *dest = fopen(destfile, "wb");
+    if (!dest) {
+        fclose(src);
+        return false;
+    }
+    char buffer[4096];
+    size_t bytes;
+    while ((bytes = fread(buffer, 1, sizeof(buffer), src)) > 0) {
+        fwrite(buffer, 1, bytes, dest);
+    }
+    fclose(src);
+    fclose(dest);
+    return true;
 #endif
 }
 

@@ -784,30 +784,17 @@ unsigned int ChttpGet::ReadDataChannel()
 
     }while (nBytesRecv > 0);
 
-	// Close the file and check for error returns.
-	if (nBytesRecv == SOCKET_ERROR)
-	{ 
-		//Ok, we got a socket error -- xfer aborted?
-		m_State = HTTP_STATE_RECV_FAILED;
-		return 0;
-	}
-	else
-	{
-		//OutputDebugString("HTTP File complete!\n");
-		//done!
-		m_State = HTTP_STATE_FILE_RECEIVED;
-		return 1;
-	}
-}	
+    fclose(LOCALFILE);							
 
 
-typedef struct _async_dns_lookup
-{
-	unsigned int ip;	//resolved host. Write only to worker thread.
-	char * host;//host name to resolve. read only to worker thread
-	bool done;	//write only to the worker thread. Signals that the operation is complete
-	bool error; //write only to worker thread. Thread sets this if the name doesn't resolve
-	bool abort;	//read only to worker thread. If this is set, don't fill in the struct.
+
+    typedef struct _async_dns_lookup
+    {
+    unsigned int ip;	//resolved host. Write only to worker thread.
+    char * host;//host name to resolve. read only to worker thread
+    bool done;	//write only to the worker thread. Signals that the operation is complete
+    bool error; //write only to worker thread. Thread sets this if the name doesn't resolve
+    bool abort;	//read only to worker thread. If this is set, don't fill in the struct.
 
     #ifdef __LINUX__
     SDL_Thread *threadId;

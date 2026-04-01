@@ -546,13 +546,15 @@ void AddSpecFacesToBuffer(MeshBuilder& mesh, std::vector<SortableElement>& eleme
 		}
 
 		mesh.EndVertices();
-		SpecularDrawElement element;
-		element.texturenum = lasttmap;
-		element.lmhandle = lastlm;
-		element.range = mesh.EndIndices();
-		element.range.offset += firstIndex;
-		element.special = &SpecialFaces[fp.special_handle];
-		interactions.push_back(element);
+		{
+			SpecularDrawElement element;
+			element.texturenum = lasttmap;
+			element.lmhandle = lastlm;
+			element.range = mesh.EndIndices();
+			element.range.offset += firstIndex;
+			element.special = &SpecialFaces[fp.special_handle];
+			interactions.push_back(element);
+		}
 	}
 }
 
