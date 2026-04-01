@@ -23,7 +23,7 @@
 
 #if defined(WIN32)
 //Windows includes
-#define NOMINMAX //why do I have to include windows.h in half the project..
+#define NOMINMAX 1 //why do I have to include windows.h in half the project..
 #include <winsock.h>
 
 //helper macros for working with SOCKADDR_IN to make it look nicer between windows and Linux
@@ -87,10 +87,18 @@ inline void INADDR_GET_SUN_SUNB(struct in_addr* st,unsigned char *s_b1,unsigned 
 #include <fcntl.h>
 
 //rcg06212000 my SDL adds.
-#include "SDL.h"
-#include "SDL_thread.h"
+#include <SDL3/SDL.h>
+
+#ifdef __LINUX__
+#include <unistd.h>
+#define closesocket(x) close(x)
+#endif
 
 #include "linux/linux_fix.h"
+
+#ifdef WIN32
+typedef int socklen_t;
+#endif
 
 #ifndef SOCKET
 #define SOCKET int

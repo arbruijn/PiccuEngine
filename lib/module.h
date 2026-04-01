@@ -54,7 +54,11 @@ struct module
 #include <dlfcn.h>
 
 #define MODPROCADDRESS	void*
+#ifdef __i386__
 #define DLLFUNCCALL		__attribute__((stdcall))
+#else
+#define DLLFUNCCALL
+#endif
 #define DLLFUNCCALLPTR	DLLFUNCCALL*
 #define DLLFUNCEXPORT
 #define DLLFUNCIMPORT
