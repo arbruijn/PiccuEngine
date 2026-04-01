@@ -19,6 +19,7 @@
 #ifndef WIN32DATABASE
 #define WIN32DATABASE
 
+#include <inttypes.h>
 
 /* oeWin32AppDatabase
 	to get info about the application from a managed database (or a custom info file)
