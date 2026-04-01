@@ -763,7 +763,7 @@ unsigned int ChttpGet::ReadDataChannel()
     		}
 
 
-	fclose(LOCALFILE);							
+    }while (nBytesRecv > 0);
 
 	// Close the file and check for error returns.
 	if (nBytesRecv == SOCKET_ERROR)

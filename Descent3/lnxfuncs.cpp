@@ -16,7 +16,20 @@ typedef unsigned ReadFunction(void *data, void *buf, unsigned qty);
 typedef struct {bool empty;} AudioDecoder;
 AudioDecoder *Create_AudioDecoder(ReadFunction *reader, void *data,unsigned *pChannels, unsigned *pSampleRate,long *pSampleCount)
 {
-	return malloc(sizeof(AudioDecoder));	
+	if(mptr)
+		free(mptr);
+}
+	
+void *GlobalAlloc(int flags,int size)
+{
+	if(size<=0)
+		return NULL;
+	return malloc(size);
+}
+
+void *GlobalLock(HGLOBAL hMem)
+{
+	return hMem;
 }
 
 // Read from audio decoder at most the specified qty of bytes
