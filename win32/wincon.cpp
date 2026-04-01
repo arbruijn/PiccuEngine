@@ -17,7 +17,7 @@
 */
 
 #include "DDAccess.h"
-#include "Application.h"
+#include "application.h"
 #include "AppConsole.h"
 
 #define WIN32_LEAN_AND_MEAN
