@@ -41,14 +41,10 @@ typedef int socklen_t;
 
 #ifdef __LINUX__
 int FTPObjThread( void * obj )
-#else
-void FTPObjThread( void * obj )
-#endif
 {
 	((CFtpGet *)obj)->WorkerThread();
 	#ifdef __LINUX__
 	return 0;
-	#endif
 }
 
 void CFtpGet::AbortGet()

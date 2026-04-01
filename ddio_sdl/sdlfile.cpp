@@ -34,6 +34,11 @@
 #include "ddio.h"
 #include "mem.h"
 
+#include "Macros.h"
+
+#ifndef _MAX_DIR
+#define _MAX_DIR 256
+#endif
 //	---------------------------------------------------------------------------
 //	File operations
 
@@ -77,6 +82,15 @@ bool ddio_FileDiff(const char* path1, const char* path2)
 		Int3();		//error getting stat info
 
 	if ((abuf.st_size != bbuf.st_size) || (abuf.st_mtime != bbuf.st_mtime))
+#else
+	struct stat abuf, bbuf;
+
+	if (stat(path1, &abuf))
+		Int3();		//error getting stat info
+
+	if (stat(path2, &bbuf))
+		Int3();		//error getting stat info
+#endif
 		return true;
 
 	return false;
@@ -564,6 +578,14 @@ int ddio_GetFileSysRoots(char** roots, int max_roots)
 //	srcPath is the original path
 //	dest is the finished cleaned path.
 //		dest should be at least _MAX_PATH in size
+#else
+    if (max_roots > 0) {
+        roots[0] = (char*)mem_malloc(2);
+        strcpy(roots[0], "/");
+        return 1;
+    }
+    return 0;
+#endif
 void ddio_CleanPath(char* dest, const char* srcPath)
 {
     strcpy(dest, srcPath);

@@ -839,6 +839,7 @@ void DumpCallsStack( DumpBuffer& dumpBuffer )
 	dumpBuffer.Printf( separator ) ;
 	PE_debug.ClearReport() ;  // Prepare for future calls
 }
+#endif
 
 
 // This ought to be local to VerboseAssert, but it
@@ -1039,6 +1040,7 @@ static void ShowModuleInfo(HANDLE LogFile, HINSTANCE ModuleHandle)
 	}
 }
 
+#endif	
 // Scan memory looking for code modules (DLLs or EXEs). VirtualQuery is used
 // to find all the blocks of address space that were reserved or committed,
 // and ShowModuleInfo will display module information if they are code
@@ -1216,6 +1218,7 @@ int __cdecl RecordExceptionInfo(PEXCEPTION_POINTERS data, const char *Message)
 	if(Debug_break)
 		return EXCEPTION_CONTINUE_SEARCH;
 	else 
+#endif
 		return EXCEPTION_EXECUTE_HANDLER;
 }
 

@@ -238,6 +238,7 @@ bool GL_GetWGLExtensionProcs()
 {
 	HWND DummyHWND = InitDummy();
 	HDC DummyDC = GetDC(DummyHWND);
+	HGLRC DummyResourceContext = nullptr;
 
 	// Finds an acceptable pixel format to render to
 	PIXELFORMATDESCRIPTOR pfd, pfd_copy;

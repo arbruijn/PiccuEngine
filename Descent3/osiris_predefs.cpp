@@ -3433,6 +3433,7 @@ void osipf_AIGoalValue(int obj_handle, char g_index, char op, char vtype, void* 
 	break;
 	case AIGV_I_SCRIPTED_DATA_PTR:
 	{
+		// this code doesn't work, likely unused
 		if (op == VF_GET)
 			ptr = g_ptr->g_info.scripted_data_ptr;
 		else if (op == VF_SET)

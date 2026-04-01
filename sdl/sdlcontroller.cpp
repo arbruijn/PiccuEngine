@@ -21,6 +21,7 @@
 #include <windows.h>
 #include <process.h>
 
+#endif
 #include <math.h>
 
 #include "pserror.h"

@@ -84,5 +84,16 @@ inline fix FixMulDiv (fix a,fix b,fix c)
 }
 
 #pragma warning (default:4035)
+	#else
+	fix ret;
+	asm("imul %0\n\t"
+		"idiv %%ebx"
+		: "=a" (ret)
+		: "a" (a), "g" (b), "b" (c)
+		: "cc", "edx")
+	return ret;
+	#endif
+
+#endif
 
 #endif

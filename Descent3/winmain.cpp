@@ -383,6 +383,7 @@ bool SupportsCPUID ()
 		enabled=false;
 	}
 
+	#endif
 	return enabled;
 }
 
@@ -602,6 +603,7 @@ void getcpudata(cpuinfo *info)
 }
 
 //	---------------------------------------------------------------------------
+#endif
 //	WinMain
 //		creates all the OS objects and then runs Descent 3.
 //		this is all this function should do.
@@ -696,10 +698,12 @@ int PASCAL WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR szCmdLine, int nC
 		result = HandledWinMain(hInst,hPrevInst,szCmdLine,nCmdShow);
 	}
 	__except(RecordExceptionInfo(GetExceptionInformation(), "WinMain()"))
+#endif
 	{
 
 	}
 	return result;
 }
 
+#endif
 #endif

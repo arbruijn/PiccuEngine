@@ -234,6 +234,7 @@ bool Debug_ConsoleInit()
 		else 
 			Mono_initialized = 0;
 	}
+#if 0
 	else {
 		_outp( 0x3b4, 0x0f );
 		_outp( 0x3b4+1, 0x55 );
@@ -250,6 +251,7 @@ bool Debug_ConsoleInit()
 		}
 		Mono_screen = (mono_element (*)[25][80])0xB0000;
 	}
+#endif
 
 	if (Mono_initialized) 
 		OPEN=1;
@@ -591,6 +593,10 @@ void copy_row(int nwords,short *src, short *dest1, short *dest2 )
 		done:	
 	}
 }
+	#else
+	memcpy(dest1, src, nwords*2);
+	memcpy(dest2, src, nwords*2);
+	#endif
 
 
 void con_scroll( int n )
@@ -630,10 +636,12 @@ void con_setcursor(int row, int col)
 	}
 
 	_outp( 0x3b4, 15 );
+#if 0
 	_outp( 0x3b5, pos & 0xFF );
 	_outp( 0x3b4, 14 );
 	_outp( 0x3b5, (pos >> 8) & 0xff );
 }
+#endif	
 
 
 void con_drawbox(int n)

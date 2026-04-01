@@ -60,7 +60,6 @@ inline void Sleep(int millis)
 void __cdecl http_gethostbynameworker(void *parm);
 #else
 int http_gethostbynameworker(void *parm);
-#endif
 
 int http_Asyncgethostbyname(unsigned int *ip,int command, char *hostname);
 
@@ -68,7 +67,6 @@ int http_Asyncgethostbyname(unsigned int *ip,int command, char *hostname);
 void HTTPObjThread( void * obj )
 #else
 int HTTPObjThread( void * obj )
-#endif
 {
 	((ChttpGet *)obj)->WorkerThread();
 	((ChttpGet *)obj)->m_Aborted = true;
@@ -76,7 +74,6 @@ int HTTPObjThread( void * obj )
 
 	#ifdef __LINUX__
 	return 0;
-	#endif
 }
 
 void ChttpGet::AbortGet()
@@ -748,10 +745,23 @@ unsigned int ChttpGet::ReadDataChannel()
 		{
 			fwrite(sDataBuffer,nBytesRecv,1,LOCALFILE);
 			//Write sDataBuffer, nBytesRecv
+    // Close the file and check for error returns.
+    if (nBytesRecv == SOCKET_ERROR)
+    { 
+    //Ok, we got a socket error -- xfer aborted?
+    m_State = HTTP_STATE_RECV_FAILED;
+    return 0;
+    }
+    else
+    {
+    //OutputDebugString("HTTP File complete!\n");
+    //done!
+    m_State = HTTP_STATE_FILE_RECEIVED;
+    return 1;
+    }
+    }
     		}
-		
 
-	}while (nBytesRecv > 0);
 
 	fclose(LOCALFILE);							
 

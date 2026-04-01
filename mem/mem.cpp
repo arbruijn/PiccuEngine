@@ -689,6 +689,7 @@ void mem_Init()
 #endif
 	_CrtSetDbgFlag(flags);
 	//atexit(mem_Free);
+	#endif
 #endif
 }
 // Returns the number of dynamically allocated bytes

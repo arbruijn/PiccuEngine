@@ -53,7 +53,6 @@
 #include "DMFC.h"
 #include "dmfcinternal.h"
 
-#ifdef MACINTOSH
 #include <stdlib.h>
 #endif
 

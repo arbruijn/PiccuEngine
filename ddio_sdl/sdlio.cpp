@@ -31,6 +31,7 @@
 #include "ddio.h"
 #include "dinput.h"
 
+#endif
 #include "forcefeedback.h"
 
 bool 				DDIO_init = false;
