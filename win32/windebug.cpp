@@ -777,6 +777,7 @@ int PE_Debug::DumpDebugInfo( DumpBuffer& dumpBuffer, const BYTE* caller, HINSTAN
 
 void DumpCallsStack( DumpBuffer& dumpBuffer )
 {
+#ifdef _MSC_VER
 	const char* separator = "------------------------------------------------------------------\r\n" ;
 	static PE_Debug PE_debug ;
 
@@ -994,6 +995,7 @@ static void PrintFileTime(char *sztime, FILETIME ftime)
 static void ShowModuleInfo(HANDLE LogFile, HINSTANCE ModuleHandle)
 {
 	char FmtString[2000];
+#ifdef _MSC_VER
 	unsigned long bytesout;
 	char ModName[MAX_PATH];
 	__try
@@ -1154,6 +1156,7 @@ int __cdecl RecordExceptionInfo(PEXCEPTION_POINTERS data, const char *Message)
 {
 	static int BeenHere;
 	if (BeenHere)	// Going recursive! That must mean this routine crashed!
+#ifdef _MSC_VER
 		return EXCEPTION_CONTINUE_SEARCH;
 	BeenHere = true;
 

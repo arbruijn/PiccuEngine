@@ -21,7 +21,7 @@
 
 #include "newui.h"
 
-#if defined(LINUX)
+#ifndef _MSC_VER
     void CIListBoxCallback(int ID,void *);
     void CISliderCallback(int ID,void *);
 #endif

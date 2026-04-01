@@ -682,6 +682,7 @@ void mem_Init()
 	if (!Mem_failsafe_block) {
 		Error("No available heap memory.");
 	}
+	#ifdef _MSC_VER
 	_set_new_handler(handle_program_memory_depletion);
 	int flags = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
 #ifdef _DEBUG

@@ -369,6 +369,7 @@ bool SupportsCPUID ()
 {
 	bool enabled=true;
 
+	#ifdef _MSC_VER
 	__try
 	{
 		_asm{
@@ -516,6 +517,7 @@ end_win32_check:
 }
 
 __declspec(no_sanitize_address)
+#ifdef _MSC_VER
 void getcpudata(cpuinfo *info)
 {
 	unsigned char family,model,mask;
@@ -695,11 +697,13 @@ int PASCAL WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR szCmdLine, int nC
 	
 	__try
 	{
+#ifdef _MSC_VER
 		result = HandledWinMain(hInst,hPrevInst,szCmdLine,nCmdShow);
 	}
 	__except(RecordExceptionInfo(GetExceptionInformation(), "WinMain()"))
 #endif
 	{
+#ifdef _MSC_VER
 
 	}
 	return result;

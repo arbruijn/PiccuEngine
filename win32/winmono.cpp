@@ -570,6 +570,7 @@ void copy_row(int nwords,short *src, short *dest1, short *dest2 )
 
 	__asm {
 		mov ecx,nwords
+	#ifdef _MSC_VER
 		mov esi,src
 		mov ebx,dest1
 		mov edx,dest2

@@ -330,6 +330,7 @@
 	#ifdef Int3
 		#undef Int3
 	#endif
+	#ifdef _MSC_VER
 	#define Int3() do { \
 		mprintf((0, "Int3 at %s line %d.\n", __FILE__, __LINE__));	\
 		if (DLLDebugBreak_callback_stop)  \
