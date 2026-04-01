@@ -508,6 +508,9 @@ char* ddio_GetUserDir(const char* extraname)
     }
 
     strcpy(narrowstr, savepath);
+    if (savepath == nullptr) // for XDG (linux)
+        savepath = SDL_GetUserFolder(SDL_FOLDER_DOCUMENTS);
+        
     if (extraname)
     {
         //The strcpy will null terminate this.
