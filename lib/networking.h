@@ -96,6 +96,10 @@ inline void INADDR_GET_SUN_SUNB(struct in_addr* st,unsigned char *s_b1,unsigned 
 #define SOCKET int
 #endif
 
+#ifdef WIN32
+typedef int socklen_t;
+#endif
+
 #define BOOL bool
 #define SOCKADDR_IN sockaddr_in
 #define SOCKADDR_IPX sockaddr_ipx

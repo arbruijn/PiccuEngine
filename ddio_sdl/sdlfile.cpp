@@ -25,7 +25,7 @@
 #include <Windows.h>
 #include <io.h>
 #include <sys/utime.h>
-#elif defined(UNIX)
+#elif defined(__LINUX__)
 #include <unistd.h>
 #include <utime.h>
 #include <signal.h>
@@ -80,6 +80,7 @@ bool ddio_FileDiff(const char* path1, const char* path2)
 		Int3();		//error getting stat info
 
 	if (_stat(path2, &bbuf))
+#ifdef WIN32
 		Int3();		//error getting stat info
 
 	if ((abuf.st_size != bbuf.st_size) || (abuf.st_mtime != bbuf.st_mtime))
@@ -555,6 +556,7 @@ int ddio_GetFileSysRoots(char** roots, int max_roots)
     char* strptr = buffer;
     char* string;
     int strsize;
+#ifdef WIN32
     while ((count < max_roots) && (!done)) {
         if (*strptr != 0) {
             strsize = strlen(strptr);

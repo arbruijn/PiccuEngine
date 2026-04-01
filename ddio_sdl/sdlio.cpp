@@ -29,6 +29,7 @@
 #include "pstring.h"
 #include "Application.h"
 #include "ddio.h"
+#ifdef WIN32
 #include "dinput.h"
 
 #endif

@@ -56,23 +56,16 @@ inline void Sleep(int millis)
 #define NW_AGHBN_LOOKUP		2
 #define NW_AGHBN_READ		3
 
-#ifndef __LINUX__
-void __cdecl http_gethostbynameworker(void *parm);
-#else
 int http_gethostbynameworker(void *parm);
 
 int http_Asyncgethostbyname(unsigned int *ip,int command, char *hostname);
 
-#ifndef __LINUX__
-void HTTPObjThread( void * obj )
-#else
 int HTTPObjThread( void * obj )
 {
 	((ChttpGet *)obj)->WorkerThread();
 	((ChttpGet *)obj)->m_Aborted = true;
 	//OutputDebugString("http transfer exiting....\n");
 
-	#ifdef __LINUX__
 	return 0;
 }
 
@@ -722,6 +715,7 @@ unsigned int ChttpGet::ReadDataChannel()
     nBytesRecv = recv(m_DataSock, (char *)&sDataBuffer,sizeof(sDataBuffer), 0);
 
     		if(m_Aborting)
+<<<<<<< ours
 		{
 			fclose(LOCALFILE);
 			return 0;
@@ -760,6 +754,31 @@ unsigned int ChttpGet::ReadDataChannel()
     return 1;
     }
     }
+=======
+    {
+    fclose(LOCALFILE);
+    return 0;
+    }
+
+    if(SOCKET_ERROR == nBytesRecv)
+    {	
+    int error = WSAGetLastError();
+    #ifdef __LINUX__
+    if(WSAEWOULDBLOCK==error || 0==error)
+    #else
+    if(WSAEWOULDBLOCK==error)
+    #endif
+    {
+    nBytesRecv = 1;
+    continue;
+    }
+    }
+    m_iBytesIn += nBytesRecv;
+    if (nBytesRecv > 0 )
+    {
+    fwrite(sDataBuffer,nBytesRecv,1,LOCALFILE);
+    //Write sDataBuffer, nBytesRecv
+>>>>>>> theirs
     		}
 
 
@@ -878,36 +897,26 @@ int http_Asyncgethostbyname(unsigned int *ip,int command, char *hostname)
 
     }
 
-// This is the worker thread which does the lookup.
-#ifndef __LINUX__
-void __cdecl http_gethostbynameworker(void *parm)
-#else
-int http_gethostbynameworker(void *parm)
-#endif
-{
-#ifdef __LINUX__
-	//df_pthread_detach(df_pthread_self());
-#endif
-	async_dns_lookup *lookup = (async_dns_lookup *)parm;
-	HOSTENT *he = gethostbyname(lookup->host);
-	if(he==NULL)
-	{
-		lookup->error = true;
-		#ifdef __LINUX__
-		return NULL;
-		#else
-		return;
-		#endif
-	}
-	else if(!lookup->abort)
-	{
-		memcpy(&lookup->ip,he->h_addr_list[0],sizeof(unsigned int));
-		lookup->done = true;
-		memcpy(&httpaslu,lookup,sizeof(async_dns_lookup));
-	}
-	mem_free(lookup);
+    // This is the worker thread which does the lookup.
+    int http_gethostbynameworker(void *parm)
+    {
+    #ifdef __LINUX__
+    //df_pthread_detach(df_pthread_self());
+    #endif
+    async_dns_lookup *lookup = (async_dns_lookup *)parm;
+    HOSTENT *he = gethostbyname(lookup->host);
+    if(he==NULL)
+    {
+    lookup->error = true;
+    return 0;
+    }
+    else if(!lookup->abort)
+    {
+    memcpy(&lookup->ip,he->h_addr_list[0],sizeof(unsigned int));
+    lookup->done = true;
+    memcpy(&httpaslu,lookup,sizeof(async_dns_lookup));
+    }
+    mem_free(lookup);
 
-#ifdef __LINUX__
-	return NULL;
-#endif
-}
+    return 0;
+    }

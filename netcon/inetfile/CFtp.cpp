@@ -39,11 +39,9 @@ typedef int socklen_t;
 
 #include "CFtp.h"
 
-#ifdef __LINUX__
 int FTPObjThread( void * obj )
 {
 	((CFtpGet *)obj)->WorkerThread();
-	#ifdef __LINUX__
 	return 0;
 }
 
