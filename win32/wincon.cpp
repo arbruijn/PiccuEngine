@@ -28,6 +28,8 @@
 #include <process.h>
 #include <stdio.h>
 
+#include "Macros.h"
+
 #define CON_SCROLL_ROWS 25
 #define CON_SCROLL_COLS 80
 
