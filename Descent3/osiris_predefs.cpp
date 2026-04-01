@@ -2319,7 +2319,7 @@ void osipf_MatcenValue(int matcen_id, char op, char var_handle, void* ptr, int i
 		break;
 	case MTNSV_I_SPAWN_POINT:
 		if (op == VF_GET)
-			Matcen[matcen_id]->SetSpawnPnt(index, *(int*)index);
+			Matcen[matcen_id]->SetSpawnPnt(index, *(int*)ptr);
 		else if (op == VF_SET)
 			(*(int*)ptr) = Matcen[matcen_id]->GetSpawnPnt(index);
 		break;
@@ -3433,10 +3433,11 @@ void osipf_AIGoalValue(int obj_handle, char g_index, char op, char vtype, void* 
 	break;
 	case AIGV_I_SCRIPTED_DATA_PTR:
 	{
+		// this code doesn't work, likely unused
 		if (op == VF_GET)
 			ptr = g_ptr->g_info.scripted_data_ptr;
 		else if (op == VF_SET)
-			g_ptr->g_info.scripted_data_ptr = (void*)(*(int*)ptr);
+			g_ptr->g_info.scripted_data_ptr = (void*)(intptr_t)(*(intptr_t*)ptr);
 	}
 	break;
 	case AIGV_V_VEC_TO_TARGET:
