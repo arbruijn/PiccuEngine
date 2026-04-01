@@ -31,7 +31,7 @@
 #include <stdlib.h>
 #include <io.h>
 #include <fcntl.h>
-#include <sys\stat.h>
+#include <sys/stat.h>
 
 extern bool Debug_NT;
 extern bool Debug_print_block = false;
@@ -234,6 +234,7 @@ bool Debug_ConsoleInit()
 		else 
 			Mono_initialized = 0;
 	}
+#if 0
 	else {
 		_outp( 0x3b4, 0x0f );
 		_outp( 0x3b4+1, 0x55 );
@@ -250,6 +251,7 @@ bool Debug_ConsoleInit()
 		}
 		Mono_screen = (mono_element (*)[25][80])0xB0000;
 	}
+#endif
 
 	if (Mono_initialized) 
 		OPEN=1;
@@ -566,6 +568,7 @@ void con_mputc( int n, char c )
 void copy_row(int nwords,short *src, short *dest1, short *dest2 )
 {
 
+	#ifdef _MSC_VER
 	__asm {
 		mov ecx,nwords
 		mov esi,src
@@ -590,6 +593,10 @@ void copy_row(int nwords,short *src, short *dest1, short *dest2 )
 		loop		rowloop				
 		done:	
 	}
+	#else
+	memcpy(dest1, src, nwords*2);
+	memcpy(dest2, src, nwords*2);
+	#endif
 }
 
 
@@ -629,10 +636,12 @@ void con_setcursor(int row, int col)
 		return;
 	}
 
+#if 0
 	_outp( 0x3b4, 15 );
 	_outp( 0x3b5, pos & 0xFF );
 	_outp( 0x3b4, 14 );
 	_outp( 0x3b5, (pos >> 8) & 0xff );
+#endif	
 }
 
 
