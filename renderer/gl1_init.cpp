@@ -19,7 +19,7 @@
 #include "gl1_local.h"
 #include "args.h"
 #ifdef WIN32
-#define NOMINMAX
+#define NOMINMAX 1
 #include <Windows.h>
 #endif
 

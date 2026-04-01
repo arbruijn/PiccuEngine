@@ -719,7 +719,7 @@ unsigned int ChttpGet::ReadDataChannel()
 			return 0;		
 		}
 
-		nBytesRecv = recv(m_DataSock, (char *)&sDataBuffer,sizeof(sDataBuffer), 0);
+    nBytesRecv = recv(m_DataSock, (char *)&sDataBuffer,sizeof(sDataBuffer), 0);
 
     		if(m_Aborting)
 		{
@@ -876,7 +876,7 @@ int http_Asyncgethostbyname(unsigned int *ip,int command, char *hostname)
 	}
 	return -2;
 
-}
+    }
 
 // This is the worker thread which does the lookup.
 #ifndef __LINUX__

@@ -67,7 +67,7 @@ bool ddio_SetWorkingDir(const char* path)
 #ifdef WIN32
 	return (SetCurrentDirectory(path)) ? true : false;
 #else
-#error "ddio_SetWorkingDir: Not implemented for current platform"
+	return (chdir(path) == 0);
 #endif
 }
 
@@ -262,7 +262,7 @@ bool ddio_DirExists(const char* path)
 //		the last argument in the list of sub dirs *MUST* be NULL to terminate the list
 void ddio_MakePath(char* newPath, const char* absolutePathHeader, const char* subDir, ...)
 {
-    const char	delimiter = '\\';
+    const char	delimiter = '/';
     va_list		args;
     char* currentDir = NULL;
     int			pathLength = 0;

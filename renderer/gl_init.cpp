@@ -22,7 +22,7 @@
 #ifdef SDL3
 #include <SDL3/SDL_video.h>
 #elif WIN32
-#define NOMINMAX
+#define NOMINMAX 1
 #include <Windows.h>
 #endif
 

@@ -2319,7 +2319,7 @@ void osipf_MatcenValue(int matcen_id, char op, char var_handle, void* ptr, int i
 		break;
 	case MTNSV_I_SPAWN_POINT:
 		if (op == VF_GET)
-			Matcen[matcen_id]->SetSpawnPnt(index, *(int*)index);
+			Matcen[matcen_id]->SetSpawnPnt(index, *(int*)ptr);
 		else if (op == VF_SET)
 			(*(int*)ptr) = Matcen[matcen_id]->GetSpawnPnt(index);
 		break;

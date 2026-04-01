@@ -26,12 +26,16 @@ unsigned AudioDecoder_Read(AudioDecoder *ad, void *buf, unsigned qty)
 {
 }
 
+<<<<<<< ours
 // Close audio decoder
 	struct timeval tv;
 	tv.tv_sec = millis / 1000;
 	tv.tv_usec = (millis % 1000) * 1000;
 	select(0,NULL,NULL,NULL,&tv);
 void AudioDecoder_Close(AudioDecoder *ad)
+=======
+char *strupr(char *string)
+>>>>>>> theirs
 {
 	if(ad) free(ad);
 }
