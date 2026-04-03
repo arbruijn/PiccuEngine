@@ -6,6 +6,8 @@ SET( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS TRUE )
 
 PROJECT(Descent3)
 
+enable_testing()
+
 function(add_hog_file HOG_NAME HOG_SRC_DIR)
 	string( REPLACE "." "_" HOG_TARGET ${HOG_NAME} )
 	
@@ -180,6 +182,8 @@ ADD_SUBDIRECTORY (netcon)
 add_custom_target( revision_check ALL
 	COMMAND "${CMAKE_COMMAND}" -P "${CMAKE_SOURCE_DIR}/tools/UpdateRevision.cmake" Descent3/gitinfo.h
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+
+ADD_SUBDIRECTORY (tests)
 
 # set default cmake build type to Debug (None Debug Release RelWithDebInfo MinSizeRel)
 IF( NOT CMAKE_BUILD_TYPE )
