@@ -1,0 +1,35 @@
+EVT_INTERVAL type=256 me_handle=1001 frame_time=0.125 game_time=42.500
+EVT_AI_FRAME type=257 me_handle=1001
+EVT_DAMAGED type=258 me_handle=1001 damage=12.500 it_handle=2002 weapon_handle=3003 damage_type=4
+EVT_COLLIDE type=259 me_handle=1001 it_handle=2002
+EVT_CREATED type=260 me_handle=1001
+EVT_DESTROY type=261 me_handle=1001 is_dying=1
+EVT_TIMER type=262 me_handle=1001 id=17 game_time=84.250
+EVT_USE type=263 me_handle=1001 it_handle=2002
+EVT_AI_NOTIFY type=272 me_handle=1001 notify_type=20 it_handle=2002 goal_num=7 goal_uid=77 enabler_num=9 attack_num=9
+EVT_AI_INIT type=273 me_handle=1001
+EVT_CHANGESEG type=277 me_handle=1001 room_num=23
+EVT_SAVESTATE type=279 me_handle=-1 fileptr=0x1234
+EVT_RESTORESTATE type=280 me_handle=-1 fileptr=0x2345
+EVT_MEMRESTORE type=281 me_handle=-1 id=31 memory_ptr=0x3456
+EVT_TIMERCANCEL type=282 me_handle=1001 handle=41 detonated=1
+EVT_AIN_OBJKILLED type=283 me_handle=1001 notify_type=2 it_handle=2002 goal_num=0 goal_uid=0 enabler_num=0 attack_num=0
+EVT_AIN_SEEPLAYER type=284 me_handle=1001 notify_type=4 it_handle=2002 goal_num=0 goal_uid=0 enabler_num=0 attack_num=0
+EVT_AIN_WHITOBJECT type=285 me_handle=1001 notify_type=6 it_handle=2002 goal_num=0 goal_uid=0 enabler_num=0 attack_num=0
+EVT_AIN_GOALCOMPLETE type=286 me_handle=1001 notify_type=9 it_handle=2002 goal_num=7 goal_uid=77 enabler_num=9 attack_num=9
+EVT_AIN_GOALFAIL type=287 me_handle=1001 notify_type=10 it_handle=2002 goal_num=8 goal_uid=88 enabler_num=10 attack_num=10
+EVT_AIN_MELEE_HIT type=288 me_handle=1001 notify_type=23 it_handle=2002 goal_num=0 goal_uid=0 enabler_num=5 attack_num=5
+EVT_AIN_MELEE_ATTACK_FRAME type=289 me_handle=1001 notify_type=24 it_handle=2002 goal_num=0 goal_uid=0 enabler_num=6 attack_num=6
+EVT_AIN_MOVIE_START type=290 me_handle=1001 notify_type=27 it_handle=2002 goal_num=0 goal_uid=0 enabler_num=0 attack_num=0
+EVT_AIN_MOVIE_END type=291 me_handle=1001 notify_type=28 it_handle=2002 goal_num=0 goal_uid=0 enabler_num=0 attack_num=0
+EVT_MATCEN_CREATE type=292 me_handle=-1 it_handle=2002 id=12
+EVT_DOOR_ACTIVATE type=293 me_handle=1001
+EVT_DOOR_CLOSE type=294 me_handle=1001
+EVT_CHILD_DIED type=295 me_handle=1001 it_handle=2002
+EVT_LEVEL_GOAL_COMPLETE type=296 me_handle=-1 level_goal_index=3
+EVT_ALL_LEVEL_GOALS_COMPLETE type=297 me_handle=-1
+EVT_LEVEL_GOAL_ITEM_COMPLETE type=298 me_handle=-1 level_goal_index=4
+EVT_PLAYER_MOVIE_START type=299 me_handle=-1
+EVT_PLAYER_MOVIE_END type=300 me_handle=-1
+EVT_PLAYER_RESPAWN type=301 me_handle=-1 it_handle=2002
+EVT_PLAYER_DIES type=302 me_handle=-1 it_handle=2002
