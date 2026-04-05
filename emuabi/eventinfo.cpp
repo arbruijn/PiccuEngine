@@ -91,47 +91,47 @@ namespace
 
 #define DECLARE_32_STRUCT_FIELD(kind, name) ABI_DECL_##kind(name)
 
-	DECLARE_32_STRUCT(tOSIRISEVTINTERVAL, EventInterval32, OSIRIS_EVTINTERVAL_FIELDS)
-	DECLARE_32_STRUCT(tOSIRISEVTDAMAGED, EventDamaged32, OSIRIS_EVTDAMAGED_FIELDS)
-	DECLARE_32_STRUCT(tOSIRISEVTCOLLIDE, EventCollide32, OSIRIS_EVTCOLLIDE_FIELDS)
-	DECLARE_32_STRUCT(tOSIRISEVTDESTROY, EventDestroy32, OSIRIS_EVTDESTROY_FIELDS)
-	DECLARE_32_STRUCT(tOSIRISEVTTIMER, EventTimer32, OSIRIS_EVTTIMER_FIELDS)
-	DECLARE_32_STRUCT(tOSIRISEVTUSE, EventUse32, OSIRIS_EVTUSE_FIELDS)
-	DECLARE_32_STRUCT(tOSIRISEVTSAVESTATE, EventSaveState32, OSIRIS_EVTSAVESTATE_FIELDS)
-	DECLARE_32_STRUCT(tOSIRISEVTRESTORESTATE, EventRestoreState32, OSIRIS_EVTRESTORESTATE_FIELDS)
-	DECLARE_32_STRUCT(tOSIRISEVTAINOTIFY, EventAINotify32, OSIRIS_EVTAINOTIFY_FIELDS)
-	DECLARE_32_STRUCT(tOSIRISEVTCHANGESEG, EventChangeSeg32, OSIRIS_EVTCHANGESEG_FIELDS)
-	DECLARE_32_STRUCT(tOSIRISEVTMEMRESTORE, EventMemRestore32, OSIRIS_EVTMEMRESTORE_FIELDS)
-	DECLARE_32_STRUCT(tOSIRISEVTTIMERCANCEL, EventTimerCancel32, OSIRIS_EVTTIMERCANCEL_FIELDS)
-	DECLARE_32_STRUCT(tOSIRISEVTCHILDDIED, EventChildDied32, OSIRIS_EVTCHILDDIED_FIELDS)
-	DECLARE_32_STRUCT(tOSIRISEVTMATCENCREATE, EventMatcenCreate32, OSIRIS_EVTMATCENCREATE_FIELDS)
-	DECLARE_32_STRUCT(tOSIRISEVTLEVELGOALCOMPLETE, EventLevelGoalComplete32, OSIRIS_EVTLEVELGOALCOMPLETE_FIELDS)
-	DECLARE_32_STRUCT(tOSIRISEVTLEVELGOALITEMCOMPLETE, EventLevelGoalItemComplete32, OSIRIS_EVTLEVELGOALITEMCOMPLETE_FIELDS)
-	DECLARE_32_STRUCT(tOSIRISEVTPLAYERRESPAWN, EventPlayerRespawn32, OSIRIS_EVTPLAYERRESPAWN_FIELDS)
-	DECLARE_32_STRUCT(tOSIRISEVTPLAYERDIES, EventPlayerDies32, OSIRIS_EVTPLAYERDIES_FIELDS)
+	DECLARE_32_STRUCT(tOSIRISEVTINTERVAL, tOSIRISEVTINTERVAL32, OSIRIS_EVTINTERVAL_FIELDS)
+	DECLARE_32_STRUCT(tOSIRISEVTDAMAGED, tOSIRISEVTDAMAGED32, OSIRIS_EVTDAMAGED_FIELDS)
+	DECLARE_32_STRUCT(tOSIRISEVTCOLLIDE, tOSIRISEVTCOLLIDE32, OSIRIS_EVTCOLLIDE_FIELDS)
+	DECLARE_32_STRUCT(tOSIRISEVTDESTROY, tOSIRISEVTDESTROY32, OSIRIS_EVTDESTROY_FIELDS)
+	DECLARE_32_STRUCT(tOSIRISEVTTIMER, tOSIRISEVTTIMER32, OSIRIS_EVTTIMER_FIELDS)
+	DECLARE_32_STRUCT(tOSIRISEVTUSE, tOSIRISEVTUSE32, OSIRIS_EVTUSE_FIELDS)
+	DECLARE_32_STRUCT(tOSIRISEVTSAVESTATE, tOSIRISEVTSAVESTATE32, OSIRIS_EVTSAVESTATE_FIELDS)
+	DECLARE_32_STRUCT(tOSIRISEVTRESTORESTATE, tOSIRISEVTRESTORESTATE32, OSIRIS_EVTRESTORESTATE_FIELDS)
+	DECLARE_32_STRUCT(tOSIRISEVTAINOTIFY, tOSIRISEVTAINOTIFY32, OSIRIS_EVTAINOTIFY_FIELDS)
+	DECLARE_32_STRUCT(tOSIRISEVTCHANGESEG, tOSIRISEVTCHANGESEG32, OSIRIS_EVTCHANGESEG_FIELDS)
+	DECLARE_32_STRUCT(tOSIRISEVTMEMRESTORE, tOSIRISEVTMEMRESTORE32, OSIRIS_EVTMEMRESTORE_FIELDS)
+	DECLARE_32_STRUCT(tOSIRISEVTTIMERCANCEL, tOSIRISEVTTIMERCANCEL32, OSIRIS_EVTTIMERCANCEL_FIELDS)
+	DECLARE_32_STRUCT(tOSIRISEVTCHILDDIED, tOSIRISEVTCHILDDIED32, OSIRIS_EVTCHILDDIED_FIELDS)
+	DECLARE_32_STRUCT(tOSIRISEVTMATCENCREATE, tOSIRISEVTMATCENCREATE32, OSIRIS_EVTMATCENCREATE_FIELDS)
+	DECLARE_32_STRUCT(tOSIRISEVTLEVELGOALCOMPLETE, tOSIRISEVTLEVELGOALCOMPLETE32, OSIRIS_EVTLEVELGOALCOMPLETE_FIELDS)
+	DECLARE_32_STRUCT(tOSIRISEVTLEVELGOALITEMCOMPLETE, tOSIRISEVTLEVELGOALITEMCOMPLETE32, OSIRIS_EVTLEVELGOALITEMCOMPLETE_FIELDS)
+	DECLARE_32_STRUCT(tOSIRISEVTPLAYERRESPAWN, tOSIRISEVTPLAYERRESPAWN32, OSIRIS_EVTPLAYERRESPAWN_FIELDS)
+	DECLARE_32_STRUCT(tOSIRISEVTPLAYERDIES, tOSIRISEVTPLAYERDIES32, OSIRIS_EVTPLAYERDIES_FIELDS)
 
 #undef DECLARE_32_STRUCT_FIELD
 #undef DECLARE_32_STRUCT
 
 #if 0
-	static_assert(sizeof(EventInterval32) == sizeof(tOSIRISEVTINTERVAL32), "Event interval ABI mismatch");
-	static_assert(sizeof(EventDamaged32) == sizeof(tOSIRISEVTDAMAGED32), "Event damaged ABI mismatch");
-	static_assert(sizeof(EventCollide32) == sizeof(tOSIRISEVTCOLLIDE32), "Event collide ABI mismatch");
-	static_assert(sizeof(EventDestroy32) == sizeof(tOSIRISEVTDESTROY32), "Event destroy ABI mismatch");
-	static_assert(sizeof(EventTimer32) == sizeof(tOSIRISEVTTIMER32), "Event timer ABI mismatch");
-	static_assert(sizeof(EventUse32) == sizeof(tOSIRISEVTUSE32), "Event use ABI mismatch");
-	static_assert(sizeof(EventSaveState32) == sizeof(tOSIRISEVTSAVESTATE32), "Event save-state ABI mismatch");
-	static_assert(sizeof(EventRestoreState32) == sizeof(tOSIRISEVTRESTORESTATE32), "Event restore-state ABI mismatch");
-	static_assert(sizeof(EventAINotify32) == sizeof(tOSIRISEVTAINOTIFY32), "Event AI notify ABI mismatch");
-	static_assert(sizeof(EventChangeSeg32) == sizeof(tOSIRISEVTCHANGESEG32), "Event change-seg ABI mismatch");
-	static_assert(sizeof(EventMemRestore32) == sizeof(tOSIRISEVTMEMRESTORE32), "Event mem-restore ABI mismatch");
-	static_assert(sizeof(EventTimerCancel32) == sizeof(tOSIRISEVTTIMERCANCEL32), "Event timercancel ABI mismatch");
-	static_assert(sizeof(EventChildDied32) == sizeof(tOSIRISEVTCHILDDIED32), "Event child-died ABI mismatch");
-	static_assert(sizeof(EventMatcenCreate32) == sizeof(tOSIRISEVTMATCENCREATE32), "Event matcen-create ABI mismatch");
-	static_assert(sizeof(EventLevelGoalComplete32) == sizeof(tOSIRISEVTLEVELGOALCOMPLETE32), "Event level-goal-complete ABI mismatch");
-	static_assert(sizeof(EventLevelGoalItemComplete32) == sizeof(tOSIRISEVTLEVELGOALITEMCOMPLETE32), "Event level-goal-item-complete ABI mismatch");
-	static_assert(sizeof(EventPlayerRespawn32) == sizeof(tOSIRISEVTPLAYERRESPAWN32), "Event player-respawn ABI mismatch");
-	static_assert(sizeof(EventPlayerDies32) == sizeof(tOSIRISEVTPLAYERDIES32), "Event player-dies ABI mismatch");
+	static_assert(sizeof(tOSIRISEVTINTERVAL32) == sizeof(tOSIRISEVTINTERVAL32), "Event interval ABI mismatch");
+	static_assert(sizeof(tOSIRISEVTDAMAGED32) == sizeof(tOSIRISEVTDAMAGED32), "Event damaged ABI mismatch");
+	static_assert(sizeof(tOSIRISEVTCOLLIDE32) == sizeof(tOSIRISEVTCOLLIDE32), "Event collide ABI mismatch");
+	static_assert(sizeof(tOSIRISEVTDESTROY32) == sizeof(tOSIRISEVTDESTROY32), "Event destroy ABI mismatch");
+	static_assert(sizeof(tOSIRISEVTTIMER32) == sizeof(tOSIRISEVTTIMER32), "Event timer ABI mismatch");
+	static_assert(sizeof(tOSIRISEVTUSE32) == sizeof(tOSIRISEVTUSE32), "Event use ABI mismatch");
+	static_assert(sizeof(tOSIRISEVTSAVESTATE32) == sizeof(tOSIRISEVTSAVESTATE32), "Event save-state ABI mismatch");
+	static_assert(sizeof(tOSIRISEVTRESTORESTATE32) == sizeof(tOSIRISEVTRESTORESTATE32), "Event restore-state ABI mismatch");
+	static_assert(sizeof(tOSIRISEVTAINOTIFY32) == sizeof(tOSIRISEVTAINOTIFY32), "Event AI notify ABI mismatch");
+	static_assert(sizeof(tOSIRISEVTCHANGESEG32) == sizeof(tOSIRISEVTCHANGESEG32), "Event change-seg ABI mismatch");
+	static_assert(sizeof(tOSIRISEVTMEMRESTORE32) == sizeof(tOSIRISEVTMEMRESTORE32), "Event mem-restore ABI mismatch");
+	static_assert(sizeof(tOSIRISEVTTIMERCANCEL32) == sizeof(tOSIRISEVTTIMERCANCEL32), "Event timercancel ABI mismatch");
+	static_assert(sizeof(tOSIRISEVTCHILDDIED32) == sizeof(tOSIRISEVTCHILDDIED32), "Event child-died ABI mismatch");
+	static_assert(sizeof(tOSIRISEVTMATCENCREATE32) == sizeof(tOSIRISEVTMATCENCREATE32), "Event matcen-create ABI mismatch");
+	static_assert(sizeof(tOSIRISEVTLEVELGOALCOMPLETE32) == sizeof(tOSIRISEVTLEVELGOALCOMPLETE32), "Event level-goal-complete ABI mismatch");
+	static_assert(sizeof(tOSIRISEVTLEVELGOALITEMCOMPLETE32) == sizeof(tOSIRISEVTLEVELGOALITEMCOMPLETE32), "Event level-goal-item-complete ABI mismatch");
+	static_assert(sizeof(tOSIRISEVTPLAYERRESPAWN32) == sizeof(tOSIRISEVTPLAYERRESPAWN32), "Event player-respawn ABI mismatch");
+	static_assert(sizeof(tOSIRISEVTPLAYERDIES32) == sizeof(tOSIRISEVTPLAYERDIES32), "Event player-dies ABI mismatch");
 #endif
 
 #define DEFINE_ENCODER(native_type, generated_type, fields_macro) \
@@ -143,24 +143,24 @@ namespace
 
 #define ENCODE_STRUCT_FIELD(kind, name) ABI_COPY_##kind(name)
 
-	DEFINE_ENCODER(tOSIRISEVTINTERVAL, EventInterval32, OSIRIS_EVTINTERVAL_FIELDS)
-	DEFINE_ENCODER(tOSIRISEVTDAMAGED, EventDamaged32, OSIRIS_EVTDAMAGED_FIELDS)
-	DEFINE_ENCODER(tOSIRISEVTCOLLIDE, EventCollide32, OSIRIS_EVTCOLLIDE_FIELDS)
-	DEFINE_ENCODER(tOSIRISEVTDESTROY, EventDestroy32, OSIRIS_EVTDESTROY_FIELDS)
-	DEFINE_ENCODER(tOSIRISEVTTIMER, EventTimer32, OSIRIS_EVTTIMER_FIELDS)
-	DEFINE_ENCODER(tOSIRISEVTUSE, EventUse32, OSIRIS_EVTUSE_FIELDS)
-	DEFINE_ENCODER(tOSIRISEVTSAVESTATE, EventSaveState32, OSIRIS_EVTSAVESTATE_FIELDS)
-	DEFINE_ENCODER(tOSIRISEVTRESTORESTATE, EventRestoreState32, OSIRIS_EVTRESTORESTATE_FIELDS)
-	DEFINE_ENCODER(tOSIRISEVTAINOTIFY, EventAINotify32, OSIRIS_EVTAINOTIFY_FIELDS)
-	DEFINE_ENCODER(tOSIRISEVTCHANGESEG, EventChangeSeg32, OSIRIS_EVTCHANGESEG_FIELDS)
-	DEFINE_ENCODER(tOSIRISEVTMEMRESTORE, EventMemRestore32, OSIRIS_EVTMEMRESTORE_FIELDS)
-	DEFINE_ENCODER(tOSIRISEVTTIMERCANCEL, EventTimerCancel32, OSIRIS_EVTTIMERCANCEL_FIELDS)
-	DEFINE_ENCODER(tOSIRISEVTCHILDDIED, EventChildDied32, OSIRIS_EVTCHILDDIED_FIELDS)
-	DEFINE_ENCODER(tOSIRISEVTMATCENCREATE, EventMatcenCreate32, OSIRIS_EVTMATCENCREATE_FIELDS)
-	DEFINE_ENCODER(tOSIRISEVTLEVELGOALCOMPLETE, EventLevelGoalComplete32, OSIRIS_EVTLEVELGOALCOMPLETE_FIELDS)
-	DEFINE_ENCODER(tOSIRISEVTLEVELGOALITEMCOMPLETE, EventLevelGoalItemComplete32, OSIRIS_EVTLEVELGOALITEMCOMPLETE_FIELDS)
-	DEFINE_ENCODER(tOSIRISEVTPLAYERRESPAWN, EventPlayerRespawn32, OSIRIS_EVTPLAYERRESPAWN_FIELDS)
-	DEFINE_ENCODER(tOSIRISEVTPLAYERDIES, EventPlayerDies32, OSIRIS_EVTPLAYERDIES_FIELDS)
+	DEFINE_ENCODER(tOSIRISEVTINTERVAL, tOSIRISEVTINTERVAL32, OSIRIS_EVTINTERVAL_FIELDS)
+	DEFINE_ENCODER(tOSIRISEVTDAMAGED, tOSIRISEVTDAMAGED32, OSIRIS_EVTDAMAGED_FIELDS)
+	DEFINE_ENCODER(tOSIRISEVTCOLLIDE, tOSIRISEVTCOLLIDE32, OSIRIS_EVTCOLLIDE_FIELDS)
+	DEFINE_ENCODER(tOSIRISEVTDESTROY, tOSIRISEVTDESTROY32, OSIRIS_EVTDESTROY_FIELDS)
+	DEFINE_ENCODER(tOSIRISEVTTIMER, tOSIRISEVTTIMER32, OSIRIS_EVTTIMER_FIELDS)
+	DEFINE_ENCODER(tOSIRISEVTUSE, tOSIRISEVTUSE32, OSIRIS_EVTUSE_FIELDS)
+	DEFINE_ENCODER(tOSIRISEVTSAVESTATE, tOSIRISEVTSAVESTATE32, OSIRIS_EVTSAVESTATE_FIELDS)
+	DEFINE_ENCODER(tOSIRISEVTRESTORESTATE, tOSIRISEVTRESTORESTATE32, OSIRIS_EVTRESTORESTATE_FIELDS)
+	DEFINE_ENCODER(tOSIRISEVTAINOTIFY, tOSIRISEVTAINOTIFY32, OSIRIS_EVTAINOTIFY_FIELDS)
+	DEFINE_ENCODER(tOSIRISEVTCHANGESEG, tOSIRISEVTCHANGESEG32, OSIRIS_EVTCHANGESEG_FIELDS)
+	DEFINE_ENCODER(tOSIRISEVTMEMRESTORE, tOSIRISEVTMEMRESTORE32, OSIRIS_EVTMEMRESTORE_FIELDS)
+	DEFINE_ENCODER(tOSIRISEVTTIMERCANCEL, tOSIRISEVTTIMERCANCEL32, OSIRIS_EVTTIMERCANCEL_FIELDS)
+	DEFINE_ENCODER(tOSIRISEVTCHILDDIED, tOSIRISEVTCHILDDIED32, OSIRIS_EVTCHILDDIED_FIELDS)
+	DEFINE_ENCODER(tOSIRISEVTMATCENCREATE, tOSIRISEVTMATCENCREATE32, OSIRIS_EVTMATCENCREATE_FIELDS)
+	DEFINE_ENCODER(tOSIRISEVTLEVELGOALCOMPLETE, tOSIRISEVTLEVELGOALCOMPLETE32, OSIRIS_EVTLEVELGOALCOMPLETE_FIELDS)
+	DEFINE_ENCODER(tOSIRISEVTLEVELGOALITEMCOMPLETE, tOSIRISEVTLEVELGOALITEMCOMPLETE32, OSIRIS_EVTLEVELGOALITEMCOMPLETE_FIELDS)
+	DEFINE_ENCODER(tOSIRISEVTPLAYERRESPAWN, tOSIRISEVTPLAYERRESPAWN32, OSIRIS_EVTPLAYERRESPAWN_FIELDS)
+	DEFINE_ENCODER(tOSIRISEVTPLAYERDIES, tOSIRISEVTPLAYERDIES32, OSIRIS_EVTPLAYERDIES_FIELDS)
 
 #undef ENCODE_STRUCT_FIELD
 #undef DEFINE_ENCODER
@@ -172,6 +172,63 @@ namespace
 		encode_fn(src, encoded, vm);
 		memcpy(&dst, &encoded, sizeof(encoded));
 	}
+
+typedef struct {} tOSIRISEVTCREATED32;
+typedef struct {} tOSIRISEVTAIFRAME32;
+typedef struct {} tOSIRISEVTAIINIT32;
+typedef struct {} tOSIRISEVTLEVELSTART32;
+typedef struct {} tOSIRISEVTLEVELEND32;
+typedef struct {} tOSIRISEVTDOORACTIVATE32;
+typedef struct {} tOSIRISEVTDOORCLOSE32;
+typedef struct {} tOSIRISEVTPLAYERMOVIESTART32;
+typedef struct {} tOSIRISEVTPLAYERMOVIEEND32;
+typedef struct{
+	union{
+		tOSIRISEVTINTERVAL32		evt_interval;
+		tOSIRISEVTAIFRAME32		evt_ai_frame;
+		tOSIRISEVTDAMAGED32		evt_damaged;
+		tOSIRISEVTCOLLIDE32		evt_collide;
+		tOSIRISEVTCREATED32		evt_created;
+		tOSIRISEVTDESTROY32		evt_destroy;
+		tOSIRISEVTTIMER32			evt_timer;
+		tOSIRISEVTUSE32			evt_use;
+		tOSIRISEVTAINOTIFY32		evt_ai_notify;
+		tOSIRISEVTAINOTIFY32		evt_ain_objkilled;
+		tOSIRISEVTAINOTIFY32		evt_ain_seeplayer;
+		tOSIRISEVTAINOTIFY32		evt_ain_whitobject;
+		tOSIRISEVTAINOTIFY32		evt_ain_goalcomplete;
+		tOSIRISEVTAINOTIFY32		evt_ain_goalinvalid;
+		tOSIRISEVTAINOTIFY32		evt_ain_goalfail;
+		tOSIRISEVTAINOTIFY32		evt_ain_goalerror;
+		tOSIRISEVTAINOTIFY32		evt_ain_goalforcedone;
+		tOSIRISEVTAINOTIFY32		evt_ain_melee_hit;
+		tOSIRISEVTAINOTIFY32		evt_ain_melee_attack_frame;
+		tOSIRISEVTAINOTIFY32		evt_ain_movie_start;
+		tOSIRISEVTAINOTIFY32		evt_ain_movie_end;		
+		tOSIRISEVTAIINIT32		evt_ai_init;
+		tOSIRISEVTLEVELSTART32	evt_levelstart;
+		tOSIRISEVTLEVELEND32		evt_levelend;
+		tOSIRISEVTCHANGESEG32		evt_changeseg;
+		tOSIRISEVTSAVESTATE32		evt_savestate;
+		tOSIRISEVTRESTORESTATE32	evt_restorestate;
+		tOSIRISEVTMEMRESTORE32	evt_memrestore;
+		tOSIRISEVTTIMERCANCEL32	evt_timercancel;
+		tOSIRISEVTMATCENCREATE32	evt_matcen_create;
+		tOSIRISEVTDOORACTIVATE32	evt_door_activate;
+		tOSIRISEVTDOORCLOSE32		evt_door_close;
+		tOSIRISEVTCHILDDIED32     evt_child_died;
+		tOSIRISEVTLEVELGOALCOMPLETE32	evt_level_goal_complete;
+		tOSIRISEVTALLLEVELGOALSCOMPLETE evt_all_level_goals_complete;
+		tOSIRISEVTLEVELGOALITEMCOMPLETE32	evt_level_goal_item_complete;
+		tOSIRISEVTPLAYERMOVIESTART32	evt_player_movie_start;
+		tOSIRISEVTPLAYERMOVIEEND32	evt_player_movie_end;
+		tOSIRISEVTPLAYERRESPAWN32		evt_player_respawn;
+		tOSIRISEVTPLAYERDIES32		evt_player_dies;
+	};
+
+	ABI_DECL_I32(me_handle);
+	ABI_DECL_PTR32(extra_info);
+}tOSIRISEventInfo32;
 
 #undef ABI_COPY_I32
 #undef ABI_COPY_U8
@@ -201,8 +258,12 @@ namespace
 #undef OSIRIS_EVTPLAYERDIES_FIELDS
 }
 
-void encode_event_info(int event, const tOSIRISEventInfo& src, tOSIRISEventInfo32& dst, const VmPtrEncoder& vm)
+
+static_assert(sizeof(tOSIRISEventInfo32) == event_info_size_32, "Event interval ABI size mismatch");
+
+void encode_event_info(int event, const tOSIRISEventInfo& src, void *dstbuf, const VmPtrEncoder& vm)
 {
+	tOSIRISEventInfo32 dst;
 	memset(&dst, 0, sizeof(dst));
 	dst.me_handle = src.me_handle;
 	dst.extra_info = vm.encode_ptr32(src.extra_info);
@@ -210,7 +271,7 @@ void encode_event_info(int event, const tOSIRISEventInfo& src, tOSIRISEventInfo3
 	switch (event)
 	{
 	case EVT_INTERVAL:
-		encode_union_event<tOSIRISEVTINTERVAL32, tOSIRISEVTINTERVAL, EventInterval32>(dst.evt_interval, src.evt_interval, vm, encode_EventInterval32);
+		encode_union_event<tOSIRISEVTINTERVAL32, tOSIRISEVTINTERVAL, tOSIRISEVTINTERVAL32>(dst.evt_interval, src.evt_interval, vm, encode_tOSIRISEVTINTERVAL32);
 		break;
 	case EVT_AI_FRAME:
 	case EVT_CREATED:
@@ -222,19 +283,19 @@ void encode_event_info(int event, const tOSIRISEventInfo& src, tOSIRISEventInfo3
 	case EVT_PLAYER_MOVIE_END:
 		break;
 	case EVT_DAMAGED:
-		encode_union_event<tOSIRISEVTDAMAGED32, tOSIRISEVTDAMAGED, EventDamaged32>(dst.evt_damaged, src.evt_damaged, vm, encode_EventDamaged32);
+		encode_union_event<tOSIRISEVTDAMAGED32, tOSIRISEVTDAMAGED, tOSIRISEVTDAMAGED32>(dst.evt_damaged, src.evt_damaged, vm, encode_tOSIRISEVTDAMAGED32);
 		break;
 	case EVT_COLLIDE:
-		encode_union_event<tOSIRISEVTCOLLIDE32, tOSIRISEVTCOLLIDE, EventCollide32>(dst.evt_collide, src.evt_collide, vm, encode_EventCollide32);
+		encode_union_event<tOSIRISEVTCOLLIDE32, tOSIRISEVTCOLLIDE, tOSIRISEVTCOLLIDE32>(dst.evt_collide, src.evt_collide, vm, encode_tOSIRISEVTCOLLIDE32);
 		break;
 	case EVT_DESTROY:
-		encode_union_event<tOSIRISEVTDESTROY32, tOSIRISEVTDESTROY, EventDestroy32>(dst.evt_destroy, src.evt_destroy, vm, encode_EventDestroy32);
+		encode_union_event<tOSIRISEVTDESTROY32, tOSIRISEVTDESTROY, tOSIRISEVTDESTROY32>(dst.evt_destroy, src.evt_destroy, vm, encode_tOSIRISEVTDESTROY32);
 		break;
 	case EVT_TIMER:
-		encode_union_event<tOSIRISEVTTIMER32, tOSIRISEVTTIMER, EventTimer32>(dst.evt_timer, src.evt_timer, vm, encode_EventTimer32);
+		encode_union_event<tOSIRISEVTTIMER32, tOSIRISEVTTIMER, tOSIRISEVTTIMER32>(dst.evt_timer, src.evt_timer, vm, encode_tOSIRISEVTTIMER32);
 		break;
 	case EVT_USE:
-		encode_union_event<tOSIRISEVTUSE32, tOSIRISEVTUSE, EventUse32>(dst.evt_use, src.evt_use, vm, encode_EventUse32);
+		encode_union_event<tOSIRISEVTUSE32, tOSIRISEVTUSE, tOSIRISEVTUSE32>(dst.evt_use, src.evt_use, vm, encode_tOSIRISEVTUSE32);
 		break;
 	case EVT_AI_NOTIFY:
 	case EVT_AIN_OBJKILLED:
@@ -246,44 +307,45 @@ void encode_event_info(int event, const tOSIRISEventInfo& src, tOSIRISEventInfo3
 	case EVT_AIN_MELEE_ATTACK_FRAME:
 	case EVT_AIN_MOVIE_START:
 	case EVT_AIN_MOVIE_END:
-		encode_union_event<tOSIRISEVTAINOTIFY32, tOSIRISEVTAINOTIFY, EventAINotify32>(dst.evt_ai_notify, src.evt_ai_notify, vm, encode_EventAINotify32);
+		encode_union_event<tOSIRISEVTAINOTIFY32, tOSIRISEVTAINOTIFY, tOSIRISEVTAINOTIFY32>(dst.evt_ai_notify, src.evt_ai_notify, vm, encode_tOSIRISEVTAINOTIFY32);
 		break;
 	case EVT_CHANGESEG:
-		encode_union_event<tOSIRISEVTCHANGESEG32, tOSIRISEVTCHANGESEG, EventChangeSeg32>(dst.evt_changeseg, src.evt_changeseg, vm, encode_EventChangeSeg32);
+		encode_union_event<tOSIRISEVTCHANGESEG32, tOSIRISEVTCHANGESEG, tOSIRISEVTCHANGESEG32>(dst.evt_changeseg, src.evt_changeseg, vm, encode_tOSIRISEVTCHANGESEG32);
 		break;
 	case EVT_SAVESTATE:
-		encode_union_event<tOSIRISEVTSAVESTATE32, tOSIRISEVTSAVESTATE, EventSaveState32>(dst.evt_savestate, src.evt_savestate, vm, encode_EventSaveState32);
+		encode_union_event<tOSIRISEVTSAVESTATE32, tOSIRISEVTSAVESTATE, tOSIRISEVTSAVESTATE32>(dst.evt_savestate, src.evt_savestate, vm, encode_tOSIRISEVTSAVESTATE32);
 		break;
 	case EVT_RESTORESTATE:
-		encode_union_event<tOSIRISEVTRESTORESTATE32, tOSIRISEVTRESTORESTATE, EventRestoreState32>(dst.evt_restorestate, src.evt_restorestate, vm, encode_EventRestoreState32);
+		encode_union_event<tOSIRISEVTRESTORESTATE32, tOSIRISEVTRESTORESTATE, tOSIRISEVTRESTORESTATE32>(dst.evt_restorestate, src.evt_restorestate, vm, encode_tOSIRISEVTRESTORESTATE32);
 		break;
 	case EVT_MEMRESTORE:
-		encode_union_event<tOSIRISEVTMEMRESTORE32, tOSIRISEVTMEMRESTORE, EventMemRestore32>(dst.evt_memrestore, src.evt_memrestore, vm, encode_EventMemRestore32);
+		encode_union_event<tOSIRISEVTMEMRESTORE32, tOSIRISEVTMEMRESTORE, tOSIRISEVTMEMRESTORE32>(dst.evt_memrestore, src.evt_memrestore, vm, encode_tOSIRISEVTMEMRESTORE32);
 		break;
 	case EVT_TIMERCANCEL:
-		encode_union_event<tOSIRISEVTTIMERCANCEL32, tOSIRISEVTTIMERCANCEL, EventTimerCancel32>(dst.evt_timercancel, src.evt_timercancel, vm, encode_EventTimerCancel32);
+		encode_union_event<tOSIRISEVTTIMERCANCEL32, tOSIRISEVTTIMERCANCEL, tOSIRISEVTTIMERCANCEL32>(dst.evt_timercancel, src.evt_timercancel, vm, encode_tOSIRISEVTTIMERCANCEL32);
 		break;
 	case EVT_CHILD_DIED:
-		encode_union_event<tOSIRISEVTCHILDDIED32, tOSIRISEVTCHILDDIED, EventChildDied32>(dst.evt_child_died, src.evt_child_died, vm, encode_EventChildDied32);
+		encode_union_event<tOSIRISEVTCHILDDIED32, tOSIRISEVTCHILDDIED, tOSIRISEVTCHILDDIED32>(dst.evt_child_died, src.evt_child_died, vm, encode_tOSIRISEVTCHILDDIED32);
 		break;
 	case EVT_MATCEN_CREATE:
-		encode_union_event<tOSIRISEVTMATCENCREATE32, tOSIRISEVTMATCENCREATE, EventMatcenCreate32>(dst.evt_matcen_create, src.evt_matcen_create, vm, encode_EventMatcenCreate32);
+		encode_union_event<tOSIRISEVTMATCENCREATE32, tOSIRISEVTMATCENCREATE, tOSIRISEVTMATCENCREATE32>(dst.evt_matcen_create, src.evt_matcen_create, vm, encode_tOSIRISEVTMATCENCREATE32);
 		break;
 	case EVT_LEVEL_GOAL_COMPLETE:
-		encode_union_event<tOSIRISEVTLEVELGOALCOMPLETE32, tOSIRISEVTLEVELGOALCOMPLETE, EventLevelGoalComplete32>(dst.evt_level_goal_complete, src.evt_level_goal_complete, vm, encode_EventLevelGoalComplete32);
+		encode_union_event<tOSIRISEVTLEVELGOALCOMPLETE32, tOSIRISEVTLEVELGOALCOMPLETE, tOSIRISEVTLEVELGOALCOMPLETE32>(dst.evt_level_goal_complete, src.evt_level_goal_complete, vm, encode_tOSIRISEVTLEVELGOALCOMPLETE32);
 		break;
 	case EVT_LEVEL_GOAL_ITEM_COMPLETE:
-		encode_union_event<tOSIRISEVTLEVELGOALITEMCOMPLETE32, tOSIRISEVTLEVELGOALITEMCOMPLETE, EventLevelGoalItemComplete32>(dst.evt_level_goal_item_complete, src.evt_level_goal_item_complete, vm, encode_EventLevelGoalItemComplete32);
+		encode_union_event<tOSIRISEVTLEVELGOALITEMCOMPLETE32, tOSIRISEVTLEVELGOALITEMCOMPLETE, tOSIRISEVTLEVELGOALITEMCOMPLETE32>(dst.evt_level_goal_item_complete, src.evt_level_goal_item_complete, vm, encode_tOSIRISEVTLEVELGOALITEMCOMPLETE32);
 		break;
 	case EVT_PLAYER_RESPAWN:
-		encode_union_event<tOSIRISEVTPLAYERRESPAWN32, tOSIRISEVTPLAYERRESPAWN, EventPlayerRespawn32>(dst.evt_player_respawn, src.evt_player_respawn, vm, encode_EventPlayerRespawn32);
+		encode_union_event<tOSIRISEVTPLAYERRESPAWN32, tOSIRISEVTPLAYERRESPAWN, tOSIRISEVTPLAYERRESPAWN32>(dst.evt_player_respawn, src.evt_player_respawn, vm, encode_tOSIRISEVTPLAYERRESPAWN32);
 		break;
 	case EVT_PLAYER_DIES:
-		encode_union_event<tOSIRISEVTPLAYERDIES32, tOSIRISEVTPLAYERDIES, EventPlayerDies32>(dst.evt_player_dies, src.evt_player_dies, vm, encode_EventPlayerDies32);
+		encode_union_event<tOSIRISEVTPLAYERDIES32, tOSIRISEVTPLAYERDIES, tOSIRISEVTPLAYERDIES32>(dst.evt_player_dies, src.evt_player_dies, vm, encode_tOSIRISEVTPLAYERDIES32);
 		break;
 	default:
 		break;
 	}
+	memcpy(dstbuf, &dst, sizeof(dst));
 }
 
 }
