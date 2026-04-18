@@ -82,22 +82,25 @@ namespace
 		return 0;
 	}
 
-	static unsigned HostMSafeCallFunction(unsigned type, unsigned mstruct_ptr)
+	static void HostMSafeCallFunction(Emu86FunCtx& ctx, void *)
 	{
 		if (!curdll)
 		{
-			return 1u;
+			ctx.set_return(1u);
+			return;
 		}
 
+		const unsigned type = ctx.arg<emu_ptr_t>(0);
+		const unsigned mstruct_ptr = ctx.arg<emu_ptr_t>(1);
 		emuabi::VmPtrDecoder vm = { curdll->as.base };
 		msafe_struct decoded;
 		emuabi::decode_msafe_struct(static_cast<int>(type), vm.decode_ptr32<void>(mstruct_ptr), decoded, vm);
 		msafe_CallFunction_Test(static_cast<ubyte>(type), &decoded);
-		return 0u;
+		ctx.set_return(0u);
 	}
 
 	static const emu86_fun_t kMSafeWrapperFuns[] = {
-		{"msafe_CallFunction", 2, {.fun2 = HostMSafeCallFunction}},
+		{"msafe_CallFunction", HostMSafeCallFunction, 2, 0},
 	};
 }
 

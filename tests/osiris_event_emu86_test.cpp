@@ -133,13 +133,15 @@ namespace
 		return encoded;
 	}
 
-	static unsigned HostAppendOsirisEventLog(unsigned text_ptr)
+	static void HostAppendOsirisEventLog(Emu86FunCtx& ctx, void *)
 	{
 		if (!curdll)
 		{
-			return 1u;
+			ctx.set_return(1u);
+			return;
 		}
 
+		const unsigned text_ptr = ctx.arg<emu_ptr_t>(0);
 		emuabi::VmPtrDecoder vm = { curdll->as.base };
 		const char* text = vm.decode_ptr32<const char>(text_ptr);
 		if (text)
@@ -147,11 +149,11 @@ namespace
 			g_log.append(text);
 		}
 
-		return 0u;
+		ctx.set_return(0u);
 	}
 
 	static const emu86_fun_t kOsirisEventWrapperFuns[] = {
-		{"append_osiris_event_log", 1 | 0x100, {.fun1 = HostAppendOsirisEventLog}},
+		{"append_osiris_event_log", HostAppendOsirisEventLog, 1, 0},
 	};
 }
 

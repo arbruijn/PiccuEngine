@@ -179,6 +179,7 @@ namespace
 			return static_cast<int>(slot);
 		}
 
+#if defined(__WATCOMC__)
 		switch (argc)
 		{
 		case 0:
@@ -211,6 +212,70 @@ namespace
 		default:
 			return static_cast<int>(slot);
 		}
+#else
+		unsigned args[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+		switch (argc)
+		{
+		case 0:
+			break;
+		case 1:
+			args[0] = TestArg(slot, 1);
+			break;
+		case 2:
+			args[0] = TestArg(slot, 1);
+			args[1] = TestArg(slot, 2);
+			break;
+		case 3:
+			args[0] = TestArg(slot, 1);
+			args[1] = TestArg(slot, 2);
+			args[2] = TestArg(slot, 3);
+			break;
+		case 4:
+			args[0] = TestArg(slot, 1);
+			args[1] = TestArg(slot, 2);
+			args[2] = TestArg(slot, 3);
+			args[3] = TestArg(slot, 4);
+			break;
+		case 5:
+			args[0] = TestArg(slot, 1);
+			args[1] = TestArg(slot, 2);
+			args[2] = TestArg(slot, 3);
+			args[3] = TestArg(slot, 4);
+			args[4] = TestArg(slot, 5);
+			break;
+		case 6:
+			args[0] = TestArg(slot, 1);
+			args[1] = TestArg(slot, 2);
+			args[2] = TestArg(slot, 3);
+			args[3] = TestArg(slot, 4);
+			args[4] = TestArg(slot, 5);
+			args[5] = TestArg(slot, 6);
+			break;
+		case 7:
+			args[0] = TestArg(slot, 1);
+			args[1] = TestArg(slot, 2);
+			args[2] = TestArg(slot, 3);
+			args[3] = TestArg(slot, 4);
+			args[4] = TestArg(slot, 5);
+			args[5] = TestArg(slot, 6);
+			args[6] = TestArg(slot, 7);
+			break;
+		case 8:
+			args[0] = TestArg(slot, 1);
+			args[1] = TestArg(slot, 2);
+			args[2] = TestArg(slot, 3);
+			args[3] = TestArg(slot, 4);
+			args[4] = TestArg(slot, 5);
+			args[5] = TestArg(slot, 6);
+			args[6] = TestArg(slot, 7);
+			args[7] = TestArg(slot, 8);
+			break;
+		default:
+			return static_cast<int>(slot);
+		}
+
+		RunOsirisImportHostCall(slot - 1u, argc, args);
+#endif
 
 		return 0;
 	}

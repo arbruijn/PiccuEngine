@@ -5,5 +5,6 @@
 
 int InitializeOsirisImportTest(tOSIRISModuleInit* module_init);
 int RunAllOsirisImportTestCallers(void);
+void RunOsirisImportHostCall(unsigned slot, int argc, const unsigned* args);
 
 #endif

@@ -149,6 +149,7 @@ target_include_directories(osiris_import_golden_test PRIVATE
 	${emu86_SOURCE_DIR}/src/cpu
 	${emu86_SOURCE_DIR}/src/cpu/include
 	${emu86_SOURCE_DIR}/include)
+target_link_libraries(osiris_import_golden_test PRIVATE emu86)
 target_include_directories(osiris_import_emu86_test PRIVATE
 	${PICCUENGINE_TEST_INCLUDE_DIRS}
 	${emu86_SOURCE_DIR}/src
