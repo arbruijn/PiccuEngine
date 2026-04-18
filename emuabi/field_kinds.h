@@ -30,6 +30,28 @@ struct VmPtrEncoder
 		return static_cast<uint32_t>(delta);
 	}
 };
+
+struct VmPtrDecoder
+{
+	uint8_t* base;
+
+	void* decode_ptr32(uint32_t ptr32) const
+	{
+		if (ptr32 == 0)
+		{
+			return nullptr;
+		}
+
+		assert(base != nullptr);
+		return base + ptr32;
+	}
+
+	template <typename T>
+	T* decode_ptr32(uint32_t ptr32) const
+	{
+		return static_cast<T*>(decode_ptr32(ptr32));
+	}
+};
 }
 
 #endif
