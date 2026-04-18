@@ -229,6 +229,7 @@ SET (MAIN_SOURCES
 		Descent3/objinfo.cpp
 		Descent3/ObjInit.cpp
 		Descent3/ObjScript.cpp
+		Descent3/osimod.cpp
 		Descent3/OsirisLoadandBind.cpp
 		Descent3/osiris_predefs.cpp
 		Descent3/pilot.cpp
