@@ -1,6 +1,12 @@
 #include "osiris_event_test.h"
 
-#include "pserror.h"
+#include "mono.h"
+
+#ifdef OSIRIS_EVENT_USE_LOGGER_CALLBACK
+extern "C" void OSIRIS_CALLEVENT_CDECL OsirisEventTestLog(const char* format, ...);
+#undef mprintf
+#define mprintf(args) OsirisEventTestLog args
+#endif
 
 namespace
 {
@@ -46,6 +52,14 @@ namespace
 		default: return "UNKNOWN_EVT";
 		}
 	}
+}
+
+short OSIRIS_CALLEVENT_CDECL CallInstanceEvent(int id, void* ptr, int event, tOSIRISEventInfo* data)
+{
+	(void)id;
+	(void)ptr;
+	OsirisEventCall_Test(event, data);
+	return CONTINUE_CHAIN | CONTINUE_DEFAULT;
 }
 
 void OsirisEventCall_Test(int event, tOSIRISEventInfo* data)

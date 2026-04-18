@@ -2,6 +2,8 @@
 
 #include <string.h>
 
+#define OsirisEventCall_Test(event, data) CallInstanceEvent(0, 0, event, data)
+
 namespace
 {
 	void ZeroEventInfo(tOSIRISEventInfo* data)
