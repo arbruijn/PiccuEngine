@@ -1,11 +1,10 @@
 #include "osiris_import_runtime.h"
 
-#include "osiris_import_test_list.h"
-
 #ifndef __LINUX__
 #include <stddef.h>
 #endif
 #include "osiris_import.h"
+#include "osiris_imports_shared.h"
 
 #include <stdint.h>
 
@@ -239,7 +238,9 @@ int InitializeOsirisImportTest(tOSIRISModuleInit* module_init)
 		} \
 	} while (0);
 
-	OSIRIS_IMPORT_TEST_LIST(VERIFY_IMPORT);
+#define VERIFY_IMPORT_ENTRY(symbol, guest_type, host_symbol, abi_argc, test_argc, return_kind, bridge_kind) VERIFY_IMPORT(symbol, test_argc)
+	OSIRIS_IMPORT_LIST(VERIFY_IMPORT_ENTRY);
+#undef VERIFY_IMPORT_ENTRY
 
 #undef VERIFY_IMPORT
 
@@ -261,7 +262,9 @@ int RunAllOsirisImportTestCallers(void)
 		} \
 	} while (0);
 
-	OSIRIS_IMPORT_TEST_LIST(CALL_IMPORT);
+#define CALL_IMPORT_ENTRY(symbol, guest_type, host_symbol, abi_argc, test_argc, return_kind, bridge_kind) CALL_IMPORT(symbol, test_argc)
+	OSIRIS_IMPORT_LIST(CALL_IMPORT_ENTRY);
+#undef CALL_IMPORT_ENTRY
 
 #undef CALL_IMPORT
 

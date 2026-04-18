@@ -109,8 +109,8 @@ add_custom_command(
 	DEPENDS
 		"${CMAKE_CURRENT_SOURCE_DIR}/osiris_import_runtime.cpp"
 		"${CMAKE_CURRENT_SOURCE_DIR}/osiris_import_runtime.h"
-		"${CMAKE_CURRENT_SOURCE_DIR}/osiris_import_test_list.h"
 		"${CMAKE_CURRENT_SOURCE_DIR}/osiris_import_emu86_dll.cpp"
+		"${CMAKE_SOURCE_DIR}/Descent3/osiris_imports_shared.h"
 		"${CMAKE_SOURCE_DIR}/scripts/osiris_import.h"
 		"${CMAKE_SOURCE_DIR}/scripts/osiris_common.h"
 	VERBATIM)

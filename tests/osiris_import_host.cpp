@@ -1,7 +1,7 @@
 #include "emu86.h"
 #include "osiris_import_host.h"
 
-#include "osiris_import_test_list.h"
+#include "osiris_imports_shared.h"
 
 #include <stdio.h>
 
@@ -108,7 +108,9 @@ namespace
 	}
 
 #define DEFINE_WRAPPER(symbol, argc) DEFINE_WRAPPER_##argc(symbol)
-	OSIRIS_IMPORT_TEST_LIST(DEFINE_WRAPPER);
+#define DEFINE_WRAPPER_ENTRY(symbol, guest_type, host_symbol, abi_argc, test_argc, return_kind, bridge_kind) DEFINE_WRAPPER(symbol, test_argc)
+	OSIRIS_IMPORT_LIST(DEFINE_WRAPPER_ENTRY);
+#undef DEFINE_WRAPPER_ENTRY
 #undef DEFINE_WRAPPER
 
 	static const emu86_fun_t kOsirisImportWrapperFuns[] = {
@@ -122,7 +124,9 @@ namespace
 #define EMU86_ENTRY_7(symbol) { #symbol, 7, { .fun7 = symbol##_Wrapper } },
 #define EMU86_ENTRY_8(symbol) { #symbol, 8, { .fun8 = symbol##_Wrapper } },
 #define EMU86_ENTRY(symbol, argc) EMU86_ENTRY_##argc(symbol)
-		OSIRIS_IMPORT_TEST_LIST(EMU86_ENTRY)
+#define EMU86_ENTRY_SPEC(symbol, guest_type, host_symbol, abi_argc, test_argc, return_kind, bridge_kind) EMU86_ENTRY(symbol, test_argc)
+		OSIRIS_IMPORT_LIST(EMU86_ENTRY_SPEC)
+#undef EMU86_ENTRY_SPEC
 #undef EMU86_ENTRY
 #undef EMU86_ENTRY_8
 #undef EMU86_ENTRY_7
@@ -156,7 +160,9 @@ void PopulateOsirisImportModuleInit(tOSIRISModuleInit* module_init)
 	int index = 0;
 
 #define ASSIGN_IMPORT(symbol, argc) module_init->fp[index++] = ModuleInitPointer(symbol##_Wrapper);
-	OSIRIS_IMPORT_TEST_LIST(ASSIGN_IMPORT);
+#define ASSIGN_IMPORT_ENTRY(symbol, guest_type, host_symbol, abi_argc, test_argc, return_kind, bridge_kind) ASSIGN_IMPORT(symbol, test_argc)
+	OSIRIS_IMPORT_LIST(ASSIGN_IMPORT_ENTRY);
+#undef ASSIGN_IMPORT_ENTRY
 #undef ASSIGN_IMPORT
 
 	for (; index < MAX_MODULEFUNCS; ++index)

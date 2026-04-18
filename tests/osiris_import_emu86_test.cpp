@@ -1,5 +1,6 @@
 #include "osiris_import_host.h"
 
+#include "emuabi/osiris_import_bridge.h"
 #include "emu86.h"
 #include "emuint.h"
 #include "heap.h"
@@ -89,6 +90,14 @@ int main(int argc, char** argv)
 
 	size_t wrapper_count = 0;
 	const emu86_fun_t* wrappers = GetOsirisImportEmu86FunTable(&wrapper_count);
+	if (wrapper_count != emuabi::osiris_import_spec_count())
+	{
+		fprintf(stderr, "wrapper/spec count mismatch: wrappers=%zu specs=%u\n", wrapper_count, emuabi::osiris_import_spec_count());
+		emu86_free(emu86);
+		emu86_done();
+		return 2;
+	}
+
 	std::vector<emu_ptr_t> wrapper_addresses(wrapper_count);
 	if (emu86_add_fun_list(emu86, wrappers, wrapper_count, &wrapper_addresses[0], wrapper_count) != wrapper_count)
 	{

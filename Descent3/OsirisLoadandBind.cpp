@@ -37,6 +37,7 @@
 #include "gamecinematics.h"
 #include "demofile.h"
 #include "osimod.h"
+#include "osiris_imports_shared.h"
 
 #ifdef _DEBUG
 #define OSIRISDEBUG
@@ -3765,130 +3766,10 @@ void Osiris_CreateModuleInitStruct(tOSIRISModuleInit* mi)
 	int i = 0;
 
 	//fill in function pointers here
-	mi->fp[i++] = (int*)MonoPrintf;
-	mi->fp[i++] = (int*)msafe_CallFunction;
-	mi->fp[i++] = (int*)msafe_GetValue;
-	mi->fp[i++] = (int*)osipf_CallObjectEvent;
-	mi->fp[i++] = (int*)osipf_CallTriggerEvent;
-	mi->fp[i++] = (int*)osipf_SoundTouch;
-	mi->fp[i++] = (int*)osipf_ObjectFindID;
-	mi->fp[i++] = (int*)osipf_WeaponFindID;
-	mi->fp[i++] = (int*)osipf_ObjectGetTimeLived;
-	mi->fp[i++] = (int*)osipf_GetGunPos;
-	mi->fp[i++] = (int*)osipf_RoomValue;
-	mi->fp[i++] = (int*)osipf_IsRoomValid;
-	mi->fp[i++] = (int*)osipf_GetAttachParent;
-	mi->fp[i++] = (int*)osipf_GetNumAttachSlots;
-	mi->fp[i++] = (int*)osipf_GetAttachChildHandle;
-	mi->fp[i++] = (int*)osipf_AttachObjectAP;
-	mi->fp[i++] = (int*)osipf_AttachObjectRad;
-	mi->fp[i++] = (int*)osipf_UnattachFromParent;
-	mi->fp[i++] = (int*)osipf_UnattachChild;
-	mi->fp[i++] = (int*)osipf_UnattachChildren;
-	mi->fp[i++] = (int*)osipf_RayCast;
-	mi->fp[i++] = (int*)osipf_AIGetPathID;
-	mi->fp[i++] = (int*)osipf_AIGoalFollowPathSimple;
-	mi->fp[i++] = (int*)osipf_AIPowerSwitch;
-	mi->fp[i++] = (int*)osipf_AITurnTowardsVectors;
-	mi->fp[i++] = (int*)osipf_AISetType;
-	mi->fp[i++] = (int*)osipf_AIFindHidePos;
-	mi->fp[i++] = (int*)osipf_AIGoalAddEnabler;
-	mi->fp[i++] = (int*)osipf_AIGoalAdd;
-	mi->fp[i++] = (int*)osipf_AIGoalClear;
-	mi->fp[i++] = (int*)osipf_AIValue;
-	mi->fp[i++] = (int*)osipf_AIFindObjOfType;
-	mi->fp[i++] = (int*)osipf_AIGetRoomPathPoint;
-	mi->fp[i++] = (int*)osipf_AIFindEnergyCenter;
-	mi->fp[i++] = (int*)osipf_AIGetDistToObj;
-	mi->fp[i++] = (int*)osipf_AISetGoalFlags;
-	mi->fp[i++] = (int*)osipf_AISetGoalCircleDist;
-	mi->fp[i++] = (int*)osipf_CFReadBytes;
-	mi->fp[i++] = (int*)osipf_CFReadInt;
-	mi->fp[i++] = (int*)osipf_CFReadShort;
-	mi->fp[i++] = (int*)osipf_CFReadByte;
-	mi->fp[i++] = (int*)osipf_CFReadFloat;
-	mi->fp[i++] = (int*)osipf_CFReadDouble;
-	mi->fp[i++] = (int*)osipf_CFReadString;
-	mi->fp[i++] = (int*)osipf_CFWriteBytes;
-	mi->fp[i++] = (int*)osipf_CFWriteString;
-	mi->fp[i++] = (int*)osipf_CFWriteInt;
-	mi->fp[i++] = (int*)osipf_CFWriteShort;
-	mi->fp[i++] = (int*)osipf_CFWriteByte;
-	mi->fp[i++] = (int*)osipf_CFWriteFloat;
-	mi->fp[i++] = (int*)osipf_CFWriteDouble;
-	mi->fp[i++] = (int*)Osiris_AllocateMemory;
-	mi->fp[i++] = (int*)Osiris_FreeMemory;
-	mi->fp[i++] = (int*)Osiris_CancelTimer;
-	mi->fp[i++] = (int*)Osiris_CreateTimer;
-	mi->fp[i++] = (int*)msafe_DoPowerup;
-	mi->fp[i++] = (int*)osipf_ObjCreate;
-	mi->fp[i++] = (int*)osipf_GameTime;
-	mi->fp[i++] = (int*)osipf_FrameTime;
-	mi->fp[i++] = (int*)osipf_ObjWBValue;
-	mi->fp[i++] = (int*)Osiris_TimerExists;
-	mi->fp[i++] = (int*)osipf_ObjectValue;
-	mi->fp[i++] = (int*)osipf_MatcenValue;
-	mi->fp[i++] = (int*)osipf_MatcenReset;
-	mi->fp[i++] = (int*)osipf_MatcenCopy;
-	mi->fp[i++] = (int*)osipf_MatcenCreate;
-	mi->fp[i++] = (int*)osipf_MatcenFindId;
-	mi->fp[i++] = (int*)osipf_MissionFlagSet;
-	mi->fp[i++] = (int*)osipf_MissionFlagGet;
-	mi->fp[i++] = (int*)osipf_PlayerValue;
-	mi->fp[i++] = (int*)osipf_ObjectCustomAnim;
-	mi->fp[i++] = (int*)osipf_PlayerAddHudMessage;
-	mi->fp[i++] = (int*)osipf_ObjGhost;
-	mi->fp[i++] = (int*)osipf_ObjBurning;
-	mi->fp[i++] = (int*)osipf_ObjIsEffect;
-	mi->fp[i++] = (int*)osipf_CFopen;
-	mi->fp[i++] = (int*)osipf_CFclose;
-	mi->fp[i++] = (int*)osipf_CFtell;
-	mi->fp[i++] = (int*)osipf_CFeof;
-	mi->fp[i++] = (int*)osipf_SoundStop;
-	mi->fp[i++] = (int*)osipf_SoundPlay2d;
-	mi->fp[i++] = (int*)osipf_SoundPlay3d;
-	mi->fp[i++] = (int*)osipf_SoundFindId;
-	mi->fp[i++] = (int*)osipf_AIIsObjFriend;
-	mi->fp[i++] = (int*)osipf_AIIsObjEnemy;
-	mi->fp[i++] = (int*)osipf_AIGoalValue;
-	mi->fp[i++] = (int*)osipf_AIGetNearbyObjs;
-	mi->fp[i++] = (int*)osipf_AIGetCurGoalIndex;
-	mi->fp[i++] = (int*)Osiris_OMMS_Malloc;
-	mi->fp[i++] = (int*)Osiris_OMMS_Attach;
-	mi->fp[i++] = (int*)Osiris_OMMS_Detach;
-	mi->fp[i++] = (int*)Osiris_OMMS_Free;
-	mi->fp[i++] = (int*)Osiris_OMMS_Find;
-	mi->fp[i++] = (int*)Osiris_OMMS_GetInfo;
-	mi->fp[i++] = (int*)Cinematic_Start;
-	mi->fp[i++] = (int*)Cinematic_Stop;
-	mi->fp[i++] = (int*)osipf_FindSoundName;
-	mi->fp[i++] = (int*)osipf_FindRoomName;
-	mi->fp[i++] = (int*)osipf_FindTriggerName;
-	mi->fp[i++] = (int*)osipf_FindObjectName;
-	mi->fp[i++] = (int*)osipf_GetTriggerRoom;
-	mi->fp[i++] = (int*)osipf_GetTriggerFace;
-	mi->fp[i++] = (int*)osipf_FindDoorName;
-	mi->fp[i++] = (int*)osipf_FindTextureName;
-	mi->fp[i++] = (int*)osipf_CreateRandomSparks;
-	mi->fp[i++] = (int*)Osiris_CancelTimerID;
-	mi->fp[i++] = (int*)osipf_GetGroundPos;
-	mi->fp[i++] = (int*)osipf_EnableShip;
-	mi->fp[i++] = (int*)osipf_IsShipEnabled;
-	mi->fp[i++] = (int*)osipf_PathGetInformation;
-	mi->fp[i++] = (int*)Cinematic_StartCannedScript;
-	mi->fp[i++] = (int*)osipf_FindMatcenName;
-	mi->fp[i++] = (int*)osipf_FindPathName;
-	mi->fp[i++] = (int*)osipf_FindLevelGoalName;
-	mi->fp[i++] = (int*)osipf_ObjectFindType;
-	mi->fp[i++] = (int*)osipf_LGoalValue;
-	mi->fp[i++] = (int*)osipf_ObjMakeListOfType;
-	mi->fp[i++] = (int*)osipf_ObjKill;
-	//	mi->fp[i++] = (int *)osipf_AIAreRoomsReachable;
-	mi->fp[i++] = (int*)osipf_AIIsDestReachable;
-	mi->fp[i++] = (int*)osipf_AIIsObjReachable;
-	mi->fp[i++] = (int*)osipf_GameGetDiffLevel;
-	mi->fp[i++] = (int*)osipf_GetLanguageSetting;
-	mi->fp[i++] = (int*)osipf_PathValue;
+#define OSIRIS_IMPORT_ASSIGN_HOST_SLOT(guest_symbol, guest_type, host_symbol, abi_argc, test_argc, return_kind, bridge_kind) \
+	mi->fp[i++] = (int*)host_symbol;
+	OSIRIS_IMPORT_LIST(OSIRIS_IMPORT_ASSIGN_HOST_SLOT)
+#undef OSIRIS_IMPORT_ASSIGN_HOST_SLOT
 
 	//fill in the remaining with NULL
 	for (; i < MAX_MODULEFUNCS; i++) {
