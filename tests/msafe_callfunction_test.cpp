@@ -2,6 +2,13 @@
 
 #include "pserror.h"
 
+#ifndef MSAFE_CALLFUNCTION_IS_POINTER
+void MSAFE_CALLFUNCTION_CDECL msafe_CallFunction(ubyte type, msafe_struct* mstruct)
+{
+	msafe_CallFunction_Test(type, mstruct);
+}
+#endif
+
 void msafe_CallFunction_Test(ubyte type, msafe_struct* mstruct)
 {
 	if (!mstruct)

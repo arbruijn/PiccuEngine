@@ -1,12 +1,26 @@
 #include "msafe_callfunction_callers.h"
 
-#include <string.h>
+#include <stddef.h>
+
+#define msafe_CallFunction_Test msafe_CallFunction
+#define strcpy CopyCString
 
 namespace
 {
 	static void ZeroMSafeStruct(msafe_struct* mstruct)
 	{
-		memset(mstruct, 0, sizeof(*mstruct));
+		unsigned char* bytes = (unsigned char*)mstruct;
+		for (size_t i = 0; i < sizeof(*mstruct); ++i)
+		{
+			bytes[i] = 0;
+		}
+	}
+
+	static void CopyCString(char* dst, const char* src)
+	{
+		while ((*dst++ = *src++) != '\0')
+		{
+		}
 	}
 }
 
