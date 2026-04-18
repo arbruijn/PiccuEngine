@@ -1,0 +1,47 @@
+AI_Value objhandle=1001 op=0(VF_SET) vtype=32(AIV_F_FOV) value=90.000
+AI_Value objhandle=1001 op=0(VF_SET) vtype=19(AIV_I_TARGET_HANDLE) value=1002
+AI_Value objhandle=1001 op=3(VF_CLEAR_FLAGS) vtype=51(AIV_I_FLAGS) value=32
+AI_Value objhandle=1001 op=2(VF_SET_FLAGS) vtype=51(AIV_I_FLAGS) value=64
+AI_Value objhandle=1001 op=0(VF_SET) vtype=19(AIV_I_TARGET_HANDLE) value=-1
+AI_Value objhandle=1001 op=0(VF_SET) vtype=0(AIV_F_MAX_SPEED) value=42.500
+AI_Value objhandle=1001 op=1(VF_GET) vtype=19(AIV_I_TARGET_HANDLE) value=1002
+AI_Value objhandle=1001 op=1(VF_GET) vtype=50(AIV_F_AWARENESS) value=0.750
+AI_Value objhandle=1001 op=1(VF_GET) vtype=52(AIV_I_STATUS_REG) value=128
+AI_Value objhandle=1001 op=1(VF_GET) vtype=0(AIV_F_MAX_SPEED) value=42.500
+LGoal_Value op=2(VF_SET_FLAGS) vtype=12(LGSV_I_STATUS) g_index=2 i_index=-1 value=1
+LGoal_Value op=0(VF_SET) vtype=16(LGSSV_B_ITEM_DONE) g_index=2 i_index=1 value=1
+LGoal_Value op=3(VF_CLEAR_FLAGS) vtype=12(LGSV_I_STATUS) g_index=2 i_index=-1 value=2
+LGoal_Value op=0(VF_SET) vtype=10(LGSV_I_PRIORITY) g_index=2 i_index=-1 value=7
+LGoal_Value op=0(VF_SET) vtype=9(LGSV_PC_COMPLETION_MESSAGE) g_index=2 i_index=-1 value="Goal complete"
+LGoal_Value op=2(VF_SET_FLAGS) vtype=12(LGSV_I_STATUS) g_index=2 i_index=-1 value=4
+LGoal_Value op=1(VF_GET) vtype=0(LGV_I_STATUS) g_index=-1 i_index=-1 value=8
+LGoal_Value op=1(VF_GET) vtype=12(LGSV_I_STATUS) g_index=2 i_index=-1 value=16
+LGoal_Value op=1(VF_GET) vtype=12(LGSV_I_STATUS) g_index=3 i_index=-1 value=32
+LGoal_Value op=1(VF_GET) vtype=12(LGSV_I_STATUS) g_index=4 i_index=-1 value=64
+Matcen_Value matcen_handle=11 op=2(VF_SET_FLAGS) vtype=8(MTNV_I_STATUS) prod_index=0 value=1
+Matcen_Value matcen_handle=11 op=3(VF_CLEAR_FLAGS) vtype=8(MTNV_I_STATUS) prod_index=0 value=2
+Matcen_Value matcen_handle=11 op=0(VF_SET) vtype=6(MTNV_I_MAX_PROD) prod_index=0 value=12
+Matcen_Value matcen_handle=11 op=0(VF_SET) vtype=7(MTNV_F_PROD_MULTIPLIER) prod_index=0 value=1.500
+Matcen_Value matcen_handle=11 op=0(VF_SET) vtype=10(MTNV_I_MAX_ALIVE_CHILDREN) prod_index=0 value=4
+Obj_Value objhandle=1001 op=1(VF_GET) vtype=1(OBJV_I_TYPE) index=0 value=2
+Obj_Value objhandle=1002 op=1(VF_GET) vtype=1(OBJV_I_TYPE) index=0 value=3
+Obj_Value objhandle=1001 op=1(VF_GET) vtype=5(OBJV_I_ROOMNUM) index=0 value=7
+Obj_Value objhandle=1001 op=1(VF_GET) vtype=3(OBJV_V_POS) index=0 value=(10.000,20.000,30.000)
+Obj_Value objhandle=1002 op=1(VF_GET) vtype=3(OBJV_V_POS) index=0 value=(40.000,50.000,60.000)
+Obj_Value objhandle=1001 op=2(VF_SET_FLAGS) vtype=16(OBJV_I_PHYSICS_FLAGS) index=0 value=256
+Obj_Value objhandle=1001 op=0(VF_SET) vtype=13(OBJV_C_MOVEMENT_TYPE) index=0 value=6
+Obj_Value objhandle=1001 op=0(VF_SET) vtype=6(OBJV_V_VELOCITY) index=0 value=(1.000,-2.000,3.500)
+Obj_Value objhandle=1001 op=3(VF_CLEAR_FLAGS) vtype=10(OBJV_I_FLAGS) index=0 value=512
+Obj_Value objhandle=1001 op=3(VF_CLEAR_FLAGS) vtype=16(OBJV_I_PHYSICS_FLAGS) index=0 value=1024
+Obj_Value objhandle=1001 op=0(VF_SET) vtype=25(OBJV_C_VIRUS_INFECTED) index=0 value=1
+Obj_Value objhandle=1001 op=0(VF_SET) vtype=26(OBJV_C_NEGATIVE_LIGHT) index=0 value=1
+Obj_Value objhandle=1001 op=1(VF_GET) vtype=25(OBJV_C_VIRUS_INFECTED) index=0 value=1
+Obj_Value objhandle=1001 op=1(VF_GET) vtype=26(OBJV_C_NEGATIVE_LIGHT) index=0 value=0
+Obj_Value objhandle=1001 op=1(VF_GET) vtype=12(OBJV_C_CONTROL_TYPE) index=0 value=5
+Obj_Value objhandle=1003 op=1(VF_GET) vtype=3(OBJV_V_POS) index=0 value=(-5.000,2.000,99.000)
+Obj_Value objhandle=1001 op=1(VF_GET) vtype=12(OBJV_C_CONTROL_TYPE) index=0 value=6
+Obj_Value objhandle=1001 op=1(VF_GET) vtype=12(OBJV_C_CONTROL_TYPE) index=0 value=7
+Obj_Value objhandle=1004 op=1(VF_GET) vtype=18(OBJV_F_ANIM_FRAME) index=0 value=12.250
+Player_Value obj_handle=1001 op=0(VF_SET) vhandle=15(PLYV_I_STRIP_WEAPONS) index=0 value=1
+Player_Value obj_handle=-1 op=0(VF_SET) vhandle=15(PLYV_I_STRIP_WEAPONS) index=0 value=1
+Room_Value roomnum=7 op=1(VF_GET) vhandle=4(RMSV_V_PATH_PNT) index=0 value=(8.000,9.000,10.000)
