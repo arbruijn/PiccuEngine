@@ -95,12 +95,6 @@ void emucall_Osiris_CancelTimer(Emu86FunCtx& ctx, void *)
 	osipf_OsirisCancelTimer(timer_id);
 }
 
-void emucall_msafe_DoPowerup(Emu86FunCtx& ctx, void *)
-{
-	msafe_struct *mstruct = ctx.arg_ptr<msafe_struct>(0);
-	msafe_DoPowerup(mstruct);
-}
-
 void emucall_Obj_Create(Emu86FunCtx& ctx, void *)
 {
 	ubyte type = static_cast<ubyte>(ctx.arg<int>(0));
@@ -260,7 +254,8 @@ void emucall_AI_GoalValue(Emu86FunCtx& ctx, void *)
 	char vtype = ctx.arg<char>(3);
 	void *ptr = ctx.arg<void *>(4);
 	char index = ctx.arg<char>(5);
-	ctx.set_return(osipf_AIGoalValue(obj_handle, g_index, op, vtype, ptr, index));
+	osipf_AIGoalValue(obj_handle, g_index, op, vtype, ptr, index);
+	ctx.set_return(1);
 }
 
 void emucall_AI_GetNearbyObjs(Emu86FunCtx& ctx, void *)
@@ -387,7 +382,6 @@ const emu86_fun_t kOsirisWrapperFuns2[] = {
 	{"Matcen_Value", emucall_Matcen_Value, 5, nullptr},
 	{"Osiris_FreeMemory", emucall_Osiris_FreeMemory, 1, nullptr},
 	{"Osiris_CancelTimer", emucall_Osiris_CancelTimer, 1, nullptr},
-	{"msafe_DoPowerup", emucall_msafe_DoPowerup, 1, nullptr},
 	{"Obj_Create", emucall_Obj_Create, 7, nullptr},
 	{"osipf_GameTime", emucall_osipf_GameTime, 0, nullptr},
 	{"osipf_FrameTime", emucall_osipf_FrameTime, 0, nullptr},

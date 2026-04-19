@@ -1,0 +1,48 @@
+osipf_SoundTouch str="alpha-sound"
+osipf_ObjectFindID name="alpha-object"
+osipf_ObjectFindType name="beta-object"
+osipf_WeaponFindID name="gamma-weapon"
+osipf_RoomValue roomnum=7 op='=' vhandle='i' index=3 value=42
+osipf_IsRoomValid roomnum=17
+osipf_GetAttachParent childhandle=2001
+osipf_AttachObjectAP parenthandle=1001 parent_ap='P' childhandle=1002 child_ap='C' f_use_aligned=1
+osipf_AttachObjectRad parenthandle=1001 parent_ap='P' childhandle=1002 percent_rad=0.625
+osipf_MatcenValue handle=11 op='=' vtype='v' index=4 value=(1.000,2.000,3.000)
+osipf_OsirisFreeMemory memory_ptr=0x1234
+osipf_OsirisCancelTimer timer_id=21
+osipf_ObjCreate type=4 id=77 roomnum=8 pos=(12.000,13.000,14.000) orient=rvec=(1.000,0.000,0.000) uvec=(0.000,1.000,0.000) fvec=(0.000,0.000,1.000) parent_handle=1001 initial_velocity=(15.000,16.000,17.000)
+osipf_GameTime
+osipf_FrameTime
+osipf_ObjWBValue obj_handle=1001 wb_index=2 op='=' vtype='i' g_index=5 value=11
+osipf_OsirisTimerExists handle=41
+osipf_MatcenReset handle=51
+osipf_MatcenCopy dhandle=61 shandle=62
+osipf_MatcenFindId str="matcen-alpha"
+osipf_MissionFlagSet flag=7 value=1
+osipf_MissionFlagGet flag=7
+osipf_PlayerValue obj_handle=1001 op='+' vhandle='f' index=6 value=9.250
+osipf_ObjSetCustomAnim handle=1001 start=1.250 end=2.500 time=3.750 flags='F' sound_handle=9001 next_anim_type='N'
+osipf_PlayerAddHudMessage handle=1001 str="hello hud"
+osipf_ObjGhost handle=1001 f_ghost=1
+osipf_ObjBurning handle=1001 time=4.500 damage_per_second=6.750
+osipf_ObjIsEffect handle=1001 type_flag=3
+osipf_SoundStop s_handle=5001 f_immediately=1
+osipf_SoundPlay2d obj_handle=1001 s_id=42 volume=0.500
+osipf_SoundPlay3d obj_handle=1001 s_id=43 volume=0.750
+osipf_SoundFindId s_name="sound-alpha"
+osipf_AIGoalValue obj_handle=1001 g_index=4 op='=' vtype='c' index=2 value='Q'
+osipf_AIGetNearbyObjs pos=(18.000,19.000,20.000) init_roomnum=7 rad=12.500 max_elements=4 f_lightmap_only=0 f_only_players_and_ais=1 f_include_non_collide_objects=0 f_stop_at_closed_doors=1 handles=[11,22,33,44]
+osipf_CinematicStop
+osipf_GetTriggerRoom trigger_id=71
+osipf_GetTriggerFace trigger_id=72
+osipf_GameCreateRandomSparks num_sparks=5 pos=(1.500,2.500,3.500) roomnum=9 which_index=2 force_scalar=4.250
+osipf_OsirisCancelTimerID id=81
+osipf_EnableShip ship_name="Black Pyro" enable=1
+osipf_IsShipEnabled ship_name="Blue Hornet"
+osipf_PathGetInformation pathid=91 point=2 pos=(21.000,22.000,23.000) room=13 orient=rvec=(1.000,0.000,0.000) uvec=(0.000,1.000,0.000) fvec=(0.000,0.000,1.000)
+osipf_LGoalValue op='=' vtype='s' g_index=5 i_index=1 value="goal-text"
+osipf_ObjKill handle=1001 killer_handle=1002 damage=12.500 flags=3 min_time=4.500 max_time=6.500
+osipf_GameGetDiffLevel
+osipf_GetLanguageSetting
+osipf_PathValue path_id=101 node_id=4 op='=' changes=3 value=77
+msafe_DoPowerup roomnum=7 objhandle=1001 ithandle=1002 scalar=1.250 interval=2.500 state=1 count=8 flags=64 pos=(10.000,20.000,30.000) pos2=(40.000,50.000,60.000) message="powerup-one" message2="powerup-two"

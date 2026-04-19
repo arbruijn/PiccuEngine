@@ -1,13 +1,14 @@
 #define INCLUDED_FROM_D3
 #include "pstypes.h"
-#include "object_ai_wrappers_callers.h"
-#include "object_ai_wrappers_test.h"
+#include "osiris_wrappers2_callers.h"
+#include "osiris_wrappers2_test.h"
 
 #include "emu86.h"
 
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <string>
 
@@ -30,9 +31,21 @@ inline vector* emu_arg<vector*>(Emu* emu86, int n)
 }
 
 template <>
-inline ray_info* emu_arg<ray_info*>(Emu* emu86, int n)
+inline matrix* emu_arg<matrix*>(Emu* emu86, int n)
 {
-	return static_cast<ray_info*>(emu_arg<void*>(emu86, n));
+	return static_cast<matrix*>(emu_arg<void*>(emu86, n));
+}
+
+template <>
+inline const matrix* emu_arg<const matrix*>(Emu* emu86, int n)
+{
+	return static_cast<const matrix*>(emu_arg<void*>(emu86, n));
+}
+
+template <>
+inline msafe_struct* emu_arg<msafe_struct*>(Emu* emu86, int n)
+{
+	return static_cast<msafe_struct*>(emu_arg<void*>(emu86, n));
 }
 
 template <>
@@ -41,7 +54,7 @@ inline ubyte emu_arg<ubyte>(Emu* emu86, int n)
 	return static_cast<ubyte>(emu_arg<int>(emu86, n));
 }
 
-#include "../emuabi/object_ai_wrappers.cpp"
+#include "../emuabi/osiris_wrappers2.cpp"
 
 namespace
 {
@@ -102,7 +115,7 @@ int main(int argc, char** argv)
 	const char* actual_log_path = argv[2];
 	const char* dll_path = argv[3];
 
-	ObjectAI_ResetLog();
+	OsirisWrappers2_ResetLog();
 
 	emu86_init();
 	g_emu86 = emu86_load(dll_path);
@@ -115,19 +128,19 @@ int main(int argc, char** argv)
 
 	emu86_set_trace(g_emu86, false);
 
-	const size_t fun_count = sizeof(kObjectAIWrapperFuns) / sizeof(kObjectAIWrapperFuns[0]);
-	uint32_t addresses[sizeof(kObjectAIWrapperFuns) / sizeof(kObjectAIWrapperFuns[0])] = {};
-	const size_t added = emu86_add_fun_list(g_emu86, kObjectAIWrapperFuns, fun_count, addresses, fun_count);
+	const size_t fun_count = sizeof(kOsirisWrapperFuns2) / sizeof(kOsirisWrapperFuns2[0]);
+	uint32_t addresses[sizeof(kOsirisWrapperFuns2) / sizeof(kOsirisWrapperFuns2[0])] = {};
+	const size_t added = emu86_add_fun_list(g_emu86, kOsirisWrapperFuns2, fun_count, addresses, fun_count);
 	if (added != fun_count)
 	{
-		fprintf(stderr, "failed to register object AI host callbacks\n");
+		fprintf(stderr, "failed to register osiris wrappers2 host callbacks\n");
 		emu86_free(g_emu86);
 		g_emu86 = 0;
 		emu86_done();
 		return 2;
 	}
 
-	if (!SetPointerHooks(g_emu86, kObjectAIWrapperFuns, fun_count, addresses))
+	if (!SetPointerHooks(g_emu86, kOsirisWrapperFuns2, fun_count, addresses))
 	{
 		emu86_free(g_emu86);
 		g_emu86 = 0;
@@ -135,7 +148,7 @@ int main(int argc, char** argv)
 		return 2;
 	}
 
-	const emu_ptr_t runner = FindExportDecorated(g_emu86, "run_all_object_ai_test_callers");
+	const emu_ptr_t runner = FindExportDecorated(g_emu86, "run_all_osiris_wrappers2_test_callers");
 	if (!runner)
 	{
 		fprintf(stderr, "failed to find required DLL export\n");
@@ -147,7 +160,7 @@ int main(int argc, char** argv)
 
 	if (emu86fun_call(g_emu86, runner, 0) != 0u)
 	{
-		fprintf(stderr, "run_all_object_ai_test_callers failed\n");
+		fprintf(stderr, "run_all_osiris_wrappers2_test_callers failed\n");
 		emu86_free(g_emu86);
 		g_emu86 = 0;
 		emu86_done();
@@ -158,15 +171,15 @@ int main(int argc, char** argv)
 	g_emu86 = 0;
 	emu86_done();
 
-	if (!ObjectAI_WriteLog(actual_log_path))
+	if (!OsirisWrappers2_WriteLog(actual_log_path))
 	{
 		fprintf(stderr, "failed to write actual log: %s\n", actual_log_path);
 		return 2;
 	}
 
-	if (!ObjectAI_FileExists(expected_log_path))
+	if (!OsirisWrappers2_FileExists(expected_log_path))
 	{
-		if (!ObjectAI_WriteLog(expected_log_path))
+		if (!OsirisWrappers2_WriteLog(expected_log_path))
 		{
 			fprintf(stderr, "failed to create expected log: %s\n", expected_log_path);
 			return 2;

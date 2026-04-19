@@ -50,6 +50,7 @@ set(MSAFE_CALLFUNCTION_EMU86_DLL_DIR "${CMAKE_CURRENT_BINARY_DIR}/dll")
 set(MSAFE_CALLFUNCTION_EMU86_DLL "${MSAFE_CALLFUNCTION_EMU86_DLL_DIR}/msafe_callfunction_callers.dll")
 set(OSIRIS_EVENT_EMU86_DLL "${MSAFE_CALLFUNCTION_EMU86_DLL_DIR}/osiris_event_callevent.dll")
 #set(OBJECT_AI_WRAPPERS_EMU86_DLL "${MSAFE_CALLFUNCTION_EMU86_DLL_DIR}/object_ai_wrappers_callers.dll")
+set(OSIRIS_WRAPPERS2_EMU86_DLL "${MSAFE_CALLFUNCTION_EMU86_DLL_DIR}/osiris_wrappers2_callers.dll")
 #set(OSIRIS_IMPORT_EMU86_DLL "${MSAFE_CALLFUNCTION_EMU86_DLL_DIR}/osiris_import_runtime.dll")
 file(MAKE_DIRECTORY "${MSAFE_CALLFUNCTION_EMU86_DLL_DIR}")
 
@@ -119,6 +120,27 @@ add_custom_command(
 add_custom_target(object_ai_wrappers_emu86_dll
 	DEPENDS "${OBJECT_AI_WRAPPERS_EMU86_DLL}")
 
+add_custom_command(
+	OUTPUT "${OSIRIS_WRAPPERS2_EMU86_DLL}"
+	COMMAND "${OWCC_EXECUTABLE}" -b nt -shared -x c++ -g
+		-DOSIRIS_WRAPPERS2_IS_POINTER
+		-I"${CMAKE_SOURCE_DIR}"
+		-I"${CMAKE_SOURCE_DIR}/lib"
+		-I"${CMAKE_SOURCE_DIR}/Descent3"
+		-I"${CMAKE_SOURCE_DIR}/scripts"
+		-o "${OSIRIS_WRAPPERS2_EMU86_DLL}"
+		"${CMAKE_CURRENT_SOURCE_DIR}/osiris_wrappers2_callers.cpp"
+		"${CMAKE_CURRENT_SOURCE_DIR}/osiris_wrappers2_emu86_dll.cpp"
+	DEPENDS
+		"${CMAKE_CURRENT_SOURCE_DIR}/osiris_wrappers2_callers.cpp"
+		"${CMAKE_CURRENT_SOURCE_DIR}/osiris_wrappers2_callers.h"
+		"${CMAKE_CURRENT_SOURCE_DIR}/osiris_wrappers2_test.h"
+		"${CMAKE_CURRENT_SOURCE_DIR}/osiris_wrappers2_emu86_dll.cpp"
+	VERBATIM)
+
+add_custom_target(osiris_wrappers2_emu86_dll
+	DEPENDS "${OSIRIS_WRAPPERS2_EMU86_DLL}")
+
 if(false)
 add_custom_command(
 	OUTPUT "${OSIRIS_IMPORT_EMU86_DLL}"
@@ -158,6 +180,13 @@ add_executable(object_ai_wrappers_golden_test
 add_executable(object_ai_wrappers_emu86_test
 	object_ai_wrappers_emu86_test.cpp
 	object_ai_wrappers_test.cpp)
+add_executable(osiris_wrappers2_golden_test
+	osiris_wrappers2_golden_test.cpp
+	osiris_wrappers2_test.cpp
+	osiris_wrappers2_callers.cpp)
+add_executable(osiris_wrappers2_emu86_test
+	osiris_wrappers2_emu86_test.cpp
+	osiris_wrappers2_test.cpp)
 #add_executable(osiris_import_emu86_test
 #	osiris_import_emu86_test.cpp
 #	osiris_import_host.cpp)
@@ -165,6 +194,8 @@ target_compile_definitions(msafe_callfunction_emu86_test PRIVATE MONO)
 target_compile_definitions(osiris_event_emu86_test PRIVATE MONO)
 target_compile_definitions(object_ai_wrappers_golden_test PRIVATE MONO)
 target_compile_definitions(object_ai_wrappers_emu86_test PRIVATE MONO)
+target_compile_definitions(osiris_wrappers2_golden_test PRIVATE MONO)
+target_compile_definitions(osiris_wrappers2_emu86_test PRIVATE MONO)
 #target_compile_definitions(osiris_import_emu86_test PRIVATE MONO)
 target_include_directories(msafe_callfunction_emu86_test PRIVATE
 	${PICCUENGINE_TEST_INCLUDE_DIRS}
@@ -186,6 +217,14 @@ target_include_directories(object_ai_wrappers_emu86_test PRIVATE
 	${emu86_SOURCE_DIR}/src/cpu
 	${emu86_SOURCE_DIR}/src/cpu/include
 	${emu86_SOURCE_DIR}/include)
+target_include_directories(osiris_wrappers2_golden_test PRIVATE
+	${PICCUENGINE_TEST_INCLUDE_DIRS})
+target_include_directories(osiris_wrappers2_emu86_test PRIVATE
+	${PICCUENGINE_TEST_INCLUDE_DIRS}
+	${emu86_SOURCE_DIR}/src
+	${emu86_SOURCE_DIR}/src/cpu
+	${emu86_SOURCE_DIR}/src/cpu/include
+	${emu86_SOURCE_DIR}/include)
 #target_include_directories(osiris_import_golden_test PRIVATE
 #	${emu86_SOURCE_DIR}/src
 #	${emu86_SOURCE_DIR}/src/cpu
@@ -201,10 +240,12 @@ target_include_directories(object_ai_wrappers_emu86_test PRIVATE
 target_link_libraries(msafe_callfunction_emu86_test PRIVATE emu86)
 target_link_libraries(osiris_event_emu86_test PRIVATE emu86)
 target_link_libraries(object_ai_wrappers_emu86_test PRIVATE emu86)
+target_link_libraries(osiris_wrappers2_emu86_test PRIVATE emu86)
 #target_link_libraries(osiris_import_emu86_test PRIVATE emu86)
 add_dependencies(msafe_callfunction_emu86_test msafe_callfunction_emu86_dll)
 add_dependencies(osiris_event_emu86_test osiris_event_emu86_dll)
 add_dependencies(object_ai_wrappers_emu86_test object_ai_wrappers_emu86_dll)
+add_dependencies(osiris_wrappers2_emu86_test osiris_wrappers2_emu86_dll)
 #add_dependencies(osiris_import_emu86_test osiris_import_emu86_dll)
 
 set(MSAFE_CALLFUNCTION_EXPECTED_LOG "${CMAKE_CURRENT_SOURCE_DIR}/msafe_callfunction_expected.log")
@@ -218,6 +259,9 @@ set(OSIRIS_EVENT_EMU86_ACTUAL_LOG "${CMAKE_CURRENT_BINARY_DIR}/osiris_event_emu8
 set(OBJECT_AI_WRAPPERS_EXPECTED_LOG "${CMAKE_CURRENT_SOURCE_DIR}/object_ai_wrappers_expected.log")
 set(OBJECT_AI_WRAPPERS_ACTUAL_LOG "${CMAKE_CURRENT_BINARY_DIR}/object_ai_wrappers_actual.log")
 set(OBJECT_AI_WRAPPERS_EMU86_ACTUAL_LOG "${CMAKE_CURRENT_BINARY_DIR}/object_ai_wrappers_emu86_actual.log")
+set(OSIRIS_WRAPPERS2_EXPECTED_LOG "${CMAKE_CURRENT_SOURCE_DIR}/osiris_wrappers2_expected.log")
+set(OSIRIS_WRAPPERS2_ACTUAL_LOG "${CMAKE_CURRENT_BINARY_DIR}/osiris_wrappers2_actual.log")
+set(OSIRIS_WRAPPERS2_EMU86_ACTUAL_LOG "${CMAKE_CURRENT_BINARY_DIR}/osiris_wrappers2_emu86_actual.log")
 #set(OSIRIS_IMPORT_EXPECTED_LOG "${CMAKE_CURRENT_SOURCE_DIR}/osiris_import_expected.log")
 #set(OSIRIS_IMPORT_ACTUAL_LOG "${CMAKE_CURRENT_BINARY_DIR}/osiris_import_actual.log")
 #set(OSIRIS_IMPORT_EMU86_ACTUAL_LOG "${CMAKE_CURRENT_BINARY_DIR}/osiris_import_emu86_actual.log")
@@ -253,6 +297,12 @@ add_test(
 		"${OBJECT_AI_WRAPPERS_EXPECTED_LOG}"
 		"${OBJECT_AI_WRAPPERS_ACTUAL_LOG}")
 
+add_test(
+	NAME osiris_wrappers2_golden
+	COMMAND osiris_wrappers2_golden_test
+		"${OSIRIS_WRAPPERS2_EXPECTED_LOG}"
+		"${OSIRIS_WRAPPERS2_ACTUAL_LOG}")
+
 #add_test(
 #	NAME osiris_import_golden
 #	COMMAND osiris_import_golden_test
@@ -272,6 +322,13 @@ add_test(
 		"${OBJECT_AI_WRAPPERS_EXPECTED_LOG}"
 		"${OBJECT_AI_WRAPPERS_EMU86_ACTUAL_LOG}"
 		"${OBJECT_AI_WRAPPERS_EMU86_DLL}")
+
+add_test(
+	NAME osiris_wrappers2_emu86
+	COMMAND osiris_wrappers2_emu86_test
+		"${OSIRIS_WRAPPERS2_EXPECTED_LOG}"
+		"${OSIRIS_WRAPPERS2_EMU86_ACTUAL_LOG}"
+		"${OSIRIS_WRAPPERS2_EMU86_DLL}")
 
 #add_test(
 #	NAME osiris_import_emu86
