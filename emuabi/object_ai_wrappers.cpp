@@ -3,6 +3,7 @@
 #include "pstypes.h"
 #include "osiris_predefs.h"
 #include "vecmat_external.h"
+#include <cstdint>
 #include <cstring>
 
 //template <>
@@ -176,8 +177,6 @@ void emucall_osipf_AIGoalAddEnabler(Emu86FunCtx& ctx, void *)
 	ctx.set_return(osipf_AIGoalAddEnabler(objhandle, goal_index, enabler_type, percent, interval, ptr));
 }
 
-// float osipf_AIGoalAdd(int objhandle, int goal_type, int level, float influence, int guid, int flags, ...);
-// VA args not supported, this is a placeholder
 void emucall_osipf_AIGoalAdd(Emu86FunCtx& ctx, void *)
 {
 	int objhandle = ctx.arg<int>(0);
@@ -186,7 +185,113 @@ void emucall_osipf_AIGoalAdd(Emu86FunCtx& ctx, void *)
 	float influence = ctx.arg<float>(3);
 	int guid = ctx.arg<int>(4);
 	int flags = ctx.arg<int>(5);
-	ctx.set_return(osipf_AIGoalAdd(objhandle, goal_type, level, influence, guid, flags));
+
+	switch (goal_type)
+	{
+	case AIG_GET_AWAY_FROM_OBJ:
+	case AIG_GET_TO_OBJ:
+	case AIG_GUARD_OBJ:
+	case AIG_DODGE_OBJ:
+	case AIG_MOVE_AROUND_OBJ:
+	case AIG_MOVE_RELATIVE_OBJ:
+	case AIG_GET_AROUND_OBJ:
+	{
+		int objref = ctx.arg<int>(6);
+		ctx.set_return(osipf_AIGoalAdd(objhandle, goal_type, level, influence, guid, flags, objref));
+		return;
+	}
+
+	case AIG_FOLLOW_PATH:
+	{
+		int path_id = ctx.arg<int>(6);
+		int start_node = ctx.arg<int>(7);
+		int end_node = ctx.arg<int>(8);
+		int next_node = ctx.arg<int>(9);
+		ctx.set_return(osipf_AIGoalAdd(objhandle, goal_type, level, influence, guid, flags,
+			path_id, start_node, end_node, next_node));
+		return;
+	}
+
+	case AIG_ATTACH_TO_OBJ:
+	case AIG_PLACE_OBJ_ON_OBJ:
+	{
+		int handle = ctx.arg<int>(6);
+		char parent_ap = ctx.arg<char>(7);
+		char child_ap = ctx.arg<char>(8);
+		float rad = static_cast<float>(ctx.arg<double>(9));
+		int aligned = ctx.arg<int>(11);
+		int sphere = ctx.arg<int>(12);
+
+		ctx.set_return(osipf_AIGoalAdd(objhandle, goal_type, level, influence, guid, flags,
+			handle, parent_ap, child_ap, rad, aligned, sphere));
+		return;
+	}
+
+	case AIG_FIRE_AT_OBJ:
+	{
+		short wb = static_cast<short>(ctx.arg<int>(6));
+		ctx.set_return(osipf_AIGoalAdd(objhandle, goal_type, level, influence, guid, flags, wb));
+		return;
+	}
+
+	case AIG_MOVE_RELATIVE_OBJ_VEC:
+	{
+		int handle = ctx.arg<int>(6);
+		int i_value = ctx.arg<int>(7);
+		ctx.set_return(osipf_AIGoalAdd(objhandle, goal_type, level, influence, guid, flags, handle, i_value));
+		return;
+	}
+
+	case AIG_HIDE_FROM_OBJ:
+	{
+		int handle = ctx.arg<int>(6);
+		int time = ctx.arg<int>(7);
+		ctx.set_return(osipf_AIGoalAdd(objhandle, goal_type, level, influence, guid, flags, handle, time));
+		return;
+	}
+
+	case AIG_GUARD_AREA:
+	case AIG_GET_TO_POS:
+	{
+		vector *pos = ctx.arg<vector *>(6);
+		int roomnum = ctx.arg<int>(7);
+		ctx.set_return(osipf_AIGoalAdd(objhandle, goal_type, level, influence, guid, flags, pos, roomnum));
+		return;
+	}
+
+	case AIG_MELEE_TARGET:
+		ctx.set_return(osipf_AIGoalAdd(objhandle, goal_type, level, influence, guid, flags));
+		return;
+
+	case AIG_SET_ANIM:
+	case AIG_DO_MELEE_ANIM:
+	case AIG_USE_MOVEMENT_TYPE:
+	case AIG_SCRIPTED:
+	{
+		int i_value = ctx.arg<int>(6);
+		ctx.set_return(osipf_AIGoalAdd(objhandle, goal_type, level, influence, guid, flags, i_value));
+		return;
+	}
+
+	case AIG_WANDER_AROUND:
+	{
+		int i_value = ctx.arg<int>(6);
+		int ignored = ctx.arg<int>(7);
+		ctx.set_return(osipf_AIGoalAdd(objhandle, goal_type, level, influence, guid, flags, i_value, ignored));
+		return;
+	}
+
+	case AIG_FACE_DIR:
+	{
+		vector *v_value = ctx.arg<vector *>(6);
+		ctx.set_return(osipf_AIGoalAdd(objhandle, goal_type, level, influence, guid, flags, v_value));
+		return;
+	}
+
+	default:
+		ctx.set_return(-1);
+		return;
+	}
 }
 
 // void osipf_AIGoalClear(int objhandle, int goal_index);

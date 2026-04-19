@@ -35,7 +35,7 @@ typedef ubyte DLLCALL (*osipf_AITurnTowardsVectors_fp)(int objhandle, vector* fv
 typedef void DLLCALL (*osipf_AISetType_fp)(int objhandle, int type);
 typedef vector DLLCALL (*osipf_AIFindHidePos_fp)(int hideobjhandle, int viewobjhandle, float time, int* hide_room);
 typedef int DLLCALL (*osipf_AIGoalAddEnabler_fp)(int objhandle, int goal_index, int enabler_type, float percent, float interval, void* ptr);
-typedef int DLLCALL (*osipf_AIGoalAdd_fp)(int objhandle, int goal_type, int level, float influence, int guid, int flags);
+typedef int DLLCALL (*osipf_AIGoalAdd_fp)(int objhandle, int goal_type, int level, float influence, int guid, int flags, ...);
 typedef void DLLCALL (*osipf_AIGoalClear_fp)(int objhandle, int goal_index);
 typedef int DLLCALL (*osipf_AIFindObjOfType_fp)(int objhandle, int type, int id, bool f_ignore_init_room, int parent_handle);
 typedef vector DLLCALL (*osipf_AIGetRoomPathPoint_fp)(int roomnum);
@@ -104,7 +104,7 @@ ubyte osipf_AITurnTowardsVectors(int objhandle, vector* fvec, vector* uvec);
 void osipf_AISetType(int objhandle, int type);
 vector osipf_AIFindHidePos(int hideobjhandle, int viewobjhandle, float time, int* hide_room);
 int osipf_AIGoalAddEnabler(int objhandle, int goal_index, int enabler_type, float percent, float interval, void* ptr);
-int osipf_AIGoalAdd(int objhandle, int goal_type, int level, float influence, int guid, int flags);
+int osipf_AIGoalAdd(int objhandle, int goal_type, int level, float influence, int guid, int flags, ...);
 void osipf_AIGoalClear(int objhandle, int goal_index);
 int osipf_AIFindObjOfType(int objhandle, int type, int id, bool f_ignore_init_room, int parent_handle);
 vector osipf_AIGetRoomPathPoint(int roomnum);

@@ -279,7 +279,7 @@ int osipf_AIGoalAddEnabler(int objhandle, int goal_index, int enabler_type, floa
 	return 1;
 }
 
-int osipf_AIGoalAdd(int objhandle, int goal_type, int level, float influence, int guid, int flags)
+int osipf_AIGoalAdd(int objhandle, int goal_type, int level, float influence, int guid, int flags, ...)
 {
 	ObjectAILogf("osipf_AIGoalAdd objhandle=%d goal_type=%d level=%d influence=%.3f guid=%d flags=%d\n",
 		objhandle, goal_type, level, influence, guid, flags);
