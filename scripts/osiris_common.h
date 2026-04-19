@@ -918,6 +918,7 @@ typedef int OMMSHANDLE;
 // quiet, the following section will only be included if this header file 
 // is included by a DLL
 #ifndef INCLUDED_FROM_D3
+//#error not incl d3
 
 //Use this handle when you want a handle that will never be a valid object
 #ifndef INCLUDED_FROM_PLAYER_H

@@ -1,8 +1,8 @@
-#include "../emu86/include/emu86.h"
+#define INCLUDED_FROM_D3
+#include "emu86.h"
 #include "pstypes.h"
 #include "osiris_predefs.h"
 #include "vecmat_external.h"
-#include "osiris_import.h"
 #include <cstring>
 
 //template <>
@@ -154,13 +154,14 @@ void emucall_osipf_AISetType(Emu86FunCtx& ctx, void *)
 // Hidden pointer is arg(4), return value is the hidden pointer
 void emucall_osipf_AIFindHidePos(Emu86FunCtx& ctx, void *)
 {
-	int hideobjhandle = ctx.arg<int>(0);
-	int viewobjhandle = ctx.arg<int>(1);
-	float time = ctx.arg<float>(2);
-	int *hide_room = ctx.arg<int *>(3);
-	vector *hidden_ptr = ctx.arg<vector *>(4);
-	*hidden_ptr = osipf_AIFindHidePos(hideobjhandle, viewobjhandle, time, hide_room);
-	ctx.set_return(static_cast<emu_ptr_t>(reinterpret_cast<uintptr_t>(hidden_ptr)));
+	emu_ptr_t ret = ctx.arg<emu_ptr_t>(0);
+	vector *ret_vector = (vector *)ctx.to_native_ptr(ret);
+	int hideobjhandle = ctx.arg<int>(1);
+	int viewobjhandle = ctx.arg<int>(2);
+	float time = ctx.arg<float>(3);
+	int *hide_room = ctx.arg<int *>(4);
+	*ret_vector = osipf_AIFindHidePos(hideobjhandle, viewobjhandle, time, hide_room);
+	ctx.set_return(ret);
 }
 
 // int osipf_AIGoalAddEnabler(int objhandle, int goal_index, int enabler_type, float percent, float interval, void *ptr);
@@ -211,10 +212,11 @@ void emucall_AI_FindObjOfType(Emu86FunCtx& ctx, void *)
 // Hidden pointer is arg(1), return value is the hidden pointer
 void emucall_osipf_AIGetRoomPathPoint(Emu86FunCtx& ctx, void *)
 {
-	int roomnum = ctx.arg<int>(0);
-	vector *hidden_ptr = ctx.arg<vector *>(1);
-	*hidden_ptr = osipf_AIGetRoomPathPoint(roomnum);
-	ctx.set_return(static_cast<emu_ptr_t>(reinterpret_cast<uintptr_t>(hidden_ptr)));
+	emu_ptr_t ret = ctx.arg<emu_ptr_t>(0);
+	vector *ret_vector = (vector *)ctx.to_native_ptr(ret);
+	int roomnum = ctx.arg<int>(1);
+	*ret_vector = osipf_AIGetRoomPathPoint(roomnum);
+	ctx.set_return(ret);
 }
 
 // int osipf_AIFindEnergyCenter(int objhandle);

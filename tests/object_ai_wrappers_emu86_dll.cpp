@@ -1,0 +1,88 @@
+#include "object_ai_wrappers_callers.h"
+#include "object_ai_wrappers_test.h"
+
+#define DEFINE_OBJECT_AI_POINTER(name) name##_fp name = 0;
+DEFINE_OBJECT_AI_POINTER(osipf_ObjectGetTimeLived)
+DEFINE_OBJECT_AI_POINTER(Obj_GetGunPos)
+DEFINE_OBJECT_AI_POINTER(Obj_GetGroundPos)
+DEFINE_OBJECT_AI_POINTER(osipf_GetNumAttachSlots)
+DEFINE_OBJECT_AI_POINTER(osipf_GetAttachChildHandle)
+DEFINE_OBJECT_AI_POINTER(osipf_UnattachFromParent)
+DEFINE_OBJECT_AI_POINTER(osipf_UnattachChild)
+DEFINE_OBJECT_AI_POINTER(osipf_UnattachChildren)
+DEFINE_OBJECT_AI_POINTER(osipf_RayCast)
+DEFINE_OBJECT_AI_POINTER(osipf_AIGetPathID)
+DEFINE_OBJECT_AI_POINTER(AI_GoalFollowPathSimple)
+DEFINE_OBJECT_AI_POINTER(osipf_AIPowerSwitch)
+DEFINE_OBJECT_AI_POINTER(osipf_AIValue)
+DEFINE_OBJECT_AI_POINTER(Obj_Value)
+DEFINE_OBJECT_AI_POINTER(osipf_AITurnTowardsVectors)
+DEFINE_OBJECT_AI_POINTER(osipf_AISetType)
+DEFINE_OBJECT_AI_POINTER(osipf_AIFindHidePos)
+DEFINE_OBJECT_AI_POINTER(osipf_AIGoalAddEnabler)
+DEFINE_OBJECT_AI_POINTER(osipf_AIGoalAdd)
+DEFINE_OBJECT_AI_POINTER(osipf_AIGoalClear)
+DEFINE_OBJECT_AI_POINTER(AI_FindObjOfType)
+DEFINE_OBJECT_AI_POINTER(osipf_AIGetRoomPathPoint)
+DEFINE_OBJECT_AI_POINTER(osipf_AIFindEnergyCenter)
+DEFINE_OBJECT_AI_POINTER(osipf_AIGetDistToObj)
+DEFINE_OBJECT_AI_POINTER(osipf_AISetGoalFlags)
+DEFINE_OBJECT_AI_POINTER(osipf_AISetGoalCircleDist)
+DEFINE_OBJECT_AI_POINTER(osipf_AIIsObjFriend)
+DEFINE_OBJECT_AI_POINTER(osipf_AIIsObjEnemy)
+DEFINE_OBJECT_AI_POINTER(osipf_AIGetCurGoalIndex)
+DEFINE_OBJECT_AI_POINTER(osipf_ObjMakeListOfType)
+DEFINE_OBJECT_AI_POINTER(osipf_AIIsDestReachable)
+DEFINE_OBJECT_AI_POINTER(osipf_AIIsObjReachable)
+#undef DEFINE_OBJECT_AI_POINTER
+
+#define DEFINE_OBJECT_AI_SETTER(name) \
+	extern "C" __declspec(dllexport) unsigned set_##name(unsigned fn) \
+	{ \
+		name = reinterpret_cast<name##_fp>(fn); \
+		return name ? 1u : 0u; \
+	}
+
+DEFINE_OBJECT_AI_SETTER(osipf_ObjectGetTimeLived)
+DEFINE_OBJECT_AI_SETTER(Obj_GetGunPos)
+DEFINE_OBJECT_AI_SETTER(Obj_GetGroundPos)
+DEFINE_OBJECT_AI_SETTER(osipf_GetNumAttachSlots)
+DEFINE_OBJECT_AI_SETTER(osipf_GetAttachChildHandle)
+DEFINE_OBJECT_AI_SETTER(osipf_UnattachFromParent)
+DEFINE_OBJECT_AI_SETTER(osipf_UnattachChild)
+DEFINE_OBJECT_AI_SETTER(osipf_UnattachChildren)
+DEFINE_OBJECT_AI_SETTER(osipf_RayCast)
+DEFINE_OBJECT_AI_SETTER(osipf_AIGetPathID)
+DEFINE_OBJECT_AI_SETTER(AI_GoalFollowPathSimple)
+DEFINE_OBJECT_AI_SETTER(osipf_AIPowerSwitch)
+DEFINE_OBJECT_AI_SETTER(osipf_AIValue)
+DEFINE_OBJECT_AI_SETTER(Obj_Value)
+DEFINE_OBJECT_AI_SETTER(osipf_AITurnTowardsVectors)
+DEFINE_OBJECT_AI_SETTER(osipf_AISetType)
+DEFINE_OBJECT_AI_SETTER(osipf_AIFindHidePos)
+DEFINE_OBJECT_AI_SETTER(osipf_AIGoalAddEnabler)
+DEFINE_OBJECT_AI_SETTER(osipf_AIGoalAdd)
+DEFINE_OBJECT_AI_SETTER(osipf_AIGoalClear)
+DEFINE_OBJECT_AI_SETTER(AI_FindObjOfType)
+DEFINE_OBJECT_AI_SETTER(osipf_AIGetRoomPathPoint)
+DEFINE_OBJECT_AI_SETTER(osipf_AIFindEnergyCenter)
+DEFINE_OBJECT_AI_SETTER(osipf_AIGetDistToObj)
+DEFINE_OBJECT_AI_SETTER(osipf_AISetGoalFlags)
+DEFINE_OBJECT_AI_SETTER(osipf_AISetGoalCircleDist)
+DEFINE_OBJECT_AI_SETTER(osipf_AIIsObjFriend)
+DEFINE_OBJECT_AI_SETTER(osipf_AIIsObjEnemy)
+DEFINE_OBJECT_AI_SETTER(osipf_AIGetCurGoalIndex)
+DEFINE_OBJECT_AI_SETTER(osipf_ObjMakeListOfType)
+DEFINE_OBJECT_AI_SETTER(osipf_AIIsDestReachable)
+DEFINE_OBJECT_AI_SETTER(osipf_AIIsObjReachable)
+#undef DEFINE_OBJECT_AI_SETTER
+
+extern "C" {
+
+__declspec(dllexport) unsigned run_all_object_ai_test_callers(void)
+{
+	RunAllObjectAITestCallers();
+	return 0u;
+}
+
+}

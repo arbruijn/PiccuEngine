@@ -1,0 +1,32 @@
+osipf_ObjectGetTimeLived objhandle=1001
+osipf_GetGunPos objhandle=1001 gun_number=2 gun_pnt=(10.000,20.000,30.000) gun_normal=(40.000,50.000,60.000)
+osipf_GetGroundPos objhandle=1001 ground_number=4 ground_pnt=(11.000,21.000,31.000) ground_normal=(41.000,51.000,61.000)
+osipf_GetNumAttachSlots objhandle=1001
+osipf_GetAttachChildHandle objhandle=1001 attachpoint='A'
+osipf_UnattachFromParent objhandle=1001
+osipf_UnattachChild objhandle=1001 parent_ap='B'
+osipf_UnattachChildren objhandle=1001
+osipf_RayCast objhandle=1001 p0=(1.500,2.500,3.500) p1=(4.500,5.500,6.500) start_roomnum=7 rad=1.250 flags=42 fate=7 hit_room=11 hit_point=(1.000,2.000,3.000) hit_object=101 hit_subobject=202 hit_face=303 hit_face_pnt=(4.000,5.000,6.000) hit_face_room=404 hit_wallnorm=(7.000,8.000,9.000)
+osipf_AIGetPathID string="alpha-path"
+osipf_AIGoalFollowPathSimple objhandle=1001 path_id=7 guid=9 flags=3 slot=4
+osipf_AIPowerSwitch objhandle=1001 f_power_on=1
+osipf_AIValue objhandle=1001 op='=' vtype='f' value=3.250
+osipf_ObjectValue objhandle=1001 op='+' vtype='i' index=5 value=17
+osipf_AITurnTowardsVectors objhandle=1001 fvec=(1.000,0.000,0.000) uvec=(0.000,1.000,0.000)
+osipf_AISetType objhandle=1001 type=12
+osipf_AIFindHidePos hideobjhandle=1001 viewobjhandle=2002 time=3.500 hide_room=7 hidden=(1.000,2.000,3.000)
+osipf_AIGoalAddEnabler objhandle=1001 goal_index=2 enabler_type=3 percent=0.750 interval=1.500 ptr_value=99
+osipf_AIGoalAdd objhandle=1001 goal_type=4 level=5 influence=0.250 guid=6 flags=7
+osipf_AIGoalClear objhandle=1001 goal_index=2
+osipf_AIFindObjOfType objhandle=1001 type=12 id=34 f_ignore_init_room=1 parent_handle=56
+osipf_AIGetRoomPathPoint roomnum=7 path_point=(4.000,5.000,6.000)
+osipf_AIFindEnergyCenter objhandle=1001
+osipf_AIGetDistToObj objhandle=1001 otherobjhandle=2002
+osipf_AISetGoalFlags objhandle=1001 goal_handle=2 flags=64 f_enable=1
+osipf_AISetGoalCircleDist objhandle=1001 goal_handle=2 dist=12.500
+osipf_AIIsObjFriend obj_handle=1001 it_handle=2002
+osipf_AIIsObjEnemy obj_handle=1001 it_handle=2002
+osipf_AIGetCurGoalIndex obj_handle=1001
+osipf_ObjMakeListOfType objhandle=1001 type=12 id=34 f_ignore_init_room=0 parent_handle=56 max_recorded=3 handles=[4000,4001,4002]
+osipf_AIIsDestReachable handle=1001 room=7
+osipf_AIIsObjReachable handle=1001 target=2002
