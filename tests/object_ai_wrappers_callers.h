@@ -21,6 +21,27 @@
 	X(osipf_AIFindHidePos) \
 	X(osipf_AIGoalAddEnabler) \
 	X(osipf_AIGoalAdd) \
+	X(osipf_AIGoalAdd_GetAwayFromObj) \
+	X(osipf_AIGoalAdd_HideFromObj) \
+	X(osipf_AIGoalAdd_GuardObj) \
+	X(osipf_AIGoalAdd_DodgeObj) \
+	X(osipf_AIGoalAdd_MoveAroundObj) \
+	X(osipf_AIGoalAdd_MoveRelativeObj) \
+	X(osipf_AIGoalAdd_GetAroundObj) \
+	X(osipf_AIGoalAdd_FollowPath) \
+	X(osipf_AIGoalAdd_AttachToObj) \
+	X(osipf_AIGoalAdd_PlaceObjOnObj) \
+	X(osipf_AIGoalAdd_FireAtObj) \
+	X(osipf_AIGoalAdd_MoveRelativeObjVec) \
+	X(osipf_AIGoalAdd_GuardArea) \
+	X(osipf_AIGoalAdd_GetToPos) \
+	X(osipf_AIGoalAdd_MeleeTarget) \
+	X(osipf_AIGoalAdd_SetAnim) \
+	X(osipf_AIGoalAdd_DoMeleeAnim) \
+	X(osipf_AIGoalAdd_UseMovementType) \
+	X(osipf_AIGoalAdd_Scripted) \
+	X(osipf_AIGoalAdd_WanderAround) \
+	X(osipf_AIGoalAdd_FaceDir) \
 	X(osipf_AIGoalClear) \
 	X(AI_FindObjOfType) \
 	X(osipf_AIGetRoomPathPoint) \

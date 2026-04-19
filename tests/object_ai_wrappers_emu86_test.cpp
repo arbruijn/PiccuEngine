@@ -113,6 +113,8 @@ int main(int argc, char** argv)
 		return 2;
 	}
 
+	emu86_set_trace(g_emu86, true);
+
 	const size_t fun_count = sizeof(kObjectAIWrapperFuns) / sizeof(kObjectAIWrapperFuns[0]);
 	uint32_t addresses[sizeof(kObjectAIWrapperFuns) / sizeof(kObjectAIWrapperFuns[0])] = {};
 	const size_t added = emu86_add_fun_list(g_emu86, kObjectAIWrapperFuns, fun_count, addresses, fun_count);

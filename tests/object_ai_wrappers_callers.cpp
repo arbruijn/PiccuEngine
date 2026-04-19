@@ -26,7 +26,18 @@ namespace
 		ri->hit_face_room = 404;
 		SeedVector(&ri->hit_wallnorm, 7.0f, 8.0f, 9.0f);
 	}
+
+#if 0
+	template <typename... Args>
+	static void CallGoalAdd(int goal_type, Args... args)
+	{
+		(void)osipf_AIGoalAdd(1001, goal_type, 5, 0.25f, 6, 7, args...);
+	}
+#endif
 }
+
+#define CallGoalAdd(goal_type, ...) osipf_AIGoalAdd(1001, goal_type, 5, 0.25f, 6, 7, __VA_ARGS__)
+#define CallGoalAddNone(goal_type) osipf_AIGoalAdd(1001, goal_type, 5, 0.25f, 6, 7)
 
 void TestCaller_osipf_ObjectGetTimeLived(void)
 {
@@ -144,7 +155,118 @@ void TestCaller_osipf_AIGoalAddEnabler(void)
 
 void TestCaller_osipf_AIGoalAdd(void)
 {
-	(void)osipf_AIGoalAdd(1001, 4, 5, 0.25f, 6, 7);
+	CallGoalAdd(AIG_GET_TO_OBJ, 2001);
+}
+
+void TestCaller_osipf_AIGoalAdd_GetAwayFromObj(void)
+{
+	CallGoalAdd(AIG_GET_AWAY_FROM_OBJ, 2002);
+}
+
+void TestCaller_osipf_AIGoalAdd_HideFromObj(void)
+{
+	CallGoalAdd(AIG_HIDE_FROM_OBJ, 2003, 8);
+}
+
+void TestCaller_osipf_AIGoalAdd_GuardObj(void)
+{
+	CallGoalAdd(AIG_GUARD_OBJ, 2004);
+}
+
+void TestCaller_osipf_AIGoalAdd_DodgeObj(void)
+{
+	CallGoalAdd(AIG_DODGE_OBJ, 2005);
+}
+
+void TestCaller_osipf_AIGoalAdd_MoveAroundObj(void)
+{
+	CallGoalAdd(AIG_MOVE_AROUND_OBJ, 2006);
+}
+
+void TestCaller_osipf_AIGoalAdd_MoveRelativeObj(void)
+{
+	CallGoalAdd(AIG_MOVE_RELATIVE_OBJ, 2007);
+}
+
+void TestCaller_osipf_AIGoalAdd_GetAroundObj(void)
+{
+	CallGoalAdd(AIG_GET_AROUND_OBJ, 2008);
+}
+
+void TestCaller_osipf_AIGoalAdd_FollowPath(void)
+{
+	CallGoalAdd(AIG_FOLLOW_PATH, 7, 8, 9, 10);
+}
+
+void TestCaller_osipf_AIGoalAdd_AttachToObj(void)
+{
+	CallGoalAdd(AIG_ATTACH_TO_OBJ, 3001, 'P', 'C', 2.5f, 1, 0);
+}
+
+void TestCaller_osipf_AIGoalAdd_PlaceObjOnObj(void)
+{
+	CallGoalAdd(AIG_PLACE_OBJ_ON_OBJ, 3002, 'Q', 'R', 3.5f, 0, 1);
+}
+
+void TestCaller_osipf_AIGoalAdd_FireAtObj(void)
+{
+	CallGoalAdd(AIG_FIRE_AT_OBJ, 11);
+}
+
+void TestCaller_osipf_AIGoalAdd_MoveRelativeObjVec(void)
+{
+	CallGoalAdd(AIG_MOVE_RELATIVE_OBJ_VEC, 3003, 42);
+}
+
+void TestCaller_osipf_AIGoalAdd_GuardArea(void)
+{
+	vector pos;
+	SeedVector(&pos, 12.0f, 13.0f, 14.0f);
+	CallGoalAdd(AIG_GUARD_AREA, &pos, 44);
+}
+
+void TestCaller_osipf_AIGoalAdd_GetToPos(void)
+{
+	vector pos;
+	SeedVector(&pos, 15.0f, 16.0f, 17.0f);
+	CallGoalAdd(AIG_GET_TO_POS, &pos, 45);
+}
+
+void TestCaller_osipf_AIGoalAdd_MeleeTarget(void)
+{
+	CallGoalAddNone(AIG_MELEE_TARGET);
+}
+
+void TestCaller_osipf_AIGoalAdd_SetAnim(void)
+{
+	CallGoalAdd(AIG_SET_ANIM, 16);
+}
+
+void TestCaller_osipf_AIGoalAdd_DoMeleeAnim(void)
+{
+	CallGoalAdd(AIG_DO_MELEE_ANIM, 17);
+}
+
+void TestCaller_osipf_AIGoalAdd_UseMovementType(void)
+{
+	CallGoalAdd(AIG_USE_MOVEMENT_TYPE, 18);
+}
+
+void TestCaller_osipf_AIGoalAdd_Scripted(void)
+{
+	CallGoalAdd(AIG_SCRIPTED, 19);
+}
+
+void TestCaller_osipf_AIGoalAdd_WanderAround(void)
+{
+	CallGoalAdd(AIG_WANDER_AROUND, 20, 21);
+}
+
+void TestCaller_osipf_AIGoalAdd_FaceDir(void)
+{
+	vector dir;
+	SeedVector(&dir, 22.0f, 23.0f, 24.0f);
+	CallGoalAdd(AIG_FACE_DIR, &dir);
 }
 
 void TestCaller_osipf_AIGoalClear(void)

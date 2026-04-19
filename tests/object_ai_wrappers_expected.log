@@ -16,7 +16,28 @@ osipf_AITurnTowardsVectors objhandle=1001 fvec=(1.000,0.000,0.000) uvec=(0.000,1
 osipf_AISetType objhandle=1001 type=12
 osipf_AIFindHidePos hideobjhandle=1001 viewobjhandle=2002 time=3.500 hide_room=7 hidden=(1.000,2.000,3.000)
 osipf_AIGoalAddEnabler objhandle=1001 goal_index=2 enabler_type=3 percent=0.750 interval=1.500 ptr_value=99
-osipf_AIGoalAdd objhandle=1001 goal_type=4 level=5 influence=0.250 guid=6 flags=7
+osipf_AIGoalAdd objhandle=1001 goal_type=4 level=5 influence=0.250 guid=6 flags=7 objref=2001
+osipf_AIGoalAdd objhandle=1001 goal_type=1 level=5 influence=0.250 guid=6 flags=7 objref=2002
+osipf_AIGoalAdd objhandle=1001 goal_type=2 level=5 influence=0.250 guid=6 flags=7 handle=2003 time=8
+osipf_AIGoalAdd objhandle=1001 goal_type=512 level=5 influence=0.250 guid=6 flags=7 objref=2004
+osipf_AIGoalAdd objhandle=1001 goal_type=8192 level=5 influence=0.250 guid=6 flags=7 objref=2005
+osipf_AIGoalAdd objhandle=1001 goal_type=131072 level=5 influence=0.250 guid=6 flags=7 objref=2006
+osipf_AIGoalAdd objhandle=1001 goal_type=524288 level=5 influence=0.250 guid=6 flags=7 objref=2007
+osipf_AIGoalAdd objhandle=1001 goal_type=4194304 level=5 influence=0.250 guid=6 flags=7 objref=2008
+osipf_AIGoalAdd objhandle=1001 goal_type=16384 level=5 influence=0.250 guid=6 flags=7 path_id=7 start_node=8 end_node=9 next_node=10
+osipf_AIGoalAdd objhandle=1001 goal_type=8 level=5 influence=0.250 guid=6 flags=7 handle=3001 parent_ap='P' child_ap='C' rad=2.500 aligned=1 sphere=0
+osipf_AIGoalAdd objhandle=1001 goal_type=256 level=5 influence=0.250 guid=6 flags=7 handle=3002 parent_ap='Q' child_ap='R' rad=3.500 aligned=0 sphere=1
+osipf_AIGoalAdd objhandle=1001 goal_type=16 level=5 influence=0.250 guid=6 flags=7 wb=11
+osipf_AIGoalAdd objhandle=1001 goal_type=262144 level=5 influence=0.250 guid=6 flags=7 handle=3003 i_value=42
+osipf_AIGoalAdd objhandle=1001 goal_type=1024 level=5 influence=0.250 guid=6 flags=7 pos=(12.000,13.000,14.000) roomnum=44
+osipf_AIGoalAdd objhandle=1001 goal_type=1048576 level=5 influence=0.250 guid=6 flags=7 pos=(15.000,16.000,17.000) roomnum=45
+osipf_AIGoalAdd objhandle=1001 goal_type=32 level=5 influence=0.250 guid=6 flags=7
+osipf_AIGoalAdd objhandle=1001 goal_type=32768 level=5 influence=0.250 guid=6 flags=7 i_value=16
+osipf_AIGoalAdd objhandle=1001 goal_type=2097152 level=5 influence=0.250 guid=6 flags=7 i_value=17
+osipf_AIGoalAdd objhandle=1001 goal_type=128 level=5 influence=0.250 guid=6 flags=7 i_value=18
+osipf_AIGoalAdd objhandle=1001 goal_type=65536 level=5 influence=0.250 guid=6 flags=7 i_value=19
+osipf_AIGoalAdd objhandle=1001 goal_type=64 level=5 influence=0.250 guid=6 flags=7 i_value=20 ignored=21
+osipf_AIGoalAdd objhandle=1001 goal_type=4096 level=5 influence=0.250 guid=6 flags=7 v_value=(22.000,23.000,24.000)
 osipf_AIGoalClear objhandle=1001 goal_index=2
 osipf_AIFindObjOfType objhandle=1001 type=12 id=34 f_ignore_init_room=1 parent_handle=56
 osipf_AIGetRoomPathPoint roomnum=7 path_point=(4.000,5.000,6.000)

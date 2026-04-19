@@ -428,7 +428,7 @@ const emu86_fun_t kObjectAIWrapperFuns[] = {
 	{"osipf_AISetType", emucall_osipf_AISetType, 2, nullptr},
 	{"osipf_AIFindHidePos", emucall_osipf_AIFindHidePos, 5, nullptr},
 	{"osipf_AIGoalAddEnabler", emucall_osipf_AIGoalAddEnabler, 6, nullptr},
-	{"osipf_AIGoalAdd", emucall_osipf_AIGoalAdd, 6, nullptr},
+	{"osipf_AIGoalAdd", emucall_osipf_AIGoalAdd, 0, nullptr},
 	{"osipf_AIGoalClear", emucall_osipf_AIGoalClear, 2, nullptr},
 	{"AI_FindObjOfType", emucall_AI_FindObjOfType, 5, nullptr},
 	{"osipf_AIGetRoomPathPoint", emucall_osipf_AIGetRoomPathPoint, 2, nullptr},

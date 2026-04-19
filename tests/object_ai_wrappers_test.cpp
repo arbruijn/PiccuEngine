@@ -281,8 +281,111 @@ int osipf_AIGoalAddEnabler(int objhandle, int goal_index, int enabler_type, floa
 
 int osipf_AIGoalAdd(int objhandle, int goal_type, int level, float influence, int guid, int flags, ...)
 {
-	ObjectAILogf("osipf_AIGoalAdd objhandle=%d goal_type=%d level=%d influence=%.3f guid=%d flags=%d\n",
+	va_list marker;
+	ObjectAILogf("osipf_AIGoalAdd objhandle=%d goal_type=%d level=%d influence=%.3f guid=%d flags=%d",
 		objhandle, goal_type, level, influence, guid, flags);
+
+	switch (goal_type)
+	{
+	case AIG_GET_AWAY_FROM_OBJ:
+	case AIG_GET_TO_OBJ:
+	case AIG_GUARD_OBJ:
+	case AIG_DODGE_OBJ:
+	case AIG_MOVE_AROUND_OBJ:
+	case AIG_MOVE_RELATIVE_OBJ:
+	case AIG_GET_AROUND_OBJ:
+		va_start(marker, flags);
+		ObjectAILogf(" objref=%d\n", va_arg(marker, int));
+		va_end(marker);
+		break;
+
+	case AIG_FOLLOW_PATH:
+		va_start(marker, flags);
+		ObjectAILogf(" path_id=%d start_node=%d end_node=%d next_node=%d\n",
+			va_arg(marker, int),
+			va_arg(marker, int),
+			va_arg(marker, int),
+			va_arg(marker, int));
+		va_end(marker);
+		break;
+
+	case AIG_ATTACH_TO_OBJ:
+	case AIG_PLACE_OBJ_ON_OBJ:
+		va_start(marker, flags);
+		ObjectAILogf(" handle=%d parent_ap='%c' child_ap='%c' rad=%.3f aligned=%d sphere=%d\n",
+			va_arg(marker, int),
+			static_cast<char>(va_arg(marker, int)),
+			static_cast<char>(va_arg(marker, int)),
+			va_arg(marker, double),
+			va_arg(marker, int),
+			va_arg(marker, int));
+		va_end(marker);
+		break;
+
+	case AIG_FIRE_AT_OBJ:
+		va_start(marker, flags);
+		ObjectAILogf(" wb=%d\n", static_cast<short>(va_arg(marker, int)));
+		va_end(marker);
+		break;
+
+	case AIG_MOVE_RELATIVE_OBJ_VEC:
+		va_start(marker, flags);
+		ObjectAILogf(" handle=%d i_value=%d\n", va_arg(marker, int), va_arg(marker, int));
+		va_end(marker);
+		break;
+
+	case AIG_HIDE_FROM_OBJ:
+		va_start(marker, flags);
+		ObjectAILogf(" handle=%d time=%d\n", va_arg(marker, int), va_arg(marker, int));
+		va_end(marker);
+		break;
+
+	case AIG_GUARD_AREA:
+	case AIG_GET_TO_POS:
+	{
+		va_start(marker, flags);
+		vector* pos = va_arg(marker, vector*);
+		int roomnum = va_arg(marker, int);
+		va_end(marker);
+		ObjectAILogf(" pos=(%.3f,%.3f,%.3f) roomnum=%d\n",
+			pos ? pos->x : 0.0f, pos ? pos->y : 0.0f, pos ? pos->z : 0.0f, roomnum);
+		break;
+	}
+
+	case AIG_MELEE_TARGET:
+		ObjectAILogf("\n");
+		break;
+
+	case AIG_SET_ANIM:
+	case AIG_DO_MELEE_ANIM:
+	case AIG_USE_MOVEMENT_TYPE:
+	case AIG_SCRIPTED:
+		va_start(marker, flags);
+		ObjectAILogf(" i_value=%d\n", va_arg(marker, int));
+		va_end(marker);
+		break;
+
+	case AIG_WANDER_AROUND:
+		va_start(marker, flags);
+		ObjectAILogf(" i_value=%d ignored=%d\n", va_arg(marker, int), va_arg(marker, int));
+		va_end(marker);
+		break;
+
+	case AIG_FACE_DIR:
+	{
+		va_start(marker, flags);
+		vector* v_value = va_arg(marker, vector*);
+		va_end(marker);
+		ObjectAILogf(" v_value=(%.3f,%.3f,%.3f)\n",
+			v_value ? v_value->x : 0.0f, v_value ? v_value->y : 0.0f, v_value ? v_value->z : 0.0f);
+		break;
+	}
+
+	default:
+		ObjectAILogf("\n");
+		break;
+	}
+
 	return 123;
 }
 

@@ -1,4 +1,4 @@
-#include "../emu86/include/emu86.h"
+#include "emu86.h"
 
 int osipf_FindSoundName(char *name);
 int osipf_FindRoomName(char *name);
@@ -10,61 +10,58 @@ int osipf_FindMatcenName(char *name);
 int osipf_FindPathName(char *name);
 int osipf_FindLevelGoalName(char *name);
 
-namespace
+void emucall_osipf_FindSoundName(Emu86FunCtx& ctx, void *)
 {
-	static void emucall_osipf_FindSoundName(Emu86FunCtx& ctx, void *)
-	{
-		char *name = ctx.arg<char *>(0);
-		ctx.set_return(osipf_FindSoundName(name));
-	}
+	char *name = ctx.arg<char *>(0);
+	ctx.set_return(osipf_FindSoundName(name));
+}
 
-	static void emucall_osipf_FindRoomName(Emu86FunCtx& ctx, void *)
-	{
-		char *name = ctx.arg<char *>(0);
-		ctx.set_return(osipf_FindRoomName(name));
-	}
+void emucall_osipf_FindRoomName(Emu86FunCtx& ctx, void *)
+{
+	char *name = ctx.arg<char *>(0);
+	ctx.set_return(osipf_FindRoomName(name));
+}
 
-	static void emucall_osipf_FindTriggerName(Emu86FunCtx& ctx, void *)
-	{
-		char *name = ctx.arg<char *>(0);
-		ctx.set_return(osipf_FindTriggerName(name));
-	}
+void emucall_osipf_FindTriggerName(Emu86FunCtx& ctx, void *)
+{
+	char *name = ctx.arg<char *>(0);
+	ctx.set_return(osipf_FindTriggerName(name));
+}
 
-	static void emucall_osipf_FindObjectName(Emu86FunCtx& ctx, void *)
-	{
-		char *name = ctx.arg<char *>(0);
-		ctx.set_return(osipf_FindObjectName(name));
-	}
+void emucall_osipf_FindObjectName(Emu86FunCtx& ctx, void *)
+{
+	char *name = ctx.arg<char *>(0);
+	ctx.set_return(osipf_FindObjectName(name));
+}
 
-	static void emucall_osipf_FindDoorName(Emu86FunCtx& ctx, void *)
-	{
-		char *name = ctx.arg<char *>(0);
-		ctx.set_return(osipf_FindDoorName(name));
-	}
+void emucall_osipf_FindDoorName(Emu86FunCtx& ctx, void *)
+{
+	char *name = ctx.arg<char *>(0);
+	ctx.set_return(osipf_FindDoorName(name));
+}
 
-	static void emucall_osipf_FindTextureName(Emu86FunCtx& ctx, void *)
-	{
-		char *name = ctx.arg<char *>(0);
-		ctx.set_return(osipf_FindTextureName(name));
-	}
+void emucall_osipf_FindTextureName(Emu86FunCtx& ctx, void *)
+{
+	char *name = ctx.arg<char *>(0);
+	ctx.set_return(osipf_FindTextureName(name));
+}
 
-	static void emucall_osipf_FindMatcenName(Emu86FunCtx& ctx, void *)
-	{
-		char *name = ctx.arg<char *>(0);
-		ctx.set_return(osipf_FindMatcenName(name));
-	}
+void emucall_osipf_FindMatcenName(Emu86FunCtx& ctx, void *)
+{
+	char *name = ctx.arg<char *>(0);
+	ctx.set_return(osipf_FindMatcenName(name));
+}
 
-	static void emucall_osipf_FindPathName(Emu86FunCtx& ctx, void *)
-	{
-		char *name = ctx.arg<char *>(0);
-		ctx.set_return(osipf_FindPathName(name));
-	}
+void emucall_osipf_FindPathName(Emu86FunCtx& ctx, void *)
+{
+	char *name = ctx.arg<char *>(0);
+	ctx.set_return(osipf_FindPathName(name));
+}
 
-	static void emucall_osipf_FindLevelGoalName(Emu86FunCtx& ctx, void *)
-	{
-		char *name = ctx.arg<char *>(0);
-		ctx.set_return(osipf_FindLevelGoalName(name));
-	}
+void emucall_osipf_FindLevelGoalName(Emu86FunCtx& ctx, void *)
+{
+	char *name = ctx.arg<char *>(0);
+	ctx.set_return(osipf_FindLevelGoalName(name));
 }
 
 const emu86_fun_t kOsirisWrapperFuns[] = {
