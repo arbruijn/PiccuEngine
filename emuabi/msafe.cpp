@@ -44,6 +44,62 @@ namespace
 		vector32 fvec;
 	};
 
+	struct osiris_timer32
+	{
+		uint16_t flags;
+		int32_t id;
+		int32_t repeat_count;
+		int32_t object_handle;
+		int32_t object_handle_detonator;
+		float timer_interval;
+	};
+
+	struct osiris_script_id32
+	{
+		int32_t type;
+		int32_t objhandle;
+	};
+
+	struct osiris_memchunk32
+	{
+		osiris_script_id32 my_id;
+		uint16_t id;
+		int32_t size;
+	};
+
+	struct game_cinematic32
+	{
+		uint32_t flags;
+		int32_t target_objhandle;
+		int32_t end_transition;
+		int32_t start_transition;
+		int32_t pathid;
+		vector32 position;
+		uint32_t orient;
+		int32_t room;
+		float max_time_play;
+		uint32_t callback;
+		PercentageRange text_display;
+		PercentageRange track_target;
+		PercentageRange player_disabled;
+		PercentageRange in_camera_view;
+		PercentageRange quick_exit;
+	};
+
+	struct canned_cinematic_info32
+	{
+		int32_t type;
+		int32_t camera_pathid;
+		int32_t target_pathid;
+		uint32_t text_to_display;
+		int32_t target_objhandle;
+		int32_t room;
+		float time;
+		int32_t object_to_use_for_point;
+		vector32 pos;
+		matrix32 orient;
+	};
+
 	static void decode_vector(vector& dst, const vector32& src)
 	{
 		dst.x = src.x;
@@ -56,6 +112,66 @@ namespace
 		decode_vector(dst.rvec, src.rvec);
 		decode_vector(dst.uvec, src.uvec);
 		decode_vector(dst.fvec, src.fvec);
+	}
+
+	static void decode_timer_struct(const osiris_timer32& src, tOSIRISTIMER& dst)
+	{
+		memset(&dst, 0, sizeof(dst));
+		dst.flags = src.flags;
+		dst.id = src.id;
+		dst.repeat_count = src.repeat_count;
+		dst.object_handle = src.object_handle;
+		dst.object_handle_detonator = src.object_handle_detonator;
+		dst.timer_interval = src.timer_interval;
+	}
+
+	static void decode_memchunk_struct(const osiris_memchunk32& src, tOSIRISMEMCHUNK& dst)
+	{
+		memset(&dst, 0, sizeof(dst));
+		dst.my_id.type = static_cast<script_type>(src.my_id.type);
+		dst.my_id.objhandle = src.my_id.objhandle;
+		dst.id = src.id;
+		dst.size = src.size;
+	}
+
+	static void decode_game_cinematic_struct(const game_cinematic32& src, tGameCinematic& dst, const VmPtrDecoder& vm)
+	{
+		memset(&dst, 0, sizeof(dst));
+		dst.flags = src.flags;
+		dst.target_objhandle = src.target_objhandle;
+		dst.end_transition = src.end_transition;
+		dst.start_transition = src.start_transition;
+		dst.pathid = src.pathid;
+		decode_vector(dst.position, src.position);
+		dst.orient = static_cast<matrix *>(vm.decode_ptr32(src.orient));
+		dst.room = src.room;
+		dst.max_time_play = src.max_time_play;
+		dst.callback = reinterpret_cast<void (*)(int)>(vm.decode_ptr32(src.callback));
+		dst.text_display.min = src.text_display.min;
+		dst.text_display.max = src.text_display.max;
+		dst.track_target.min = src.track_target.min;
+		dst.track_target.max = src.track_target.max;
+		dst.player_disabled.min = src.player_disabled.min;
+		dst.player_disabled.max = src.player_disabled.max;
+		dst.in_camera_view.min = src.in_camera_view.min;
+		dst.in_camera_view.max = src.in_camera_view.max;
+		dst.quick_exit.min = src.quick_exit.min;
+		dst.quick_exit.max = src.quick_exit.max;
+	}
+
+	static void decode_canned_cinematic_info_struct(const canned_cinematic_info32& src, tCannedCinematicInfo& dst, const VmPtrDecoder& vm)
+	{
+		memset(&dst, 0, sizeof(dst));
+		dst.type = src.type;
+		dst.camera_pathid = src.camera_pathid;
+		dst.target_pathid = src.target_pathid;
+		dst.text_to_display = static_cast<char *>(vm.decode_ptr32(src.text_to_display));
+		dst.target_objhandle = src.target_objhandle;
+		dst.room = src.room;
+		dst.time = src.time;
+		dst.object_to_use_for_point = src.object_to_use_for_point;
+		decode_vector(dst.pos, src.pos);
+		decode_matrix(dst.orient, src.orient);
 	}
 
 #define MSAFE_STRUCT_FIELDS(APPLY) \
@@ -447,5 +563,53 @@ void decode_msafe_struct(int type, const void* srcbuf, msafe_struct& dst, const 
 
 	const msafe_struct32& src = *static_cast<const msafe_struct32*>(srcbuf);
 	decode_msafe_fields(type, src, dst, vm);
+}
+
+void decode_osiris_timer_struct(const void* srcbuf, tOSIRISTIMER& dst)
+{
+	if (!srcbuf)
+	{
+		memset(&dst, 0, sizeof(dst));
+		return;
+	}
+
+	const osiris_timer32& src = *static_cast<const osiris_timer32*>(srcbuf);
+	decode_timer_struct(src, dst);
+}
+
+void decode_osiris_memchunk_struct(const void* srcbuf, tOSIRISMEMCHUNK& dst)
+{
+	if (!srcbuf)
+	{
+		memset(&dst, 0, sizeof(dst));
+		return;
+	}
+
+	const osiris_memchunk32& src = *static_cast<const osiris_memchunk32*>(srcbuf);
+	decode_memchunk_struct(src, dst);
+}
+
+void decode_game_cinematic_struct(const void* srcbuf, tGameCinematic& dst, const VmPtrDecoder& vm)
+{
+	if (!srcbuf)
+	{
+		memset(&dst, 0, sizeof(dst));
+		return;
+	}
+
+	const game_cinematic32& src = *static_cast<const game_cinematic32*>(srcbuf);
+	decode_game_cinematic_struct(src, dst, vm);
+}
+
+void decode_canned_cinematic_info_struct(const void* srcbuf, tCannedCinematicInfo& dst, const VmPtrDecoder& vm)
+{
+	if (!srcbuf)
+	{
+		memset(&dst, 0, sizeof(dst));
+		return;
+	}
+
+	const canned_cinematic_info32& src = *static_cast<const canned_cinematic_info32*>(srcbuf);
+	decode_canned_cinematic_info_struct(src, dst, vm);
 }
 }
