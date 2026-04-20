@@ -110,7 +110,7 @@ int FindArg(char* which)
 
 	argBuf[0] = '\0';  // blank buffer.
 
-#ifdef __LINUX__
+#if 0 //def __LINUX__
 	if ((*which == '-') || (*which == '+'))  // change D3 args to GNU type.
 	{
 		strcpy(argBuf, "--");
