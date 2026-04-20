@@ -1,12 +1,13 @@
 CMAKE_MINIMUM_REQUIRED( VERSION 3.11 )
 
+option(BUILD_TESTS "Build tests" OFF)
+
 MARK_AS_ADVANCED(CMAKE_BACKWARDS_COMPATIBILITY)
 # allow more human readable "if then else" constructs
 SET( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS TRUE )
 
 PROJECT(Descent3)
 
-enable_testing()
 
 function(add_hog_file HOG_NAME HOG_SRC_DIR)
 	string( REPLACE "." "_" HOG_TARGET ${HOG_NAME} )
@@ -183,7 +184,10 @@ add_custom_target( revision_check ALL
 	COMMAND "${CMAKE_COMMAND}" -P "${CMAKE_SOURCE_DIR}/tools/UpdateRevision.cmake" Descent3/gitinfo.h
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
+if (BUILD_TESTS)
+enable_testing()
 ADD_SUBDIRECTORY (tests)
+endif()
 
 # set default cmake build type to Debug (None Debug Release RelWithDebInfo MinSizeRel)
 IF( NOT CMAKE_BUILD_TYPE )
