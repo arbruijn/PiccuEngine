@@ -71,19 +71,22 @@ FOREACH( SCRIPT ${SCRIPTS})
  
   ADD_LIBRARY(${SCRIPT} SHARED ${CPPS} "${SCRIPT}.cpp")
   set_target_properties(${SCRIPT} PROPERTIES PREFIX "")
-  SET(SCRIPTTARGETS ${SCRIPTTARGETS} ${SCRIPT})
+  list(APPEND SCRIPTTARGETS ${SCRIPT})
     IF(UNIX)
-      GET_TARGET_PROPERTY(SCRIPT_LIB ${SCRIPT} LOCATION)
+      set(SCRIPT_MODULE_SUFFIX ".so")
+      if(APPLE)
+        set(SCRIPT_MODULE_SUFFIX ".dylib")
+      endif()
       ADD_CUSTOM_COMMAND(
 	TARGET ${SCRIPT}
 	POST_BUILD
-	COMMAND ${CMAKE_COMMAND} -E copy ${SCRIPT_LIB} "${CMAKE_SOURCE_DIR}/scripts/data/linuxfullhog/"
-	COMMENT "Copying file ${SCRIPT_LIB} to hogfile directory..."
+	COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${SCRIPT}> "${CMAKE_SOURCE_DIR}/scripts/data/linuxfullhog/"
+	COMMENT "Copying file $<TARGET_FILE:${SCRIPT}> to hogfile directory..."
 	)
       ADD_CUSTOM_COMMAND(
 	TARGET ${SCRIPT}
 	POST_BUILD
-	COMMAND ${CMAKE_COMMAND} -E copy ${SCRIPT_LIB} "${CMAKE_SOURCE_DIR}/scripts/data/linuxdemohog/"
+	COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${SCRIPT}> "${CMAKE_SOURCE_DIR}/scripts/data/linuxdemohog/"
 	)
 
     ENDIF()
@@ -91,6 +94,11 @@ FOREACH( SCRIPT ${SCRIPTS})
 ENDFOREACH()
 
 IF(UNIX)
+  set(SCRIPT_MODULE_SUFFIX ".so")
+  if(APPLE)
+    set(SCRIPT_MODULE_SUFFIX ".dylib")
+  endif()
+
   SET(HOGBUILDCMD "${CMAKE_SOURCE_DIR}/scripts/hogutils/hogUtils-i686")
   SET(HOGARCH "linux")
   IF(APPLE)
@@ -98,12 +106,25 @@ IF(UNIX)
     SET(HOGARCH "osx")
   ENDIF()
 
+  set(FULL_HOG_MANIFEST "${CMAKE_CURRENT_BINARY_DIR}/d3linuxfullhog.txt")
+  file(READ "${CMAKE_CURRENT_SOURCE_DIR}/data/linuxfullhog/d3linuxfullhog.txt" FULL_HOG_MANIFEST_CONTENT)
+  if(SCRIPT_MODULE_SUFFIX STREQUAL ".so")
+    string(REPLACE "polaris.so" "Polaris.so" FULL_HOG_MANIFEST_CONTENT "${FULL_HOG_MANIFEST_CONTENT}")
+  endif()
+  foreach(SCRIPT ${SCRIPTS})
+    if(NOT FULL_HOG_MANIFEST_CONTENT MATCHES "(^|[\r\n])${SCRIPT}\\${SCRIPT_MODULE_SUFFIX}([\r\n]|$)")
+      string(APPEND FULL_HOG_MANIFEST_CONTENT "${SCRIPT}${SCRIPT_MODULE_SUFFIX}\n")
+    endif()
+  endforeach()
+  file(WRITE "${FULL_HOG_MANIFEST}" "${FULL_HOG_MANIFEST_CONTENT}")
+
 
   ADD_CUSTOM_TARGET("FullLinuxHog"
     ALL
-    COMMAND ${HOGBUILDCMD} "--makehog" "d3linuxfullhog.txt" 
+    COMMAND ${HOGBUILDCMD} "--makehog" "${FULL_HOG_MANIFEST}" 
     COMMAND ${CMAKE_COMMAND} -E remove "${CMAKE_SOURCE_DIR}/scripts/data/linuxfullhog/d3-${HOGARCH}.hog"
     COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/scripts/data/linuxfullhog/new.hog" "${CMAKE_SOURCE_DIR}/scripts/data/linuxfullhog/d3-${HOGARCH}.hog"
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${D3_GAMEDIR}"
     COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/scripts/data/linuxfullhog/d3-${HOGARCH}.hog" "${D3_GAMEDIR}"
     COMMAND ${CMAKE_COMMAND} -E remove "${CMAKE_SOURCE_DIR}/scripts/data/linuxfullhog/new.hog"
     WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/scripts/data/linuxfullhog/"

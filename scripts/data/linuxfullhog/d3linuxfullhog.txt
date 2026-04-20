@@ -1,4 +1,5 @@
 AIGame3.so
+barney.so
 BatteriesIncluded.so
 CanyonsCTF.so
 CellTestLevel.so
@@ -8,11 +9,14 @@ Geodomes.so
 HalfPipe.so
 InfernalBolt.so
 Inversion.so
+LEVEL0.so
 LEVEL15.so
 Level12.so
 Level6.so
 Level9.so
 LevelS1.so
+Level16.so
+level17.so
 Merc02.so
 Merc1.so
 Merc3.so
@@ -20,10 +24,14 @@ Merc4.so
 Merc6.so
 Merc7.so
 Mysterious_Isle.so
+myPowerHouse.so
 Paranoia.so
+PiccuStation.so
+Polaris.so
 Quadsomniac.so
 RudeAwakening.so
 SewerRat.so
+testscript.so
 TrainingMission.so
 Y2K.so
 aigame2.so
@@ -45,7 +53,7 @@ level8.so
 levelS2.so
 merc5.so
 orbital.so
-polaris.so
+Polaris.so
 AIGAMEi.STR
 Anarchy.str
 Anarchyi.str
