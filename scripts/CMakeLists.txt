@@ -127,19 +127,20 @@ IF(UNIX)
   file(WRITE "${FULL_HOG_MANIFEST}" "${FULL_HOG_MANIFEST_CONTENT}")
 
   
-
-  ADD_CUSTOM_TARGET("FullLinuxHog"
-    ALL
+  SET(FULLHOG "${FULLDIR}/d3-${HOGARCH}.hog")
+  ADD_CUSTOM_COMMAND(
+    OUTPUT "${FULLHOG}"
     COMMAND ${HOGBUILDCMD} "--makehog" "${FULL_HOG_MANIFEST}" 
-    COMMAND ${CMAKE_COMMAND} -E remove "${FULLDIR}/d3-${HOGARCH}.hog"
-    COMMAND ${CMAKE_COMMAND} -E copy "${FULLDIR}/new.hog" "${FULLDIR}/d3-${HOGARCH}.hog"
+    COMMAND ${CMAKE_COMMAND} -E remove "${FULLHOG}"
+    COMMAND ${CMAKE_COMMAND} -E copy "${FULLDIR}/new.hog" "${FULLHOG}"
     #COMMAND ${CMAKE_COMMAND} -E make_directory "${D3_GAMEDIR}"
-    #COMMAND ${CMAKE_COMMAND} -E copy "${FULLDIR}/d3-${HOGARCH}.hog" "${D3_GAMEDIR}"
+    #COMMAND ${CMAKE_COMMAND} -E copy "${FULLHOG}" "${D3_GAMEDIR}"
     COMMAND ${CMAKE_COMMAND} -E remove "${FULLDIR}/new.hog"
     WORKING_DIRECTORY "${FULLDIR}"
     DEPENDS ${SCRIPTTARGETS}
     COMMENT "Building platform specific hog."
     )
+  ADD_CUSTOM_TARGET("FullLinuxHog" ALL DEPENDS "${FULLHOG}")
   #ADD_CUSTOM_TARGET("DemoLinuxHog"
   #  ALL
   #  COMMAND ${HOGBUILDCMD} "--makehog" "d3linuxdemohog.txt" 
