@@ -39,6 +39,7 @@
 #include "BOA.h"
 #include "findintersection.h"
 #include "args.h"
+#include "pserror.h"
 
 extern int AIAltPath[MAX_ROOMS];
 extern int AIAltPathNumNodes;
@@ -362,6 +363,11 @@ bool ap_resolve_goal_from_list(int goal_index, ap_target *best_target)
 	int num_items = Level_goals.GoalGetNumItems(goal_index);
 	for (int item_index = 0; item_index < num_items; item_index++)
 	{
+		bool done = false;
+		Level_goals.GoalItemInfo(goal_index, item_index, LO_GET_SPECIFIED, NULL, NULL, &done);
+		if (done)
+			continue;
+
 		ap_target candidate = {};
 		if (!ap_build_goal_item_target(goal_index, item_index, &candidate))
 			continue;
@@ -370,17 +376,22 @@ bool ap_resolve_goal_from_list(int goal_index, ap_target *best_target)
 		if (path_dist >= 9999999.0f)
 			continue;
 
+		*best_target = candidate;
+		found = true;
+		break;
+		/*
 		float world_dist = 0.0f;
 		if (Player_object && BOA_INDEX(candidate.roomnum) == BOA_INDEX(Player_object->roomnum))
 			world_dist = vm_VectorDistance(&Player_object->pos, &candidate.nav_pos);
 
 		float score = path_dist + world_dist;
-		if (!found || score < best_dist)
+		if (!found || score < best_dist - 100.0f)
 		{
 			best_dist = score;
 			*best_target = candidate;
 			found = true;
 		}
+		*/
 	}
 
 	return found;
@@ -419,6 +430,10 @@ bool ap_find_powerup_target(ap_target *target)
 	{
 		object *obj = &Objects[nearby[i]];
 		if (obj->type != OBJ_POWERUP || !ap_valid_object(obj))
+			continue;
+
+		char *name = Object_info[obj->id].name;
+		if (name && strnicmp(name, "buddy", 5) == 0)
 			continue;
 
 		float dist = vm_VectorDistanceQuick(&Player_object->pos, &obj->pos);
@@ -662,6 +677,9 @@ bool ap_rebuild_path()
 		Autopilot_state.path_index++;
 	}
 
+	mprintf((0, "Autopilot path rebuild: start_room=%d target_room=%d path_count=%d path_index=%d\n",
+		Player_object->roomnum, Autopilot_state.target.roomnum, Autopilot_state.path_count, Autopilot_state.path_index));
+
 	if (Autopilot_state.path_index >= Autopilot_state.path_count)
 	{
 		Autopilot_state.path_count = 0;
@@ -692,11 +710,10 @@ bool ap_resolve_target()
 		Autopilot_state.next_path_rebuild_time = 0.0f;
 	}
 
-	if (Autopilot_state.path_count == 0 || target_changed || Gametime >= Autopilot_state.next_path_rebuild_time)
+	if (Autopilot_state.path_count == 0 || target_changed)
 	{
 		if (!ap_rebuild_path())
 			return false;
-		Autopilot_state.next_path_rebuild_time = Gametime + AP_PATH_REBUILD_INTERVAL;
 	}
 
 	return true;
@@ -761,7 +778,8 @@ bool ap_find_path_obstacle(const vector &nav_pos, ap_shoot_target *shoot_target)
 		return true;
 	}
 
-	if (hit_obj->type == OBJ_ROBOT || (hit_obj->type == OBJ_BUILDING && hit_obj->ai_info))
+	if (hit_obj->type == OBJ_ROBOT || (hit_obj->type == OBJ_BUILDING && (hit_obj->ai_info ||
+		(hit_obj->render_type == RT_POLYOBJ && hit_obj->rtype.pobj_info.anim_time))))
 	{
 		shoot_target->kind = APSK_ROBOT;
 		shoot_target->handle = hit_obj->handle;
@@ -805,8 +823,11 @@ bool ap_compute_evade_dir(vector *evade_dir)
 		object *weapon_obj = &Objects[nearby[i]];
 		if (weapon_obj->type != OBJ_WEAPON || (weapon_obj->flags & (OF_DEAD | OF_DYING)))
 			continue;
-
-		object *parent_obj = ObjGetUltimateParent(ObjGet(weapon_obj->parent_handle));
+		
+		object *parent_obj = ObjGet(weapon_obj->parent_handle);
+		if (!parent_obj)
+			continue;
+		parent_obj = ObjGetUltimateParent(parent_obj);
 		if (!parent_obj || parent_obj == Player_object || !AIObjEnemy(Player_object, parent_obj))
 			continue;
 
@@ -851,12 +872,29 @@ bool ap_compute_evade_dir(vector *evade_dir)
 
 void ap_advance_path()
 {
+	int old_path_index = Autopilot_state.path_index;
+
 	while (Autopilot_state.path_index < Autopilot_state.path_count)
 	{
 		vector delta = Autopilot_state.path[Autopilot_state.path_index].pos - Player_object->pos;
 		if (vm_GetMagnitudeFast(&delta) >= AP_NODE_REACHED_DIST)
 			break;
 		Autopilot_state.path_index++;
+	}
+
+	if (Autopilot_state.path_index != old_path_index)
+	{
+		if (Autopilot_state.path_index < Autopilot_state.path_count)
+		{
+			vector *next_node = &Autopilot_state.path[Autopilot_state.path_index].pos;
+			mprintf((0, "Autopilot path advance: %d -> %d (next=(%.1f, %.1f, %.1f))\n",
+				old_path_index, Autopilot_state.path_index, next_node->x, next_node->y, next_node->z));
+		}
+		else
+		{
+			mprintf((0, "Autopilot path advance: %d -> %d (path complete)\n",
+				old_path_index, Autopilot_state.path_index));
+		}
 	}
 }
 
