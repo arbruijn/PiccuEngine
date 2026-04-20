@@ -7,6 +7,7 @@ SET (MAIN_SOURCES
 		Descent3/aistruct_external.h
 		Descent3/aiterrain.h
 		Descent3/ambient.h
+		Descent3/autopilot.h
 		Descent3/args.h
 		Descent3/attach.h
 		Descent3/audiotaunts.h
@@ -147,6 +148,7 @@ SET (MAIN_SOURCES
 		Descent3/aipath.cpp
 		Descent3/aiterrain.cpp
 		Descent3/ambient.cpp
+		Descent3/autopilot.cpp
 		Descent3/args.cpp
 		Descent3/attach.cpp
 		Descent3/audiotaunts.cpp

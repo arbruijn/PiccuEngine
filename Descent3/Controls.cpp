@@ -38,6 +38,7 @@
 #include "args.h"
 
 #include "player.h"
+#include "autopilot.h"
 
 #include "hlsoundlib.h"
 #include "sounds.h"
@@ -361,6 +362,7 @@ void ReadPlayerControls(game_controls *controls)
 	DoWeapons(controls);	// controls for weapon firing operations
 	DoMisc(controls);
 	DoMovement(controls);	// controls for moving the object
+	AutopilotApply(controls);
 }
 
 //	---------------------------------------------------------------------------

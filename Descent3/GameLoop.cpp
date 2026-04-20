@@ -782,6 +782,7 @@ void SendCheaterText()
 
 #include "osiris_dll.h"
 #include "audiotaunts.h"
+#include "autopilot.h"
 
 void InitObjectScripts(object* obj, bool call_evt_created = true);
 
@@ -1078,6 +1079,11 @@ void ProcessTestKeys(int key)
 	case KEY_O + KEY_SHIFTED:
 		Outline_mode = OM_ON + OM_ALL;
 		AddHUDMessage("All outline options turned on.");
+		break;
+
+	case KEY_P + KEY_SHIFTED:
+		SendCheaterText();
+		AutopilotToggle();
 		break;
 
 	case KEY_Q:
@@ -2689,4 +2695,3 @@ void EndGameMenu()
 	SetUICallback(NULL);
 	Clear_screen = 4;
 }
-
