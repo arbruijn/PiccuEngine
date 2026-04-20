@@ -1,5 +1,10 @@
 
-ADD_DEFINITIONS (-DCHECKSUM=2273873307UL)
+if (CMAKE_SIZEOF_VOID_P EQUAL 8)
+	add_definitions(-DCHECKSUM=2273889867L)
+else()
+	add_definitions(-DCHECKSUM=2273873307UL -D__32BIT__)
+endif()
+
 SET (HEADERS )
 SET (CPPS )
 IF(UNIX)
@@ -67,6 +72,9 @@ SET (SCRIPTS
 
 SET (SCRIPTTARGETS )
 
+set (FULLDIR "${CMAKE_CURRENT_BINARY_DIR}/linuxfullhog")
+file (MAKE_DIRECTORY "${FULLDIR}")
+
 FOREACH( SCRIPT ${SCRIPTS})
  
   ADD_LIBRARY(${SCRIPT} SHARED ${CPPS} "${SCRIPT}.cpp")
@@ -80,14 +88,14 @@ FOREACH( SCRIPT ${SCRIPTS})
       ADD_CUSTOM_COMMAND(
 	TARGET ${SCRIPT}
 	POST_BUILD
-	COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${SCRIPT}> "${CMAKE_SOURCE_DIR}/scripts/data/linuxfullhog/"
+	COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${SCRIPT}> "${FULLDIR}/"
 	COMMENT "Copying file $<TARGET_FILE:${SCRIPT}> to hogfile directory..."
 	)
-      ADD_CUSTOM_COMMAND(
-	TARGET ${SCRIPT}
-	POST_BUILD
-	COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${SCRIPT}> "${CMAKE_SOURCE_DIR}/scripts/data/linuxdemohog/"
-	)
+      #ADD_CUSTOM_COMMAND(
+	#TARGET ${SCRIPT}
+	#POST_BUILD
+	#COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${SCRIPT}> "${CMAKE_SOURCE_DIR}/scripts/data/linuxdemohog/"
+	#)
 
     ENDIF()
 
@@ -118,27 +126,28 @@ IF(UNIX)
   endforeach()
   file(WRITE "${FULL_HOG_MANIFEST}" "${FULL_HOG_MANIFEST_CONTENT}")
 
+  
 
   ADD_CUSTOM_TARGET("FullLinuxHog"
     ALL
     COMMAND ${HOGBUILDCMD} "--makehog" "${FULL_HOG_MANIFEST}" 
-    COMMAND ${CMAKE_COMMAND} -E remove "${CMAKE_SOURCE_DIR}/scripts/data/linuxfullhog/d3-${HOGARCH}.hog"
-    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/scripts/data/linuxfullhog/new.hog" "${CMAKE_SOURCE_DIR}/scripts/data/linuxfullhog/d3-${HOGARCH}.hog"
-    COMMAND ${CMAKE_COMMAND} -E make_directory "${D3_GAMEDIR}"
-    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/scripts/data/linuxfullhog/d3-${HOGARCH}.hog" "${D3_GAMEDIR}"
-    COMMAND ${CMAKE_COMMAND} -E remove "${CMAKE_SOURCE_DIR}/scripts/data/linuxfullhog/new.hog"
-    WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/scripts/data/linuxfullhog/"
+    COMMAND ${CMAKE_COMMAND} -E remove "${FULLDIR}/d3-${HOGARCH}.hog"
+    COMMAND ${CMAKE_COMMAND} -E copy "${FULLDIR}/new.hog" "${FULLDIR}/d3-${HOGARCH}.hog"
+    #COMMAND ${CMAKE_COMMAND} -E make_directory "${D3_GAMEDIR}"
+    #COMMAND ${CMAKE_COMMAND} -E copy "${FULLDIR}/d3-${HOGARCH}.hog" "${D3_GAMEDIR}"
+    COMMAND ${CMAKE_COMMAND} -E remove "${FULLDIR}/new.hog"
+    WORKING_DIRECTORY "${FULLDIR}"
     DEPENDS ${SCRIPTTARGETS}
     COMMENT "Building platform specific hog."
     )
-  ADD_CUSTOM_TARGET("DemoLinuxHog"
-    ALL
-    COMMAND ${HOGBUILDCMD} "--makehog" "d3linuxdemohog.txt" 
-    COMMAND ${CMAKE_COMMAND} -E remove "${CMAKE_SOURCE_DIR}/scripts/data/linuxdemohog/d3-${HOGARCH}.hog"
-    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/scripts/data/linuxdemohog/new.hog" "${CMAKE_SOURCE_DIR}/scripts/data/linuxdemohog/d3-${HOGARCH}.hog"
-    COMMAND ${CMAKE_COMMAND} -E remove "${CMAKE_SOURCE_DIR}/scripts/data/linuxdemohog/new.hog"
-    WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/scripts/data/linuxdemohog/"
-    DEPENDS ${SCRIPTTARGETS}
-    COMMENT "Building platform specific hog."
-    )
+  #ADD_CUSTOM_TARGET("DemoLinuxHog"
+  #  ALL
+  #  COMMAND ${HOGBUILDCMD} "--makehog" "d3linuxdemohog.txt" 
+  #  COMMAND ${CMAKE_COMMAND} -E remove "${CMAKE_SOURCE_DIR}/scripts/data/linuxdemohog/d3-${HOGARCH}.hog"
+  #  COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/scripts/data/linuxdemohog/new.hog" "${CMAKE_SOURCE_DIR}/scripts/data/linuxdemohog/d3-${HOGARCH}.hog"
+  #  COMMAND ${CMAKE_COMMAND} -E remove "${CMAKE_SOURCE_DIR}/scripts/data/linuxdemohog/new.hog"
+  #  WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/scripts/data/linuxdemohog/"
+  #  DEPENDS ${SCRIPTTARGETS}
+  #  COMMENT "Building platform specific hog."
+  #  )
 ENDIF()
