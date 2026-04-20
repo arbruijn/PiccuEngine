@@ -174,9 +174,9 @@ ADD_SUBDIRECTORY (netcon/inetfile)
 ADD_SUBDIRECTORY (netcon)
 
 #[ISB] TODO: Needs fixing for new build system
-#IF(UNIX)
-#ADD_SUBDIRECTORY (scripts)
-#ENDIF()
+IF(UNIX)
+ADD_SUBDIRECTORY (scripts)
+ENDIF()
 
 #From GZDOOM
 add_custom_target( revision_check ALL
