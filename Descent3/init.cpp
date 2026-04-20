@@ -916,6 +916,15 @@ void InitIOSystems(bool editor)
 	int d3_hid=-1,extra_hid=-1,extra1_hid=-1,merc_hid=-1,sys_hid=-1,extra13_hid=-1;
 	char fullname[_MAX_PATH];
 
+#ifdef __LINUX__
+	ddio_MakePath(fullname, Working_directory, "d3-linux.hog", nullptr);
+	int d3_linux_hid = cf_OpenLibrary(fullname);
+	if (d3_linux_hid == 0)
+	{
+		Error("Cannot find d3-linux.hog file!");
+	}
+#endif
+
 	ddio_MakePath(fullname, Working_directory, "piccuengine.hog", nullptr);
 	int piccu_hid = cf_OpenLibrary(fullname);
 	if (piccu_hid == 0)
