@@ -49,7 +49,7 @@ IF (UNIX AND NOT APPLE)
   endif()
 
   add_compile_options(-Wno-write-strings -Wno-multichar -Wno-format-overflow -Wno-format-security)
-  add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wno-register$<SEMICOLON>-fpermissive$<SEMICOLON>-Wno-delete-incomplete>)
+  add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wno-register$<SEMICOLON>-Wno-delete-incomplete>)
 ENDIF()
 
 IF (APPLE)
