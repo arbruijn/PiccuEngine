@@ -1612,7 +1612,10 @@ void ObjDoEffects(object* obj)
 
 			if (obj->type == OBJ_PLAYER)
 			{
-				ApplyDamageToPlayer(obj, killer, PD_NONE, obj->effect_info->damage_per_second);
+				// for peer to peer send damage from host, otherwise killer unknown if player dies
+				int server_says = (Netgame.flags & NF_PEER_PEER) && Netgame.local_role == LR_SERVER;
+				if (!(Netgame.flags & NF_PEER_PEER) || server_says)
+					ApplyDamageToPlayer(obj, killer, PD_NONE, obj->effect_info->damage_per_second, server_says);
 			}
 			else if (IS_GENERIC(obj->type) || (obj->type == OBJ_DOOR))
 			{
