@@ -9,6 +9,11 @@
 #include <io.h>
 #else
 #include <unistd.h>
+#define _open open
+#define _close close
+#define _read read
+#define _lseek lseek
+#define O_BINARY 0
 #endif
 
 static const char  MVE_HEADER[]  = "Interplay MVE File\x1A";

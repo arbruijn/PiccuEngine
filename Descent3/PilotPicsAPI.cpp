@@ -28,8 +28,8 @@
 #include "PilotPicsAPI.h"
 #include "mem.h"
 
-#define PILOTPIC_DATABASE_HOG	"PPics.Hog"
-#define PILOTPIC_DATABASE_INDEX	"PPics.idx"
+#define PILOTPIC_DATABASE_HOG	"ppics.hog"
+#define PILOTPIC_DATABASE_INDEX	"ppics.idx"
 
 CFILE* PilotPic_database_index_handle = NULL;
 int		PilotPic_database_hog_handle = 0;

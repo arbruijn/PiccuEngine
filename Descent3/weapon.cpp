@@ -1053,7 +1053,7 @@ void SetAutoSelectSecondaryWpnIdx(int slot, ushort idx)
 	SecondaryWpnSelectList[slot + 1] = idx;
 }
 
-const ushort IWPNSEL_SKIP = (~WPNSEL_SKIP);
+const ushort IWPNSEL_SKIP = (ushort)(~WPNSEL_SKIP);
 
 #define WPNINDEX(_index) (sel_list[(_index)]&IWPNSEL_SKIP)
 

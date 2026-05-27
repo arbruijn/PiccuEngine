@@ -471,14 +471,16 @@ void AddPostFacesToBuffer(MeshBuilder& mesh, std::vector<SortableElement>& eleme
 		}
 
 		mesh.EndVertices();
-		PostDrawElement element;
-		element.facenum = lastfacenum;
-		element.texturenum = lasttmap;
-		element.lmhandle = lastlm;
-		element.range = mesh.EndIndices();
-		element.range.offset += firstIndex;
-		element.avg = avg / (float)rp.faces[lastfacenum].num_verts;
-		interactions.push_back(element);
+		{
+			PostDrawElement element;
+			element.facenum = lastfacenum;
+			element.texturenum = lasttmap;
+			element.lmhandle = lastlm;
+			element.range = mesh.EndIndices();
+			element.range.offset += firstIndex;
+			element.avg = avg / (float)rp.faces[lastfacenum].num_verts;
+			interactions.push_back(element);
+		}
 	}
 }
 
@@ -544,13 +546,15 @@ void AddSpecFacesToBuffer(MeshBuilder& mesh, std::vector<SortableElement>& eleme
 		}
 
 		mesh.EndVertices();
-		SpecularDrawElement element;
-		element.texturenum = lasttmap;
-		element.lmhandle = lastlm;
-		element.range = mesh.EndIndices();
-		element.range.offset += firstIndex;
-		element.special = &SpecialFaces[fp.special_handle];
-		interactions.push_back(element);
+		{
+			SpecularDrawElement element;
+			element.texturenum = lasttmap;
+			element.lmhandle = lastlm;
+			element.range = mesh.EndIndices();
+			element.range.offset += firstIndex;
+			element.special = &SpecialFaces[fp.special_handle];
+			interactions.push_back(element);
+		}
 	}
 }
 
@@ -1226,7 +1230,8 @@ void RenderList::GatherVisible(vector& eye_pos, matrix& eye_orient, int viewroom
 	{
 		RoomChecked[viewroomnum] = 0;
 		VisibleRooms.emplace_back(viewroomnum, initialWindow);
-		AddRoom(RenderListEntry(viewroomnum, initialWindow), viewFrustum);
+		RenderListEntry entry(viewroomnum, initialWindow);
+		AddRoom(entry, viewFrustum);
 	}
 	else
 	{

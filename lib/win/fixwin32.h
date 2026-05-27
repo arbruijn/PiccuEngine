@@ -44,6 +44,8 @@
 // is generated when converting doubles to floats
 // A thousand pardons for the confusion
 
+#ifdef _MSC_VER
+
 #pragma warning (disable:4035)
 
 inline fix FixDiv (fix a,fix b)
@@ -84,5 +86,7 @@ inline fix FixMulDiv (fix a,fix b,fix c)
 }
 
 #pragma warning (default:4035)
+
+#endif
 
 #endif

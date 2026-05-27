@@ -34,9 +34,9 @@
 #include "ddio.h"
 
 #ifdef WIN32
-#define REGISTRY_FILENAME ENGINE_NAME_NO_SPACE".registry"
+#define REGISTRY_FILENAME ENGINE_NAME_NO_SPACE ".registry"
 #else
-#define REGISTRY_FILENAME "."ENGINE_NAME_NO_SPACE"Registry"
+#define REGISTRY_FILENAME "." ENGINE_NAME_NO_SPACE "Registry"
 #endif
 
 //Construction and destruction.
@@ -58,7 +58,10 @@ oeSDLAppDatabase::oeSDLAppDatabase()
     filename += REGISTRY_FILENAME;
 
 #else
-#error "oeSDLAppDatabase::oeSDLAppDatabase: Implment more suitable path for non-windows platforms here"
+    char* prefPath = SDL_GetPrefPath(NULL, ENGINE_NAME);
+    std::string filename = prefPath;
+    filename += REGISTRY_FILENAME;
+    SDL_free(prefPath);
 #endif
 
     //sprintf(fileName, "%s/%s", prefPath, REGISTRY_FILENAME);

@@ -89,7 +89,16 @@ inline void INADDR_GET_SUN_SUNB(struct in_addr* st,unsigned char *s_b1,unsigned 
 //rcg06212000 my SDL adds.
 #include <SDL3/SDL.h>
 
+#ifdef __LINUX__
+#include <unistd.h>
+#define closesocket(x) close(x)
+#endif
+
 #include "linux/linux_fix.h"
+
+#ifdef WIN32
+typedef int socklen_t;
+#endif
 
 #ifndef SOCKET
 #define SOCKET int
