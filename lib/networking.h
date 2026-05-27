@@ -87,8 +87,7 @@ inline void INADDR_GET_SUN_SUNB(struct in_addr* st,unsigned char *s_b1,unsigned 
 #include <fcntl.h>
 
 //rcg06212000 my SDL adds.
-#include "SDL.h"
-#include "SDL_thread.h"
+#include <SDL3/SDL.h>
 
 #include "linux/linux_fix.h"
 

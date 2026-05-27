@@ -41,7 +41,7 @@
 
 #ifdef __LINUX__
 
-#include "SDL_thread.h"
+#include <SDL3/SDL_thread.h>
 
 inline void Sleep(int millis)
 {
@@ -56,27 +56,17 @@ inline void Sleep(int millis)
 #define NW_AGHBN_LOOKUP		2
 #define NW_AGHBN_READ		3
 
-#ifndef __LINUX__
-void __cdecl http_gethostbynameworker(void *parm);
-#else
 int http_gethostbynameworker(void *parm);
-#endif
 
 int http_Asyncgethostbyname(unsigned int *ip,int command, char *hostname);
 
-#ifndef __LINUX__
-void HTTPObjThread( void * obj )
-#else
 int HTTPObjThread( void * obj )
-#endif
 {
 	((ChttpGet *)obj)->WorkerThread();
 	((ChttpGet *)obj)->m_Aborted = true;
 	//OutputDebugString("http transfer exiting....\n");
 
-	#ifdef __LINUX__
 	return 0;
-	#endif
 }
 
 void ChttpGet::AbortGet()
@@ -222,7 +212,7 @@ void ChttpGet::GetFile(const char *URL,const char *localfile)
 	}
 
 //	if(df_pthread_create(&thread,NULL,HTTPObjThread,this)!=0)
-    thread = SDL_CreateThread(HTTPObjThread, this);
+    thread = SDL_CreateThread(HTTPObjThread, "HTTPWorker", this);
     if (thread == NULL)
 	{
 		m_State = HTTP_STATE_INTERNAL_ERROR;
@@ -788,11 +778,7 @@ typedef struct _async_dns_lookup
 async_dns_lookup httpaslu;
 async_dns_lookup *http_lastaslu = NULL;
 
-#ifndef __LINUX__
-void __cdecl http_gethostbynameworker(void *parm);
-#else
 int http_gethostbynameworker(void *parm);
-#endif
 
 int http_Asyncgethostbyname(unsigned int *ip,int command, char *hostname)
 {
@@ -822,7 +808,7 @@ int http_Asyncgethostbyname(unsigned int *ip,int command, char *hostname)
 		}
 
 //		df_pthread_create(&thread,NULL,http_gethostbynameworker,newaslu);
-        newaslu->threadId = SDL_CreateThread(http_gethostbynameworker,newaslu);
+        newaslu->threadId = SDL_CreateThread(http_gethostbynameworker,"HTTPDNSWorker",newaslu);
 #endif
 		return 1;
 	}
@@ -869,25 +855,14 @@ int http_Asyncgethostbyname(unsigned int *ip,int command, char *hostname)
 }
 
 // This is the worker thread which does the lookup.
-#ifndef __LINUX__
-void __cdecl http_gethostbynameworker(void *parm)
-#else
 int http_gethostbynameworker(void *parm)
-#endif
 {
-#ifdef __LINUX__
-	//df_pthread_detach(df_pthread_self());
-#endif
 	async_dns_lookup *lookup = (async_dns_lookup *)parm;
 	HOSTENT *he = gethostbyname(lookup->host);
 	if(he==NULL)
 	{
 		lookup->error = true;
-		#ifdef __LINUX__
-		return NULL;
-		#else
-		return;
-		#endif
+		return 0;
 	}
 	else if(!lookup->abort)
 	{
@@ -897,7 +872,5 @@ int http_gethostbynameworker(void *parm)
 	}
 	mem_free(lookup);
 
-#ifdef __LINUX__
-	return NULL;
-#endif
+	return 0;
 }
