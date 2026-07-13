@@ -177,6 +177,15 @@ static void emucall_msafe_DoPowerup(Emu86FunCtx& ctx, void *)
 	*/
 }
 
+static void emucall_Osiris_CreateTimer(Emu86FunCtx& ctx, void *)
+{
+	const emu_ptr_t guest_timer_ptr = ctx.arg<emu_ptr_t>(0);
+	tOSIRISTIMER timer;
+	void* host_timer_ptr = vm_to_host_ptr(ctx.emu86, guest_timer_ptr);
+	emuabi::decode_osiris_timer_struct(host_timer_ptr, timer);
+	ctx.set_return(Osiris_CreateTimer(&timer));
+}
+
 static emu_ptr_t find_export_variant(Emu* vm, emu_ptr_t module_handle, const char* name, unsigned arg_bytes)
 {
 	if (!vm || !module_handle || !name)
@@ -348,6 +357,7 @@ const emu86_ctx_fun_t kOsirisBridgeFuns[] = {
 	{"msafe_CallFunction", emucall_msafe_CallFunction, 2, nullptr},
 	{"msafe_GetValue", emucall_msafe_GetValue, 2, nullptr},
 	{"msafe_DoPowerup", emucall_msafe_DoPowerup, 1, nullptr},
+	{"Osiris_CreateTimer", emucall_Osiris_CreateTimer, 1, nullptr},
 };
 
 const size_t kOsirisBridgeFunsCount = sizeof(kOsirisBridgeFuns) / sizeof(kOsirisBridgeFuns[0]);

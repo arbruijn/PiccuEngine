@@ -134,7 +134,14 @@ namespace
 		dst.flags = src.flags;
 		dst.id = src.id;
 		dst.repeat_count = src.repeat_count;
-		dst.object_handle = src.object_handle;
+		if (src.flags & OTF_TRIGGER)
+		{
+			dst.trigger_number = src.object_handle;
+		}
+		else
+		{
+			dst.object_handle = src.object_handle;
+		}
 		dst.object_handle_detonator = src.object_handle_detonator;
 		dst.timer_interval = src.timer_interval;
 	}
