@@ -11,7 +11,8 @@ namespace
 #define ABI_COPY_I32(name) dst.name = src.name;
 #define ABI_COPY_U8(name) dst.name = src.name;
 #define ABI_COPY_F32(name) dst.name = src.name;
-#define ABI_COPY_PTR32(name) dst.name = vm.encode_ptr32(src.name);
+// PTR32 is only for extra_info field, that is handled separately
+#define ABI_COPY_PTR32(name)
 
 #define ABI_DECL_I32(name) int32_t name;
 #define ABI_DECL_U8(name) uint8_t name;
@@ -114,7 +115,6 @@ namespace
 #undef DECLARE_32_STRUCT_FIELD
 #undef DECLARE_32_STRUCT
 
-#if 0
 	static_assert(sizeof(tOSIRISEVTINTERVAL32) == sizeof(tOSIRISEVTINTERVAL32), "Event interval ABI mismatch");
 	static_assert(sizeof(tOSIRISEVTDAMAGED32) == sizeof(tOSIRISEVTDAMAGED32), "Event damaged ABI mismatch");
 	static_assert(sizeof(tOSIRISEVTCOLLIDE32) == sizeof(tOSIRISEVTCOLLIDE32), "Event collide ABI mismatch");
@@ -133,7 +133,6 @@ namespace
 	static_assert(sizeof(tOSIRISEVTLEVELGOALITEMCOMPLETE32) == sizeof(tOSIRISEVTLEVELGOALITEMCOMPLETE32), "Event level-goal-item-complete ABI mismatch");
 	static_assert(sizeof(tOSIRISEVTPLAYERRESPAWN32) == sizeof(tOSIRISEVTPLAYERRESPAWN32), "Event player-respawn ABI mismatch");
 	static_assert(sizeof(tOSIRISEVTPLAYERDIES32) == sizeof(tOSIRISEVTPLAYERDIES32), "Event player-dies ABI mismatch");
-#endif
 
 #define DEFINE_ENCODER(native_type, generated_type, fields_macro) \
 	void encode_##generated_type(const native_type& src, generated_type& dst, const VmPtrEncoder& vm) \
@@ -174,7 +173,6 @@ namespace
 		fields_macro(DECODE_STRUCT_FIELD) \
 	}
 
-#if 0
 	DEFINE_DECODER(tOSIRISEVTINTERVAL, tOSIRISEVTINTERVAL32, OSIRIS_EVTINTERVAL_FIELDS)
 	DEFINE_DECODER(tOSIRISEVTDAMAGED, tOSIRISEVTDAMAGED32, OSIRIS_EVTDAMAGED_FIELDS)
 	DEFINE_DECODER(tOSIRISEVTCOLLIDE, tOSIRISEVTCOLLIDE32, OSIRIS_EVTCOLLIDE_FIELDS)
@@ -193,7 +191,6 @@ namespace
 	DEFINE_DECODER(tOSIRISEVTLEVELGOALITEMCOMPLETE, tOSIRISEVTLEVELGOALITEMCOMPLETE32, OSIRIS_EVTLEVELGOALITEMCOMPLETE_FIELDS)
 	DEFINE_DECODER(tOSIRISEVTPLAYERRESPAWN, tOSIRISEVTPLAYERRESPAWN32, OSIRIS_EVTPLAYERRESPAWN_FIELDS)
 	DEFINE_DECODER(tOSIRISEVTPLAYERDIES, tOSIRISEVTPLAYERDIES32, OSIRIS_EVTPLAYERDIES_FIELDS)
-#endif
 
 #undef DEFINE_DECODER
 #undef DECODE_STRUCT_FIELD
@@ -294,7 +291,6 @@ typedef struct{
 
 static_assert(sizeof(tOSIRISEventInfo32) == event_info_size_32, "Event interval ABI size mismatch");
 
-#if 0
 void decode_event_info(int event, const void* srcbuf, tOSIRISEventInfo& dst, const VmPtrDecoder& vm)
 {
 	memset(&dst, 0, sizeof(dst));
@@ -305,7 +301,9 @@ void decode_event_info(int event, const void* srcbuf, tOSIRISEventInfo& dst, con
 
 	const tOSIRISEventInfo32& src = *static_cast<const tOSIRISEventInfo32*>(srcbuf);
 	dst.me_handle = src.me_handle;
-	dst.extra_info = vm.decode_ptr32(src.extra_info);
+
+	if (event == EVT_AI_NOTIFY && src.evt_ai_notify.notify_type == AIN_USER_DEFINED)
+		dst.extra_info = vm.decode_ptr32(src.extra_info);
 
 	switch (event)
 	{
@@ -387,14 +385,15 @@ void decode_event_info(int event, const void* srcbuf, tOSIRISEventInfo& dst, con
 		break;
 	}
 }
-#endif
 
 void encode_event_info(int event, const tOSIRISEventInfo& src, void *dstbuf, const VmPtrEncoder& vm)
 {
 	tOSIRISEventInfo32 dst;
 	memset(&dst, 0, sizeof(dst));
 	dst.me_handle = src.me_handle;
-	dst.extra_info = vm.encode_ptr32(src.extra_info);
+
+	if (event == EVT_AI_NOTIFY && src.evt_ai_notify.notify_type == AIN_USER_DEFINED)
+		dst.extra_info = vm.encode_ptr32(src.extra_info);
 
 	switch (event)
 	{
