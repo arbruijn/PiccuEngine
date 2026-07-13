@@ -26,6 +26,8 @@ static const emu86_ctx_fun_t* FindWrapper(const char* name)
 {
 	if (const emu86_ctx_fun_t* fun = FindInTable(kOsirisBridgeFuns, kOsirisBridgeFunsCount, name))
 		return fun;
+	if (const emu86_ctx_fun_t* fun = FindInTable(kOsirisPrintfBridgeFuns, kOsirisPrintfBridgeFunsCount, name))
+		return fun;
 	if (const emu86_ctx_fun_t* fun = FindInTable(kOsirisWrapperFuns, kOsirisWrapperFunsCount, name))
 		return fun;
 	if (const emu86_ctx_fun_t* fun = FindInTable(kOsirisWrapperFuns2, kOsirisWrapperFuns2Count, name))

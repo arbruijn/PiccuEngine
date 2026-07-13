@@ -12,6 +12,8 @@ namespace emuabi
 {
 extern const emu86_ctx_fun_t kOsirisBridgeFuns[];
 extern const size_t kOsirisBridgeFunsCount;
+extern const emu86_ctx_fun_t kOsirisPrintfBridgeFuns[];
+extern const size_t kOsirisPrintfBridgeFunsCount;
 
 static inline unsigned int osiris_import_spec_count()
 {
