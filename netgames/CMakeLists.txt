@@ -1,6 +1,6 @@
 include_directories("includes")
 ADD_SUBDIRECTORY(dmfc)
-#ADD_SUBDIRECTORY(anarchy)
+ADD_SUBDIRECTORY(anarchy)
 #ADD_SUBDIRECTORY(coop)
 #ADD_SUBDIRECTORY(ctf)
 #ADD_SUBDIRECTORY(entropy)
