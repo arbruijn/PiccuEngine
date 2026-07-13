@@ -11,7 +11,7 @@ namespace
 #define ABI_COPY_I32(name) dst.name = src.name;
 #define ABI_COPY_U8(name) dst.name = src.name;
 #define ABI_COPY_F32(name) dst.name = src.name;
-// PTR32 is only for extra_info field, that is handled separately
+// PTR32 is only for fileptr/memory_ptr/extra_info field, that is handled separately
 #define ABI_COPY_PTR32(name)
 
 #define ABI_DECL_I32(name) int32_t name;
@@ -302,9 +302,6 @@ void decode_event_info(int event, const void* srcbuf, tOSIRISEventInfo& dst, con
 	const tOSIRISEventInfo32& src = *static_cast<const tOSIRISEventInfo32*>(srcbuf);
 	dst.me_handle = src.me_handle;
 
-	if (event == EVT_AI_NOTIFY && src.evt_ai_notify.notify_type == AIN_USER_DEFINED)
-		dst.extra_info = vm.decode_ptr32(src.extra_info);
-
 	switch (event)
 	{
 	case EVT_INTERVAL:
@@ -345,6 +342,8 @@ void decode_event_info(int event, const void* srcbuf, tOSIRISEventInfo& dst, con
 	case EVT_AIN_MOVIE_START:
 	case EVT_AIN_MOVIE_END:
 		decode_tOSIRISEVTAINOTIFY32(src.evt_ai_notify, dst.evt_ai_notify, vm);
+		if (event == EVT_AI_NOTIFY && src.evt_ai_notify.notify_type == AIN_USER_DEFINED)
+			dst.extra_info = vm.decode_ptr32(src.extra_info);
 		break;
 	case EVT_CHANGESEG:
 		decode_tOSIRISEVTCHANGESEG32(src.evt_changeseg, dst.evt_changeseg, vm);
@@ -359,6 +358,7 @@ void decode_event_info(int event, const void* srcbuf, tOSIRISEventInfo& dst, con
 		break;
 	case EVT_MEMRESTORE:
 		decode_tOSIRISEVTMEMRESTORE32(src.evt_memrestore, dst.evt_memrestore, vm);
+		dst.evt_memrestore.memory_ptr = vm.decode_ptr32(src.evt_memrestore.memory_ptr);
 		break;
 	case EVT_TIMERCANCEL:
 		decode_tOSIRISEVTTIMERCANCEL32(src.evt_timercancel, dst.evt_timercancel, vm);
@@ -391,9 +391,6 @@ void encode_event_info(int event, const tOSIRISEventInfo& src, void *dstbuf, con
 	tOSIRISEventInfo32 dst;
 	memset(&dst, 0, sizeof(dst));
 	dst.me_handle = src.me_handle;
-
-	if (event == EVT_AI_NOTIFY && src.evt_ai_notify.notify_type == AIN_USER_DEFINED)
-		dst.extra_info = vm.encode_ptr32(src.extra_info);
 
 	switch (event)
 	{
@@ -435,6 +432,8 @@ void encode_event_info(int event, const tOSIRISEventInfo& src, void *dstbuf, con
 	case EVT_AIN_MOVIE_START:
 	case EVT_AIN_MOVIE_END:
 		encode_union_event<tOSIRISEVTAINOTIFY32, tOSIRISEVTAINOTIFY, tOSIRISEVTAINOTIFY32>(dst.evt_ai_notify, src.evt_ai_notify, vm, encode_tOSIRISEVTAINOTIFY32);
+		if (event == EVT_AI_NOTIFY && src.evt_ai_notify.notify_type == AIN_USER_DEFINED)
+			dst.extra_info = vm.encode_ptr32(src.extra_info);
 		break;
 	case EVT_CHANGESEG:
 		encode_union_event<tOSIRISEVTCHANGESEG32, tOSIRISEVTCHANGESEG, tOSIRISEVTCHANGESEG32>(dst.evt_changeseg, src.evt_changeseg, vm, encode_tOSIRISEVTCHANGESEG32);
@@ -447,6 +446,7 @@ void encode_event_info(int event, const tOSIRISEventInfo& src, void *dstbuf, con
 		break;
 	case EVT_MEMRESTORE:
 		encode_union_event<tOSIRISEVTMEMRESTORE32, tOSIRISEVTMEMRESTORE, tOSIRISEVTMEMRESTORE32>(dst.evt_memrestore, src.evt_memrestore, vm, encode_tOSIRISEVTMEMRESTORE32);
+		dst.evt_memrestore.memory_ptr = vm.encode_ptr32(src.evt_memrestore.memory_ptr);
 		break;
 	case EVT_TIMERCANCEL:
 		encode_union_event<tOSIRISEVTTIMERCANCEL32, tOSIRISEVTTIMERCANCEL, tOSIRISEVTTIMERCANCEL32>(dst.evt_timercancel, src.evt_timercancel, vm, encode_tOSIRISEVTTIMERCANCEL32);
