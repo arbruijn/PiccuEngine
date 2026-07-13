@@ -139,6 +139,16 @@ void emucall_Matcen_Value(Emu86FunCtx& ctx, void *)
 	osipf_MatcenValue(matcen_handle, op, vtype, ptr, prod_index);
 }
 
+void emucall_Osiris_AllocateMemory(Emu86FunCtx& ctx, void *)
+{
+	void *memchunk_ptr = ctx.arg<void *>(0);
+	tOSIRISMEMCHUNK memchunk;
+	emuabi::decode_osiris_memchunk_struct(memchunk_ptr, memchunk);
+
+	void *memory_ptr = Osiris_AllocateMemory(&memchunk, ctx.emu86);
+	ctx.set_return(static_cast<emu_ptr_t>(reinterpret_cast<uintptr_t>(memory_ptr)));
+}
+
 void emucall_Osiris_FreeMemory(Emu86FunCtx& ctx, void *)
 {
 	void *memory_ptr = ctx.arg<void *>(0);
@@ -461,6 +471,7 @@ emu86_ctx_fun_t kOsirisWrapperFuns2[] = {
 	{"osipf_AttachObjectRad", emucall_osipf_AttachObjectRad, 4, nullptr},
 	{"Matcen_Value", emucall_Matcen_Value, 5, nullptr},
 	{"osipf_MatcenValue", emucall_Matcen_Value, 5, nullptr},
+	{"Osiris_AllocateMemory", emucall_Osiris_AllocateMemory, 1, nullptr},
 	{"Osiris_FreeMemory", emucall_Osiris_FreeMemory, 1, nullptr},
 	{"Osiris_CancelTimer", emucall_Osiris_CancelTimer, 1, nullptr},
 	{"Obj_Create", emucall_Obj_Create, 7, nullptr},

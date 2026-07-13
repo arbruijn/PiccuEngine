@@ -183,7 +183,13 @@ void Osiris_CloseMemoryManager(void);
 //	Purpose:
 //		Allocates a chunk of memory to be associated with a script.  It will automatically
 //	save this memory to disk on game save, and will pass the pointer to this memory on EVT_RESTORE
+#ifdef __cplusplus
+struct Emu;
 void *Osiris_AllocateMemory(tOSIRISMEMCHUNK *mc);
+void *Osiris_AllocateMemory(tOSIRISMEMCHUNK *mc, Emu *emu86);
+#else
+void *Osiris_AllocateMemory(tOSIRISMEMCHUNK *mc);
+#endif
 
 //	Osiris_FreeMemory
 //	Purpose:

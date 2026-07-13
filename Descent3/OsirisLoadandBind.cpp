@@ -22,7 +22,13 @@
 #include "CFILE.H"
 #include "ddio.h"
 #include "manage.h"
+#ifdef HANDLE
+#undef HANDLE
+#endif
+#include "emu86.h"
+#include "heap.h"
 #include <stdlib.h>
+#include <cstdint>
 #include "mem.h"
 #include "DllWrappers.h"
 #include "objinfo.h"
@@ -2555,6 +2561,8 @@ struct tOSIRISMEMNODE
 {
 	tOSIRISMEMCHUNK chunk_id;
 	void* memory;
+	Emu* emu86;
+	emu_ptr_t vm_memory;
 	tOSIRISMEMNODE* next;
 };
 
@@ -2583,18 +2591,19 @@ void Osiris_CloseMemoryManager(void)
 	{
 		next = curr->next;
 		if (curr->memory)
-			mem_free(curr->memory);
+		{
+			if (curr->emu86 && curr->vm_memory)
+				heap_free(curr->emu86, curr->emu86->process_heap, 0, curr->vm_memory);
+			else
+				mem_free(curr->memory);
+		}
 		mem_free(curr);
 		curr = next;
 	}
 	Osiris_mem_root = NULL;
 }
 
-//	Osiris_AllocateMemory
-//	Purpose:
-//		Allocates a chunk of memory to be associated with a script.  It will automatically
-//	save this memory to disk on game save, and will pass the pointer to this memory on EVT_RESTORE
-void* Osiris_AllocateMemory(tOSIRISMEMCHUNK* mc)
+static void* Osiris_AllocateMemoryInternal(tOSIRISMEMCHUNK* mc, Emu* emu86)
 {
 	//find the end of the list
 	tOSIRISMEMNODE* curr, ** error_node;
@@ -2625,7 +2634,17 @@ void* Osiris_AllocateMemory(tOSIRISMEMCHUNK* mc)
 
 	//setup the data
 	curr->next = NULL;
-	curr->memory = mem_malloc(mc->size);
+	curr->emu86 = emu86;
+	curr->vm_memory = 0;
+	if (emu86)
+	{
+		curr->vm_memory = heap_alloc(emu86, emu86->process_heap, 0, static_cast<emu_ptr_t>(mc->size));
+		curr->memory = curr->vm_memory ? emu86->as.base + curr->vm_memory : NULL;
+	}
+	else
+	{
+		curr->memory = mem_malloc(mc->size);
+	}
 	if (!curr->memory)
 	{
 		//ack...out of memory
@@ -2635,7 +2654,26 @@ void* Osiris_AllocateMemory(tOSIRISMEMCHUNK* mc)
 	}
 	memcpy(&curr->chunk_id, mc, sizeof(tOSIRISMEMCHUNK));
 
-	return curr->memory;
+	return emu86 ? reinterpret_cast<void*>(static_cast<uintptr_t>(curr->vm_memory)) : curr->memory;
+}
+
+static void* Osiris_AllocateMemory_1Arg(tOSIRISMEMCHUNK* mc)
+{
+	return Osiris_AllocateMemory(mc);
+}
+
+//	Osiris_AllocateMemory
+//	Purpose:
+//		Allocates a chunk of memory to be associated with a script.  It will automatically
+//	save this memory to disk on game save, and will pass the pointer to this memory on EVT_RESTORE
+void* Osiris_AllocateMemory(tOSIRISMEMCHUNK* mc)
+{
+	return Osiris_AllocateMemoryInternal(mc, 0);
+}
+
+void* Osiris_AllocateMemory(tOSIRISMEMCHUNK* mc, Emu* emu86)
+{
+	return Osiris_AllocateMemoryInternal(mc, emu86);
 }
 
 //	Osiris_FreeMemory
@@ -2691,7 +2729,12 @@ void Osiris_FreeMemory(void* mem_ptr)
 
 	//free the memory associated with tofree
 	if (tofree->memory)
-		mem_free(tofree->memory);
+	{
+		if (tofree->emu86 && tofree->vm_memory)
+			heap_free(tofree->emu86, tofree->emu86->process_heap, 0, tofree->vm_memory);
+		else
+			mem_free(tofree->memory);
+	}
 	mem_free(tofree);
 }
 
@@ -2740,7 +2783,12 @@ void Osiris_FreeMemoryForScript(tOSIRISSCRIPTID* sid)
 					Osiris_mem_root = curr->next;
 
 					if (curr->memory)
-						mem_free(curr->memory);
+					{
+						if (curr->emu86 && curr->vm_memory)
+							heap_free(curr->emu86, curr->emu86->process_heap, 0, curr->vm_memory);
+						else
+							mem_free(curr->memory);
+					}
 					mem_free(curr);
 				}
 				else
@@ -2749,7 +2797,12 @@ void Osiris_FreeMemoryForScript(tOSIRISSCRIPTID* sid)
 					prev->next = curr->next;
 
 					if (curr->memory)
-						mem_free(curr->memory);
+					{
+						if (curr->emu86 && curr->vm_memory)
+							heap_free(curr->emu86, curr->emu86->process_heap, 0, curr->vm_memory);
+						else
+							mem_free(curr->memory);
+					}
 					mem_free(curr);
 				}
 			}
@@ -2843,6 +2896,8 @@ void Osiris_RestoreMemoryChunks(CFILE* file)
 
 			memchunk->chunk_id.id = cf_ReadInt(file);
 			memchunk->memory = mem_malloc(memchunk->chunk_id.size);
+			memchunk->emu86 = NULL;
+			memchunk->vm_memory = 0;
 			if (!memchunk->memory)
 			{
 				Error("Out of memory");
@@ -3766,10 +3821,12 @@ void Osiris_CreateModuleInitStruct(tOSIRISModuleInit* mi)
 	int i = 0;
 
 	//fill in function pointers here
+#define Osiris_AllocateMemory Osiris_AllocateMemory_1Arg
 #define OSIRIS_IMPORT_ASSIGN_HOST_SLOT(guest_symbol, guest_type, host_symbol, abi_argc, test_argc, return_kind, bridge_kind) \
 	mi->fp[i++] = (int*)host_symbol;
 	OSIRIS_IMPORT_LIST(OSIRIS_IMPORT_ASSIGN_HOST_SLOT)
 #undef OSIRIS_IMPORT_ASSIGN_HOST_SLOT
+#undef Osiris_AllocateMemory
 
 	//fill in the remaining with NULL
 	for (; i < MAX_MODULEFUNCS; i++) {
