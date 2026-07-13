@@ -179,7 +179,7 @@ void emucall_osipf_CFeof(Emu86FunCtx& ctx, void *)
 }
 
 // Calculate stack bytes to pop: each argument is 4 bytes on x86
-const emu86_fun_t kCfileWrapperFuns[] = {
+const emu86_ctx_fun_t kCfileWrapperFuns[] = {
 	{"osipf_CFReadBytes", emucall_osipf_CFReadBytes, 3, nullptr},
 	{"osipf_CFReadShort", emucall_osipf_CFReadShort, 1, nullptr},
 	{"osipf_CFReadByte", emucall_osipf_CFReadByte, 1, nullptr},

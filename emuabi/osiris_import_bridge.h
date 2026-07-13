@@ -2,6 +2,7 @@
 #define EMUABI_OSIRIS_IMPORT_BRIDGE_H
 
 #include "field_kinds.h"
+#include "emu86.h"
 #include "osiris_imports_shared.h"
 
 #include <stdint.h>
@@ -49,6 +50,11 @@ static inline int import_needs_opaque_handle_bridge(const OsirisImportSpec* spec
 static inline int import_returns_guest_visible_memory(const OsirisImportSpec* spec)
 {
 	return Osiris_ImportReturnsGuestVisibleMemory(spec);
+}
+
+static inline size_t Osiris_BuildGuestThunkTable(Emu* emu86, const emu86_ctx_fun_t* funs, size_t count, uint32_t* addresses, size_t address_count)
+{
+	return emu86_add_fun_list_ctx(emu86, funs, count, addresses, address_count);
 }
 
 class OpaqueHandleTable

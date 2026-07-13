@@ -79,7 +79,7 @@ namespace
 		return emu86_find(emu86, stdcall.c_str());
 	}
 
-	static bool SetPointerHooks(Emu* emu86, const emu86_fun_t* funs, size_t count, const uint32_t* addresses)
+	static bool SetPointerHooks(Emu* emu86, const emu86_ctx_fun_t* funs, size_t count, const uint32_t* addresses)
 	{
 		for (size_t i = 0; i < count; ++i)
 		{
@@ -130,7 +130,7 @@ int main(int argc, char** argv)
 
 	const size_t fun_count = sizeof(kOsirisWrapperFuns2) / sizeof(kOsirisWrapperFuns2[0]);
 	uint32_t addresses[sizeof(kOsirisWrapperFuns2) / sizeof(kOsirisWrapperFuns2[0])] = {};
-	const size_t added = emu86_add_fun_list(g_emu86, kOsirisWrapperFuns2, fun_count, addresses, fun_count);
+	const size_t added = emu86_add_fun_list_ctx(g_emu86, kOsirisWrapperFuns2, fun_count, addresses, fun_count);
 	if (added != fun_count)
 	{
 		fprintf(stderr, "failed to register osiris wrappers2 host callbacks\n");

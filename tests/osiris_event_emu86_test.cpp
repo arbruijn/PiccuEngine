@@ -152,7 +152,7 @@ namespace
 		ctx.set_return(0u);
 	}
 
-	static const emu86_fun_t kOsirisEventWrapperFuns[] = {
+	static const emu86_ctx_fun_t kOsirisEventWrapperFuns[] = {
 		{"append_osiris_event_log", HostAppendOsirisEventLog, 1, 0},
 	};
 }
@@ -227,7 +227,7 @@ int main(int argc, char** argv)
 	}
 
 	emu_ptr_t logger_address = 0;
-	if (emu86_add_fun_list(g_emu86, kOsirisEventWrapperFuns, 1, &logger_address, 1) != 1 || !logger_address)
+	if (emu86_add_fun_list_ctx(g_emu86, kOsirisEventWrapperFuns, 1, &logger_address, 1) != 1 || !logger_address)
 	{
 		fprintf(stderr, "failed to register osiris event logger wrapper\n");
 		emu86_free(g_emu86);

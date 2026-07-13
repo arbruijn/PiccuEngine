@@ -369,7 +369,7 @@ void emucall_osipf_PathValue(Emu86FunCtx& ctx, void *)
 	osipf_PathValue(path_id, node_id, op, changes, ptr);
 }
 
-const emu86_fun_t kOsirisWrapperFuns2[] = {
+const emu86_ctx_fun_t kOsirisWrapperFuns2[] = {
 	{"osipf_SoundTouch", emucall_osipf_SoundTouch, 1, nullptr},
 	{"osipf_ObjectFindID", emucall_osipf_ObjectFindID, 1, nullptr},
 	{"osipf_ObjectFindType", emucall_osipf_ObjectFindType, 1, nullptr},

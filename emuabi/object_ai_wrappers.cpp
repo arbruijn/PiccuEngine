@@ -409,7 +409,7 @@ void emucall_osipf_AIIsObjReachable(Emu86FunCtx& ctx, void *)
 	int target = ctx.arg<int>(1);
 	ctx.set_return(osipf_AIIsObjReachable(handle, target));
 }
-const emu86_fun_t kObjectAIWrapperFuns[] = {
+const emu86_ctx_fun_t kObjectAIWrapperFuns[] = {
 	{"osipf_ObjectGetTimeLived", emucall_osipf_ObjectGetTimeLived, 1, nullptr},
 	{"Obj_GetGunPos", emucall_Obj_GetGunPos, 4, nullptr},
 	{"Obj_GetGroundPos", emucall_Obj_GetGroundPos, 4, nullptr},

@@ -99,7 +99,7 @@ namespace
 		ctx.set_return(0u);
 	}
 
-	static const emu86_fun_t kMSafeWrapperFuns[] = {
+	static const emu86_ctx_fun_t kMSafeWrapperFuns[] = {
 		{"msafe_CallFunction", HostMSafeCallFunction, 2, 0},
 	};
 }
@@ -148,7 +148,7 @@ int main(int argc, char** argv)
 	}
 
 	emu_ptr_t wrapper_address = 0;
-	if (emu86_add_fun_list(emu86, kMSafeWrapperFuns, 1, &wrapper_address, 1) != 1 || !wrapper_address)
+	if (emu86_add_fun_list_ctx(emu86, kMSafeWrapperFuns, 1, &wrapper_address, 1) != 1 || !wrapper_address)
 	{
 		fprintf(stderr, "failed to register msafe_CallFunction wrapper\n");
 		emu86_free(emu86);
