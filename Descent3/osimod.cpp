@@ -342,6 +342,8 @@ static void clear_vm_backend(osimod_t* om)
 }
 }
 
+namespace emuabi
+{
 const emu86_ctx_fun_t kOsirisBridgeFuns[] = {
 	{"msafe_CallFunction", emucall_msafe_CallFunction, 2, nullptr},
 	{"msafe_GetValue", emucall_msafe_GetValue, 2, nullptr},
@@ -349,6 +351,7 @@ const emu86_ctx_fun_t kOsirisBridgeFuns[] = {
 };
 
 const size_t kOsirisBridgeFunsCount = sizeof(kOsirisBridgeFuns) / sizeof(kOsirisBridgeFuns[0]);
+}
 
 void osimod_init(osimod_t *om)
 {
