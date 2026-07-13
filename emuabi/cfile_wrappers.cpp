@@ -110,6 +110,14 @@ void emucall_osipf_CFReadString(Emu86FunCtx& ctx, void *)
 	ctx.set_return(osipf_CFReadString(buf, n, native_fileptr));
 }
 
+// CFReadInt wrapper
+void emucall_osipf_CFReadInt(Emu86FunCtx& ctx, void *)
+{
+	emu_ptr_t fileptr = ctx.arg<emu_ptr_t>(0);
+	CFILE *native_fileptr = emuabi::resolve_file_handle(fileptr);
+	ctx.set_return(osipf_CFReadInt(native_fileptr));
+}
+
 // CFWriteBytes wrapper
 void emucall_osipf_CFWriteBytes(Emu86FunCtx& ctx, void *)
 {
@@ -145,6 +153,24 @@ void emucall_osipf_CFWriteFloat(Emu86FunCtx& ctx, void *)
 	emu_ptr_t fileptr = ctx.arg<emu_ptr_t>(1);
 	CFILE *native_fileptr = emuabi::resolve_file_handle(fileptr);
 	osipf_CFWriteFloat(f, native_fileptr);
+}
+
+// CFWriteString wrapper
+void emucall_osipf_CFWriteString(Emu86FunCtx& ctx, void *)
+{
+	const char *buf = ctx.arg<const char *>(0);
+	emu_ptr_t fileptr = ctx.arg<emu_ptr_t>(1);
+	CFILE *native_fileptr = emuabi::resolve_file_handle(fileptr);
+	ctx.set_return(osipf_CFWriteString(buf, native_fileptr));
+}
+
+// CFWriteInt wrapper
+void emucall_osipf_CFWriteInt(Emu86FunCtx& ctx, void *)
+{
+	int i = ctx.arg<int>(0);
+	emu_ptr_t fileptr = ctx.arg<emu_ptr_t>(1);
+	CFILE *native_fileptr = emuabi::resolve_file_handle(fileptr);
+	osipf_CFWriteInt(i, native_fileptr);
 }
 
 // CFWriteDouble wrapper
@@ -200,12 +226,15 @@ void emucall_osipf_CFeof(Emu86FunCtx& ctx, void *)
 // Calculate stack bytes to pop: each argument is 4 bytes on x86
 emu86_ctx_fun_t kCfileWrapperFuns[] = {
 	{"osipf_CFReadBytes", emucall_osipf_CFReadBytes, 3, nullptr},
+	{"osipf_CFReadInt", emucall_osipf_CFReadInt, 1, nullptr},
 	{"osipf_CFReadShort", emucall_osipf_CFReadShort, 1, nullptr},
 	{"osipf_CFReadByte", emucall_osipf_CFReadByte, 1, nullptr},
 	{"osipf_CFReadFloat", emucall_osipf_CFReadFloat, 1, nullptr},
 	{"osipf_CFReadDouble", emucall_osipf_CFReadDouble, 1, nullptr},
 	{"osipf_CFReadString", emucall_osipf_CFReadString, 3, nullptr},
 	{"osipf_CFWriteBytes", emucall_osipf_CFWriteBytes, 3, nullptr},
+	{"osipf_CFWriteString", emucall_osipf_CFWriteString, 2, nullptr},
+	{"osipf_CFWriteInt", emucall_osipf_CFWriteInt, 2, nullptr},
 	{"osipf_CFWriteShort", emucall_osipf_CFWriteShort, 2, nullptr},
 	{"osipf_CFWriteByte", emucall_osipf_CFWriteByte, 2, nullptr},
 	{"osipf_CFWriteFloat", emucall_osipf_CFWriteFloat, 2, nullptr},
