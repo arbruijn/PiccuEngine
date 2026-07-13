@@ -219,6 +219,12 @@ void emucall_osipf_MatcenFindId(Emu86FunCtx& ctx, void *)
 	ctx.set_return(osipf_MatcenFindId(str));
 }
 
+void emucall_osipf_MatcenCreate(Emu86FunCtx& ctx, void *)
+{
+	char *name = ctx.arg<char *>(0);
+	ctx.set_return(osipf_MatcenCreate(name));
+}
+
 void emucall_osipf_MissionFlagSet(Emu86FunCtx& ctx, void *)
 {
 	int flag = ctx.arg<int>(0);
@@ -483,6 +489,7 @@ emu86_ctx_fun_t kOsirisWrapperFuns2[] = {
 	{"Osiris_TimerExists", emucall_Osiris_TimerExists, 1, nullptr},
 	{"osipf_MatcenReset", emucall_osipf_MatcenReset, 1, nullptr},
 	{"osipf_MatcenCopy", emucall_osipf_MatcenCopy, 2, nullptr},
+	{"osipf_MatcenCreate", emucall_osipf_MatcenCreate, 1, nullptr},
 	{"osipf_MatcenFindId", emucall_osipf_MatcenFindId, 1, nullptr},
 	{"osipf_MissionFlagSet", emucall_osipf_MissionFlagSet, 2, nullptr},
 	{"osipf_MissionFlagGet", emucall_osipf_MissionFlagGet, 1, nullptr},

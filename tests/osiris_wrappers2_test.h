@@ -30,6 +30,7 @@ bool OsirisWrappers2_FileExists(const char* path);
 	X(Osiris_TimerExists, ubyte, (int handle)) \
 	X(osipf_MatcenReset, void, (int handle)) \
 	X(osipf_MatcenCopy, void, (int dhandle, int shandle)) \
+	X(Matcen_Create, int, (char* name)) \
 	X(osipf_MatcenFindId, int, (char* str)) \
 	X(osipf_MissionFlagSet, void, (int flag, ubyte value)) \
 	X(osipf_MissionFlagGet, int, (int flag)) \
@@ -96,6 +97,7 @@ void osipf_ObjWBValue(int obj_handle, char wb_index, char op, char vtype, void* 
 ubyte osipf_OsirisTimerExists(int handle);
 void osipf_MatcenReset(int handle);
 void osipf_MatcenCopy(int dhandle, int shandle);
+int osipf_MatcenCreate(char* name);
 int osipf_MatcenFindId(char* str);
 void osipf_MissionFlagSet(int flag, ubyte value);
 int osipf_MissionFlagGet(int flag);
@@ -143,6 +145,11 @@ inline void Osiris_FreeMemory(void* memory_ptr)
 inline void Osiris_CancelTimer(int timer_id)
 {
 	osipf_OsirisCancelTimer(timer_id);
+}
+
+inline int Matcen_Create(char* name)
+{
+	return osipf_MatcenCreate(name);
 }
 
 inline int Obj_Create(ubyte type, ushort id, int roomnum, vector* pos, const matrix* orient = 0, int parent_handle = OBJECT_HANDLE_NONE, vector* initial_velocity = 0)

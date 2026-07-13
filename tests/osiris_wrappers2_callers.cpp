@@ -145,6 +145,12 @@ void TestCaller_osipf_MatcenCopy(void)
 	osipf_MatcenCopy(61, 62);
 }
 
+void TestCaller_Matcen_Create(void)
+{
+	char name[] = "matcen-alpha";
+	(void)Matcen_Create(name);
+}
+
 void TestCaller_osipf_MatcenFindId(void)
 {
 	char name[] = "matcen-alpha";

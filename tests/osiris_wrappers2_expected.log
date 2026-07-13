@@ -17,6 +17,7 @@ osipf_ObjWBValue obj_handle=1001 wb_index=2 op='=' vtype='i' g_index=5 value=11
 osipf_OsirisTimerExists handle=41
 osipf_MatcenReset handle=51
 osipf_MatcenCopy dhandle=61 shandle=62
+osipf_MatcenCreate name="matcen-alpha"
 osipf_MatcenFindId str="matcen-alpha"
 osipf_MissionFlagSet flag=7 value=1
 osipf_MissionFlagGet flag=7

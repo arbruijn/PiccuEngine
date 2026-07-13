@@ -322,6 +322,12 @@ int osipf_MatcenFindId(char* str)
 	return 77;
 }
 
+int osipf_MatcenCreate(char* name)
+{
+	OsirisWrappers2Logf("osipf_MatcenCreate name=\"%s\"\n", name ? name : "<null>");
+	return 78;
+}
+
 void osipf_MissionFlagSet(int flag, ubyte value)
 {
 	OsirisWrappers2Logf("osipf_MissionFlagSet flag=%d value=%u\n", flag, static_cast<unsigned>(value));
