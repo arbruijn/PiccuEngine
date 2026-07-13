@@ -785,15 +785,4 @@ void decode_game_cinematic_struct(const void* srcbuf, tGameCinematic& dst, const
 	decode_game_cinematic_struct(src, dst, vm);
 }
 
-void decode_canned_cinematic_info_struct(const void* srcbuf, tCannedCinematicInfo& dst, const VmPtrDecoder& vm)
-{
-	if (!srcbuf)
-	{
-		memset(&dst, 0, sizeof(dst));
-		return;
-	}
-
-	const canned_cinematic_info32& src = *static_cast<const canned_cinematic_info32*>(srcbuf);
-	decode_canned_cinematic_info_struct(src, dst, vm);
-}
 }

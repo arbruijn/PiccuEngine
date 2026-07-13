@@ -185,10 +185,12 @@ add_executable(object_ai_wrappers_emu86_test
 add_executable(osiris_wrappers2_golden_test
 	osiris_wrappers2_golden_test.cpp
 	osiris_wrappers2_test.cpp
-	osiris_wrappers2_callers.cpp)
+	osiris_wrappers2_callers.cpp
+	${CMAKE_SOURCE_DIR}/emuabi/cannedcinematicinfo.cpp)
 add_executable(osiris_wrappers2_emu86_test
 	osiris_wrappers2_emu86_test.cpp
-	osiris_wrappers2_test.cpp)
+	osiris_wrappers2_test.cpp
+	${CMAKE_SOURCE_DIR}/emuabi/cannedcinematicinfo.cpp)
 #add_executable(osiris_import_emu86_test
 #	osiris_import_emu86_test.cpp
 #	osiris_import_host.cpp)

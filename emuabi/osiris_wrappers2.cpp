@@ -2,7 +2,9 @@
 #include "emu86.h"
 #include "emuint.h"
 #include "pstypes.h"
+#include "cannedcinematicinfo.h"
 #include "eventinfo.h"
+#include "msafe.h"
 #include "osiris_predefs.h"
 #include "osiris_dll.h"
 #include "gamecinematics.h"
@@ -13,6 +15,7 @@
 #include <cstdint>
 
 void Osiris_CancelTimerID(int id);
+void Cinematic_StartCannedScript(tCannedCinematicInfo* info);
 
 namespace
 {
@@ -330,6 +333,27 @@ void emucall_Cinematic_Stop(Emu86FunCtx& ctx, void *)
 	Cinematic_Stop();
 }
 
+void emucall_Cinematic_Start(Emu86FunCtx& ctx, void *)
+{
+	emu_ptr_t info_ptr = ctx.arg<emu_ptr_t>(0);
+	char *text_string = ctx.arg<char *>(1);
+	tGameCinematic info;
+	void *host_info = vm_ptr<void>(ctx, info_ptr);
+	emuabi::VmPtrDecoder vm = { ctx.emu86 ? ctx.emu86->as.base : nullptr };
+	emuabi::decode_game_cinematic_struct(host_info, info, vm);
+	ctx.set_return(Cinematic_Start(&info, text_string));
+}
+
+void emucall_Cinematic_StartCannedScript(Emu86FunCtx& ctx, void *)
+{
+	emu_ptr_t info_ptr = ctx.arg<emu_ptr_t>(0);
+	tCannedCinematicInfo info;
+	void *host_info = vm_ptr<void>(ctx, info_ptr);
+	emuabi::VmPtrDecoder vm = { ctx.emu86 ? ctx.emu86->as.base : nullptr };
+	emuabi::decode_canned_cinematic_info_struct(host_info, info, vm);
+	Cinematic_StartCannedScript(&info);
+}
+
 void emucall_osipf_GetTriggerRoom(Emu86FunCtx& ctx, void *)
 {
 	int trigger_id = ctx.arg<int>(0);
@@ -471,7 +495,9 @@ emu86_ctx_fun_t kOsirisWrapperFuns2[] = {
 	{"osipf_AIGoalValue", emucall_AI_GoalValue, 6, nullptr},
 	{"AI_GetNearbyObjs", emucall_AI_GetNearbyObjs, 9, nullptr},
 	{"osipf_AIGetNearbyObjs", emucall_AI_GetNearbyObjs, 9, nullptr},
+	{"Cinematic_Start", emucall_Cinematic_Start, 2, nullptr},
 	{"Cinematic_Stop", emucall_Cinematic_Stop, 0, nullptr},
+	{"Cinematic_StartCannedScript", emucall_Cinematic_StartCannedScript, 1, nullptr},
 	{"osipf_GetTriggerRoom", emucall_osipf_GetTriggerRoom, 1, nullptr},
 	{"osipf_GetTriggerFace", emucall_osipf_GetTriggerFace, 1, nullptr},
 	{"Game_CreateRandomSparks", emucall_Game_CreateRandomSparks, 5, nullptr},

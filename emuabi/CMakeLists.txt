@@ -1,5 +1,6 @@
 SET (EMUABI_SOURCES
 		emuabi/cfile_wrappers.cpp
+		emuabi/cannedcinematicinfo.cpp
 		emuabi/eventinfo.cpp
 		emuabi/msafe.cpp
 		emuabi/object_ai_wrappers.cpp
