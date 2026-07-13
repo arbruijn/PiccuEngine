@@ -140,7 +140,7 @@ IF(UNIX)
     DEPENDS ${SCRIPTTARGETS}
     COMMENT "Building platform specific hog."
     )
-  ADD_CUSTOM_TARGET("FullLinuxHog" ALL DEPENDS "${FULLHOG}")
+  #ADD_CUSTOM_TARGET("FullLinuxHog" ALL DEPENDS "${FULLHOG}")
   #ADD_CUSTOM_TARGET("DemoLinuxHog"
   #  ALL
   #  COMMAND ${HOGBUILDCMD} "--makehog" "d3linuxdemohog.txt" 
