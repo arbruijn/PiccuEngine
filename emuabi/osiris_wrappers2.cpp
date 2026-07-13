@@ -1,6 +1,8 @@
 #define INCLUDED_FROM_D3
 #include "emu86.h"
+#include "emuint.h"
 #include "pstypes.h"
+#include "eventinfo.h"
 #include "osiris_predefs.h"
 #include "osiris_dll.h"
 #include "gamecinematics.h"
@@ -11,6 +13,53 @@
 #include <cstdint>
 
 void Osiris_CancelTimerID(int id);
+
+namespace
+{
+template <typename T>
+static T *vm_ptr(Emu86FunCtx& ctx, emu_ptr_t addr)
+{
+	if (!ctx.emu86 || !ctx.emu86->as.base)
+		return nullptr;
+	if (addr >= ctx.emu86->as.size)
+		return nullptr;
+	return reinterpret_cast<T *>(ctx.emu86->as.base + addr);
+}
+}
+
+void emucall_osipf_CallObjectEvent(Emu86FunCtx& ctx, void *)
+{
+	int objnum = ctx.arg<int>(0);
+	int event = ctx.arg<int>(1);
+	emu_ptr_t event_info_ptr = ctx.arg<emu_ptr_t>(2);
+	tOSIRISEventInfo event_info;
+	void *host_event_info = vm_ptr<void>(ctx, event_info_ptr);
+	emuabi::VmPtrDecoder vm = { ctx.emu86 ? ctx.emu86->as.base : nullptr };
+	emuabi::decode_event_info(event, host_event_info, event_info, vm);
+	ctx.set_return(osipf_CallObjectEvent(objnum, event, &event_info));
+	if (host_event_info && ctx.emu86 && ctx.emu86->as.base)
+	{
+		emuabi::VmPtrEncoder encoder = { ctx.emu86->as.base };
+		emuabi::encode_event_info(event, event_info, host_event_info, encoder);
+	}
+}
+
+void emucall_osipf_CallTriggerEvent(Emu86FunCtx& ctx, void *)
+{
+	int trignum = ctx.arg<int>(0);
+	int event = ctx.arg<int>(1);
+	emu_ptr_t event_info_ptr = ctx.arg<emu_ptr_t>(2);
+	tOSIRISEventInfo event_info;
+	void *host_event_info = vm_ptr<void>(ctx, event_info_ptr);
+	emuabi::VmPtrDecoder vm = { ctx.emu86 ? ctx.emu86->as.base : nullptr };
+	emuabi::decode_event_info(event, host_event_info, event_info, vm);
+	ctx.set_return(osipf_CallTriggerEvent(trignum, event, &event_info));
+	if (host_event_info && ctx.emu86 && ctx.emu86->as.base)
+	{
+		emuabi::VmPtrEncoder encoder = { ctx.emu86->as.base };
+		emuabi::encode_event_info(event, event_info, host_event_info, encoder);
+	}
+}
 
 void emucall_osipf_SoundTouch(Emu86FunCtx& ctx, void *)
 {
@@ -378,6 +427,8 @@ emu86_ctx_fun_t kOsirisWrapperFuns2[] = {
 	{"osipf_ObjectFindID", emucall_osipf_ObjectFindID, 1, nullptr},
 	{"osipf_ObjectFindType", emucall_osipf_ObjectFindType, 1, nullptr},
 	{"osipf_WeaponFindID", emucall_osipf_WeaponFindID, 1, nullptr},
+	{"osipf_CallObjectEvent", emucall_osipf_CallObjectEvent, 3, nullptr},
+	{"osipf_CallTriggerEvent", emucall_osipf_CallTriggerEvent, 3, nullptr},
 	{"Room_Value", emucall_Room_Value, 5, nullptr},
 	{"osipf_RoomValue", emucall_Room_Value, 5, nullptr},
 	{"osipf_IsRoomValid", emucall_osipf_IsRoomValid, 1, nullptr},
