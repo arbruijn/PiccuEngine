@@ -680,6 +680,38 @@ void encode_msafe_struct(int type, const msafe_struct& srcbuf, void* dstbuf, con
 #undef ENCODE_STRUCT_FIELD
 }
 
+void decode_msafe_do_powerup_struct(const void* srcbuf, msafe_struct& dst, const VmPtrDecoder& vm)
+{
+	memset(&dst, 0, sizeof(dst));
+	if (!srcbuf)
+	{
+		return;
+	}
+
+	const msafe_struct32& src = *static_cast<const msafe_struct32*>(srcbuf);
+	dst.objhandle = src.objhandle;
+	dst.killer_handle = src.killer_handle;
+	dst.ithandle = src.ithandle;
+	dst.playsound = src.playsound;
+	(void)vm;
+}
+
+void encode_msafe_do_powerup_struct(const msafe_struct& srcbuf, void* dstbuf, const VmPtrEncoder& vm)
+{
+	if (!dstbuf)
+	{
+		return;
+	}
+
+	msafe_struct32& dst = *static_cast<msafe_struct32*>(dstbuf);
+	memset(&dst, 0, sizeof(dst));
+	dst.objhandle = srcbuf.objhandle;
+	dst.killer_handle = srcbuf.killer_handle;
+	dst.ithandle = srcbuf.ithandle;
+	dst.playsound = srcbuf.playsound;
+	(void)vm;
+}
+
 void decode_osiris_timer_struct(const void* srcbuf, tOSIRISTIMER& dst)
 {
 	if (!srcbuf)

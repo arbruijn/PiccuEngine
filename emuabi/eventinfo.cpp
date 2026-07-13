@@ -174,6 +174,7 @@ namespace
 		fields_macro(DECODE_STRUCT_FIELD) \
 	}
 
+#if 0
 	DEFINE_DECODER(tOSIRISEVTINTERVAL, tOSIRISEVTINTERVAL32, OSIRIS_EVTINTERVAL_FIELDS)
 	DEFINE_DECODER(tOSIRISEVTDAMAGED, tOSIRISEVTDAMAGED32, OSIRIS_EVTDAMAGED_FIELDS)
 	DEFINE_DECODER(tOSIRISEVTCOLLIDE, tOSIRISEVTCOLLIDE32, OSIRIS_EVTCOLLIDE_FIELDS)
@@ -192,6 +193,7 @@ namespace
 	DEFINE_DECODER(tOSIRISEVTLEVELGOALITEMCOMPLETE, tOSIRISEVTLEVELGOALITEMCOMPLETE32, OSIRIS_EVTLEVELGOALITEMCOMPLETE_FIELDS)
 	DEFINE_DECODER(tOSIRISEVTPLAYERRESPAWN, tOSIRISEVTPLAYERRESPAWN32, OSIRIS_EVTPLAYERRESPAWN_FIELDS)
 	DEFINE_DECODER(tOSIRISEVTPLAYERDIES, tOSIRISEVTPLAYERDIES32, OSIRIS_EVTPLAYERDIES_FIELDS)
+#endif
 
 #undef DEFINE_DECODER
 #undef DECODE_STRUCT_FIELD
@@ -292,6 +294,7 @@ typedef struct{
 
 static_assert(sizeof(tOSIRISEventInfo32) == event_info_size_32, "Event interval ABI size mismatch");
 
+#if 0
 void decode_event_info(int event, const void* srcbuf, tOSIRISEventInfo& dst, const VmPtrDecoder& vm)
 {
 	memset(&dst, 0, sizeof(dst));
@@ -384,6 +387,7 @@ void decode_event_info(int event, const void* srcbuf, tOSIRISEventInfo& dst, con
 		break;
 	}
 }
+#endif
 
 void encode_event_info(int event, const tOSIRISEventInfo& src, void *dstbuf, const VmPtrEncoder& vm)
 {

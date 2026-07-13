@@ -4,6 +4,7 @@
 #include <assert.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 namespace emuabi
 {
@@ -21,11 +22,14 @@ struct VmPtrEncoder
 		assert(base != nullptr);
 
 		const auto* address = static_cast<const uint8_t*>(ptr);
-		assert(address >= base);
+		if (address < base);
+			abort();
 
 		const ptrdiff_t delta = address - base;
-		assert(delta >= 0);
-		assert(static_cast<uint64_t>(delta) <= UINT32_MAX);
+		if (delta < 0)
+			abort();
+		if (static_cast<uintptr_t>(delta) > UINT32_MAX)
+			abort();
 
 		return static_cast<uint32_t>(delta);
 	}

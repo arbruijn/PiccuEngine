@@ -8,9 +8,11 @@
 #include "heap.h"
 #include "emuabi/cfile_wrappers.h"
 #include "emuabi/eventinfo.h"
+#include "emuabi/msafe.h"
 #include "emuabi/osiris_import_bridge.h"
 #include "emuabi/osiris_import_registry.h"
 #include "emuabi/osiris_module_init.h"
+#include "multisafe.h"
 
 #include <algorithm>
 #include <cctype>
@@ -111,6 +113,68 @@ static void* vm_to_host_ptr(Emu* vm, emu_ptr_t ptr)
 	if (!vm || !ptr || ptr >= vm->as.size)
 		return 0;
 	return vm->as.base + ptr;
+}
+
+template <typename Fn>
+static void bridge_msafe_struct(Emu86FunCtx& ctx, int type, emu_ptr_t guest_struct_ptr, Fn&& fn)
+{
+	msafe_struct mstruct;
+	void* host_struct_ptr = vm_to_host_ptr(ctx.emu86, guest_struct_ptr);
+	emuabi::VmPtrDecoder vm = { ctx.emu86 ? ctx.emu86->as.base : nullptr };
+	emuabi::decode_msafe_struct(type, host_struct_ptr, mstruct, vm);
+	fn(mstruct);
+
+	if (host_struct_ptr && ctx.emu86 && ctx.emu86->as.base)
+	{
+		emuabi::VmPtrEncoder encoder = { ctx.emu86->as.base };
+		emuabi::encode_msafe_struct(type, mstruct, host_struct_ptr, encoder);
+	}
+}
+
+static void emucall_msafe_CallFunction(Emu86FunCtx& ctx, void *)
+{
+	const int type = ctx.arg<int>(0);
+	const emu_ptr_t guest_struct_ptr = ctx.arg<emu_ptr_t>(1);
+
+	msafe_struct mstruct;
+	void* host_struct_ptr = vm_to_host_ptr(ctx.emu86, guest_struct_ptr);
+	emuabi::VmPtrDecoder vm = { ctx.emu86 ? ctx.emu86->as.base : nullptr };
+	emuabi::decode_msafe_struct(type, host_struct_ptr, mstruct, vm);
+
+	msafe_CallFunction(static_cast<ubyte>(type), &mstruct);
+}
+
+static void emucall_msafe_GetValue(Emu86FunCtx& ctx, void *)
+{
+	const int type = ctx.arg<int>(0);
+	const emu_ptr_t guest_struct_ptr = ctx.arg<emu_ptr_t>(1);
+
+	msafe_struct mstruct;
+	void* host_struct_ptr = vm_to_host_ptr(ctx.emu86, guest_struct_ptr);
+	emuabi::VmPtrDecoder vm = { ctx.emu86 ? ctx.emu86->as.base : nullptr };
+	emuabi::decode_msafe_struct(type, host_struct_ptr, mstruct, vm);
+
+	msafe_GetValue(type, &mstruct);
+
+	emuabi::VmPtrEncoder encoder = { ctx.emu86->as.base };
+	emuabi::encode_msafe_struct(type, mstruct, host_struct_ptr, encoder);
+}
+
+static void emucall_msafe_DoPowerup(Emu86FunCtx& ctx, void *)
+{
+	const emu_ptr_t guest_struct_ptr = ctx.arg<emu_ptr_t>(0);
+	msafe_struct mstruct;
+	void* host_struct_ptr = vm_to_host_ptr(ctx.emu86, guest_struct_ptr);
+	emuabi::VmPtrDecoder vm = { ctx.emu86 ? ctx.emu86->as.base : nullptr };
+	emuabi::decode_msafe_do_powerup_struct(host_struct_ptr, mstruct, vm);
+	msafe_DoPowerup(&mstruct);
+	/*
+	if (host_struct_ptr && ctx.emu86 && ctx.emu86->as.base)
+	{
+		emuabi::VmPtrEncoder encoder = { ctx.emu86->as.base };
+		emuabi::encode_msafe_do_powerup_struct(mstruct, host_struct_ptr, encoder);
+	}
+	*/
 }
 
 static emu_ptr_t find_export_variant(Emu* vm, emu_ptr_t module_handle, const char* name, unsigned arg_bytes)
@@ -277,6 +341,14 @@ static void clear_vm_backend(osimod_t* om)
 	om->import_thunks.clear();
 }
 }
+
+const emu86_ctx_fun_t kOsirisBridgeFuns[] = {
+	{"msafe_CallFunction", emucall_msafe_CallFunction, 2, nullptr},
+	{"msafe_GetValue", emucall_msafe_GetValue, 2, nullptr},
+	{"msafe_DoPowerup", emucall_msafe_DoPowerup, 1, nullptr},
+};
+
+const size_t kOsirisBridgeFunsCount = sizeof(kOsirisBridgeFuns) / sizeof(kOsirisBridgeFuns[0]);
 
 void osimod_init(osimod_t *om)
 {
