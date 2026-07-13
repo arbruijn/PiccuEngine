@@ -1247,7 +1247,7 @@ void InitLevelScript()
 	{
 		char filename[_MAX_PATH], ext[_MAX_EXT];
 		ddio_SplitPath(Current_level->filename, NULL, filename, ext);
-#if defined (WIN32)
+#if 1 || defined (WIN32)
 		strcat(filename, ".dll");
 #else
 #if defined(MACOSX)

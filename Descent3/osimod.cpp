@@ -514,7 +514,7 @@ int osimod_load(osimod_t **ret, char *fullpath, osimod_type type) {
 	if (!ret || !fullpath)
 		return 0;
 
-	if (!ends_with_dll(fullpath))
+	if (0 && !ends_with_dll(fullpath))
 	{
 		module mod;
 		if (!mod_LoadModule(&mod, fullpath))

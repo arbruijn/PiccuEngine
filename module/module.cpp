@@ -98,7 +98,7 @@ void mod_GetRealModuleName(const char *modfilename,char *realmodfilename)
 	char pathname[_MAX_PATH],filename[_MAX_FNAME],extension[_MAX_EXT];
 	ddio_SplitPath(modfilename,pathname,filename,extension);
 	if(*extension=='\0')
-#if		defined (WIN32)	
+#if 1 ||		defined (WIN32)	
 		strcat(filename,".dll");
 #elif	defined (__LINUX__)
                 #if defined(MACOSX)
@@ -108,7 +108,7 @@ void mod_GetRealModuleName(const char *modfilename,char *realmodfilename)
 		#endif
 #endif
 	else{
-#if		defined (WIN32)
+#if 1 || 		defined (WIN32)
 	  if(!stricmp(extension,".so") || !stricmp(extension,"msl") || !stricmp(extension,"dylib"))
 			strcat(filename,".dll");
 		else

@@ -2938,8 +2938,8 @@ int Osiris_ExtractScriptsFromHog(int library_handle, bool is_mission_hog)
 	int count = 0;
 
 	char* script_extension;
-#if defined(__LINUX__)
-#if defined(MACOSX)
+#if 0 && defined(__LINUX__)
+#if 0 && defined(MACOSX)
 	script_extension = "*.dylib";
 #else
 	script_extension = "*.so";
