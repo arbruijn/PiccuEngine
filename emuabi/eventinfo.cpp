@@ -1,4 +1,5 @@
 #include "eventinfo.h"
+#include "cfile_wrappers.h"
 
 #include <stddef.h>
 #include <string.h>
@@ -165,6 +166,36 @@ namespace
 #undef ENCODE_STRUCT_FIELD
 #undef DEFINE_ENCODER
 
+#define DECODE_STRUCT_FIELD(kind, name) ABI_COPY_##kind(name)
+#define DEFINE_DECODER(native_type, generated_type, fields_macro) \
+	void decode_##generated_type(const generated_type& src, native_type& dst, const VmPtrDecoder& vm) \
+	{ \
+		memset(&dst, 0, sizeof(dst)); \
+		fields_macro(DECODE_STRUCT_FIELD) \
+	}
+
+	DEFINE_DECODER(tOSIRISEVTINTERVAL, tOSIRISEVTINTERVAL32, OSIRIS_EVTINTERVAL_FIELDS)
+	DEFINE_DECODER(tOSIRISEVTDAMAGED, tOSIRISEVTDAMAGED32, OSIRIS_EVTDAMAGED_FIELDS)
+	DEFINE_DECODER(tOSIRISEVTCOLLIDE, tOSIRISEVTCOLLIDE32, OSIRIS_EVTCOLLIDE_FIELDS)
+	DEFINE_DECODER(tOSIRISEVTDESTROY, tOSIRISEVTDESTROY32, OSIRIS_EVTDESTROY_FIELDS)
+	DEFINE_DECODER(tOSIRISEVTTIMER, tOSIRISEVTTIMER32, OSIRIS_EVTTIMER_FIELDS)
+	DEFINE_DECODER(tOSIRISEVTUSE, tOSIRISEVTUSE32, OSIRIS_EVTUSE_FIELDS)
+	DEFINE_DECODER(tOSIRISEVTSAVESTATE, tOSIRISEVTSAVESTATE32, OSIRIS_EVTSAVESTATE_FIELDS)
+	DEFINE_DECODER(tOSIRISEVTRESTORESTATE, tOSIRISEVTRESTORESTATE32, OSIRIS_EVTRESTORESTATE_FIELDS)
+	DEFINE_DECODER(tOSIRISEVTAINOTIFY, tOSIRISEVTAINOTIFY32, OSIRIS_EVTAINOTIFY_FIELDS)
+	DEFINE_DECODER(tOSIRISEVTCHANGESEG, tOSIRISEVTCHANGESEG32, OSIRIS_EVTCHANGESEG_FIELDS)
+	DEFINE_DECODER(tOSIRISEVTMEMRESTORE, tOSIRISEVTMEMRESTORE32, OSIRIS_EVTMEMRESTORE_FIELDS)
+	DEFINE_DECODER(tOSIRISEVTTIMERCANCEL, tOSIRISEVTTIMERCANCEL32, OSIRIS_EVTTIMERCANCEL_FIELDS)
+	DEFINE_DECODER(tOSIRISEVTCHILDDIED, tOSIRISEVTCHILDDIED32, OSIRIS_EVTCHILDDIED_FIELDS)
+	DEFINE_DECODER(tOSIRISEVTMATCENCREATE, tOSIRISEVTMATCENCREATE32, OSIRIS_EVTMATCENCREATE_FIELDS)
+	DEFINE_DECODER(tOSIRISEVTLEVELGOALCOMPLETE, tOSIRISEVTLEVELGOALCOMPLETE32, OSIRIS_EVTLEVELGOALCOMPLETE_FIELDS)
+	DEFINE_DECODER(tOSIRISEVTLEVELGOALITEMCOMPLETE, tOSIRISEVTLEVELGOALITEMCOMPLETE32, OSIRIS_EVTLEVELGOALITEMCOMPLETE_FIELDS)
+	DEFINE_DECODER(tOSIRISEVTPLAYERRESPAWN, tOSIRISEVTPLAYERRESPAWN32, OSIRIS_EVTPLAYERRESPAWN_FIELDS)
+	DEFINE_DECODER(tOSIRISEVTPLAYERDIES, tOSIRISEVTPLAYERDIES32, OSIRIS_EVTPLAYERDIES_FIELDS)
+
+#undef DEFINE_DECODER
+#undef DECODE_STRUCT_FIELD
+
 	template <typename DstEvent32, typename SrcEvent64, typename GeneratedEvent32>
 	void encode_union_event(DstEvent32& dst, const SrcEvent64& src, const VmPtrEncoder& vm, void (*encode_fn)(const SrcEvent64&, GeneratedEvent32&, const VmPtrEncoder&))
 	{
@@ -260,6 +291,99 @@ typedef struct{
 
 
 static_assert(sizeof(tOSIRISEventInfo32) == event_info_size_32, "Event interval ABI size mismatch");
+
+void decode_event_info(int event, const void* srcbuf, tOSIRISEventInfo& dst, const VmPtrDecoder& vm)
+{
+	memset(&dst, 0, sizeof(dst));
+	if (!srcbuf)
+	{
+		return;
+	}
+
+	const tOSIRISEventInfo32& src = *static_cast<const tOSIRISEventInfo32*>(srcbuf);
+	dst.me_handle = src.me_handle;
+	dst.extra_info = vm.decode_ptr32(src.extra_info);
+
+	switch (event)
+	{
+	case EVT_INTERVAL:
+		decode_tOSIRISEVTINTERVAL32(src.evt_interval, dst.evt_interval, vm);
+		break;
+	case EVT_AI_FRAME:
+	case EVT_CREATED:
+	case EVT_AI_INIT:
+	case EVT_DOOR_ACTIVATE:
+	case EVT_DOOR_CLOSE:
+	case EVT_ALL_LEVEL_GOALS_COMPLETE:
+	case EVT_PLAYER_MOVIE_START:
+	case EVT_PLAYER_MOVIE_END:
+		break;
+	case EVT_DAMAGED:
+		decode_tOSIRISEVTDAMAGED32(src.evt_damaged, dst.evt_damaged, vm);
+		break;
+	case EVT_COLLIDE:
+		decode_tOSIRISEVTCOLLIDE32(src.evt_collide, dst.evt_collide, vm);
+		break;
+	case EVT_DESTROY:
+		decode_tOSIRISEVTDESTROY32(src.evt_destroy, dst.evt_destroy, vm);
+		break;
+	case EVT_TIMER:
+		decode_tOSIRISEVTTIMER32(src.evt_timer, dst.evt_timer, vm);
+		break;
+	case EVT_USE:
+		decode_tOSIRISEVTUSE32(src.evt_use, dst.evt_use, vm);
+		break;
+	case EVT_AI_NOTIFY:
+	case EVT_AIN_OBJKILLED:
+	case EVT_AIN_SEEPLAYER:
+	case EVT_AIN_WHITOBJECT:
+	case EVT_AIN_GOALCOMPLETE:
+	case EVT_AIN_GOALFAIL:
+	case EVT_AIN_MELEE_HIT:
+	case EVT_AIN_MELEE_ATTACK_FRAME:
+	case EVT_AIN_MOVIE_START:
+	case EVT_AIN_MOVIE_END:
+		decode_tOSIRISEVTAINOTIFY32(src.evt_ai_notify, dst.evt_ai_notify, vm);
+		break;
+	case EVT_CHANGESEG:
+		decode_tOSIRISEVTCHANGESEG32(src.evt_changeseg, dst.evt_changeseg, vm);
+		break;
+	case EVT_SAVESTATE:
+		decode_tOSIRISEVTSAVESTATE32(src.evt_savestate, dst.evt_savestate, vm);
+		dst.evt_savestate.fileptr = emuabi::resolve_file_handle(src.evt_savestate.fileptr);
+		break;
+	case EVT_RESTORESTATE:
+		decode_tOSIRISEVTRESTORESTATE32(src.evt_restorestate, dst.evt_restorestate, vm);
+		dst.evt_restorestate.fileptr = emuabi::resolve_file_handle(src.evt_restorestate.fileptr);
+		break;
+	case EVT_MEMRESTORE:
+		decode_tOSIRISEVTMEMRESTORE32(src.evt_memrestore, dst.evt_memrestore, vm);
+		break;
+	case EVT_TIMERCANCEL:
+		decode_tOSIRISEVTTIMERCANCEL32(src.evt_timercancel, dst.evt_timercancel, vm);
+		break;
+	case EVT_CHILD_DIED:
+		decode_tOSIRISEVTCHILDDIED32(src.evt_child_died, dst.evt_child_died, vm);
+		break;
+	case EVT_MATCEN_CREATE:
+		decode_tOSIRISEVTMATCENCREATE32(src.evt_matcen_create, dst.evt_matcen_create, vm);
+		break;
+	case EVT_LEVEL_GOAL_COMPLETE:
+		decode_tOSIRISEVTLEVELGOALCOMPLETE32(src.evt_level_goal_complete, dst.evt_level_goal_complete, vm);
+		break;
+	case EVT_LEVEL_GOAL_ITEM_COMPLETE:
+		decode_tOSIRISEVTLEVELGOALITEMCOMPLETE32(src.evt_level_goal_item_complete, dst.evt_level_goal_item_complete, vm);
+		break;
+	case EVT_PLAYER_RESPAWN:
+		decode_tOSIRISEVTPLAYERRESPAWN32(src.evt_player_respawn, dst.evt_player_respawn, vm);
+		break;
+	case EVT_PLAYER_DIES:
+		decode_tOSIRISEVTPLAYERDIES32(src.evt_player_dies, dst.evt_player_dies, vm);
+		break;
+	default:
+		break;
+	}
+}
 
 void encode_event_info(int event, const tOSIRISEventInfo& src, void *dstbuf, const VmPtrEncoder& vm)
 {
