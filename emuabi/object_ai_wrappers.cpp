@@ -1,5 +1,6 @@
 #define INCLUDED_FROM_D3
 #include "emu86.h"
+#include "emuint.h"
 #include "pstypes.h"
 #include "osiris_predefs.h"
 #include "vecmat_external.h"
@@ -8,6 +9,16 @@
 
 //template <>
 //vector *emu_arg<vector *>(Emu *emu86, int n) { return static_cast<vector *>(emu_arg<void *>(emu86, n)); }
+
+template <typename T>
+static T *vm_ptr(Emu86FunCtx& ctx, emu_ptr_t addr)
+{
+	if (!ctx.emu86 || !ctx.emu86->as.base)
+		return nullptr;
+	if (addr >= ctx.emu86->as.size)
+		return nullptr;
+	return reinterpret_cast<T *>(ctx.emu86->as.base + addr);
+}
 
 
 // float osipf_ObjectGetTimeLived(int objhandle);
@@ -156,11 +167,13 @@ void emucall_osipf_AISetType(Emu86FunCtx& ctx, void *)
 void emucall_osipf_AIFindHidePos(Emu86FunCtx& ctx, void *)
 {
 	emu_ptr_t ret = ctx.arg<emu_ptr_t>(0);
-	vector *ret_vector = (vector *)ctx.to_native_ptr(ret);
+	vector *ret_vector = vm_ptr<vector>(ctx, ret);
 	int hideobjhandle = ctx.arg<int>(1);
 	int viewobjhandle = ctx.arg<int>(2);
 	float time = ctx.arg<float>(3);
 	int *hide_room = ctx.arg<int *>(4);
+	if (!ret_vector)
+		return;
 	*ret_vector = osipf_AIFindHidePos(hideobjhandle, viewobjhandle, time, hide_room);
 	ctx.set_return(ret);
 }
@@ -318,8 +331,10 @@ void emucall_AI_FindObjOfType(Emu86FunCtx& ctx, void *)
 void emucall_osipf_AIGetRoomPathPoint(Emu86FunCtx& ctx, void *)
 {
 	emu_ptr_t ret = ctx.arg<emu_ptr_t>(0);
-	vector *ret_vector = (vector *)ctx.to_native_ptr(ret);
+	vector *ret_vector = vm_ptr<vector>(ctx, ret);
 	int roomnum = ctx.arg<int>(1);
+	if (!ret_vector)
+		return;
 	*ret_vector = osipf_AIGetRoomPathPoint(roomnum);
 	ctx.set_return(ret);
 }
@@ -409,7 +424,7 @@ void emucall_osipf_AIIsObjReachable(Emu86FunCtx& ctx, void *)
 	int target = ctx.arg<int>(1);
 	ctx.set_return(osipf_AIIsObjReachable(handle, target));
 }
-const emu86_ctx_fun_t kObjectAIWrapperFuns[] = {
+emu86_ctx_fun_t kObjectAIWrapperFuns[] = {
 	{"osipf_ObjectGetTimeLived", emucall_osipf_ObjectGetTimeLived, 1, nullptr},
 	{"Obj_GetGunPos", emucall_Obj_GetGunPos, 4, nullptr},
 	{"Obj_GetGroundPos", emucall_Obj_GetGroundPos, 4, nullptr},
@@ -443,3 +458,5 @@ const emu86_ctx_fun_t kObjectAIWrapperFuns[] = {
 	{"osipf_AIIsDestReachable", emucall_osipf_AIIsDestReachable, 2, nullptr},
 	{"osipf_AIIsObjReachable", emucall_osipf_AIIsObjReachable, 2, nullptr},
 };
+
+size_t kObjectAIWrapperFunsCount = sizeof(kObjectAIWrapperFuns) / sizeof(kObjectAIWrapperFuns[0]);

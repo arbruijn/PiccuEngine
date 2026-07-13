@@ -99,7 +99,14 @@ ENDIF ()
 
 MESSAGE("Install will copy files to ${D3_GAMEDIR}")
 
-include_directories("lib" "Descent3" "netcon/includes" ${PLATFORM_INCLUDES})
+include_directories("${CMAKE_SOURCE_DIR}" "lib" "Descent3" "scripts" "netcon/includes" ${PLATFORM_INCLUDES})
+
+include(FetchContent)
+if (NOT TARGET emu86)
+	FetchContent_Declare(emu86
+		SOURCE_DIR "${CMAKE_SOURCE_DIR}/../emu86")
+	FetchContent_MakeAvailable(emu86)
+endif()
 
 IF (WIN32)
 	SET (PLATFORM_LIBS wsock32.lib winmm.lib Glu32.lib OpenGL32.lib dbghelp.lib wininet.lib
@@ -250,7 +257,12 @@ SET (DESCENT3_SOURCES
 ENDIF()
 
 add_executable(PiccuEngine ${DESCENT3_SOURCES})
-	
+target_include_directories(PiccuEngine PRIVATE
+	${emu86_SOURCE_DIR}/src
+	${emu86_SOURCE_DIR}/src/cpu
+	${emu86_SOURCE_DIR}/src/cpu/include
+	${emu86_SOURCE_DIR}/include)
+
 IF (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 	if (USE_SDL) #for convenience SDL will compile as a console app, and dump mono there
 		target_link_options(PiccuEngine PUBLIC /SAFESEH:NO /NODEFAULTLIB:LIBC)
@@ -267,7 +279,7 @@ IF (APPLE)
 	target_link_options(PiccuEngine PUBLIC -framework IOKit -framework Cocoa -framework OpenGL -framework Carbon)
 ENDIF()
 
-target_link_libraries(PiccuEngine ${PLATFORM_LIBS})
+target_link_libraries(PiccuEngine PRIVATE emu86 ${PLATFORM_LIBS})
 	
 target_compile_definitions(PiccuEngine PUBLIC -DMONO "$<$<CONFIG:RELEASE>:RELEASE>")
 target_compile_definitions(PiccuEngine PUBLIC -DMONO "$<$<CONFIG:MINSIZEREL>:RELEASE>")
@@ -291,6 +303,7 @@ source_group("ddio_common" REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/ddio_
 source_group("ddio_lnx" REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/ddio_lnx/.+")
 source_group("ddio_win" REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/ddio_win/.+")
 source_group("main" REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/Descent3/.+")
+source_group("emuabi" REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/emuabi/.+")
 source_group("fix" REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/fix/.+")
 source_group("grtext" REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/grtext/.+")
 source_group("libacm" REGULAR_EXPRESSION "${CMAKE_CURRENT_SOURCE_DIR}/libacm/.+")

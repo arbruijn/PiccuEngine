@@ -234,6 +234,13 @@ SET (MAIN_SOURCES
 		Descent3/osimod.cpp
 		Descent3/OsirisLoadandBind.cpp
 		Descent3/osiris_predefs.cpp
+		emuabi/cfile_wrappers.cpp
+		emuabi/eventinfo.cpp
+		emuabi/object_ai_wrappers.cpp
+		emuabi/osiris_import_registry.cpp
+		emuabi/osiris_module_init.cpp
+		emuabi/osiris_wrappers.cpp
+		emuabi/osiris_wrappers2.cpp
 		Descent3/pilot.cpp
 		Descent3/PilotPicsAPI.cpp
 		Descent3/pilot_class.cpp

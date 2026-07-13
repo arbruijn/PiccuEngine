@@ -64,7 +64,7 @@ void emucall_osipf_FindLevelGoalName(Emu86FunCtx& ctx, void *)
 	ctx.set_return(osipf_FindLevelGoalName(name));
 }
 
-const emu86_ctx_fun_t kOsirisWrapperFuns[] = {
+emu86_ctx_fun_t kOsirisWrapperFuns[] = {
 	{"osipf_FindSoundName", emucall_osipf_FindSoundName, 1, 0},
 	{"osipf_FindRoomName", emucall_osipf_FindRoomName, 1, 0},
 	{"osipf_FindTriggerName", emucall_osipf_FindTriggerName, 1, 0},
@@ -75,3 +75,5 @@ const emu86_ctx_fun_t kOsirisWrapperFuns[] = {
 	{"osipf_FindPathName", emucall_osipf_FindPathName, 1, 0},
 	{"osipf_FindLevelGoalName", emucall_osipf_FindLevelGoalName, 1, 0},
 };
+
+size_t kOsirisWrapperFunsCount = sizeof(kOsirisWrapperFuns) / sizeof(kOsirisWrapperFuns[0]);

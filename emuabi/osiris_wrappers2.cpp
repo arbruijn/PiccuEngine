@@ -2,11 +2,15 @@
 #include "emu86.h"
 #include "pstypes.h"
 #include "osiris_predefs.h"
+#include "osiris_dll.h"
+#include "gamecinematics.h"
 #include "vecmat_external.h"
 #include "osiris_common.h"
 #include "gamecinematics_external.h"
 #include "multisafe.h"
 #include <cstdint>
+
+void Osiris_CancelTimerID(int id);
 
 void emucall_osipf_SoundTouch(Emu86FunCtx& ctx, void *)
 {
@@ -86,13 +90,13 @@ void emucall_Matcen_Value(Emu86FunCtx& ctx, void *)
 void emucall_Osiris_FreeMemory(Emu86FunCtx& ctx, void *)
 {
 	void *memory_ptr = ctx.arg<void *>(0);
-	osipf_OsirisFreeMemory(memory_ptr);
+	Osiris_FreeMemory(memory_ptr);
 }
 
 void emucall_Osiris_CancelTimer(Emu86FunCtx& ctx, void *)
 {
 	int timer_id = ctx.arg<int>(0);
-	osipf_OsirisCancelTimer(timer_id);
+	Osiris_CancelTimer(timer_id);
 }
 
 void emucall_Obj_Create(Emu86FunCtx& ctx, void *)
@@ -131,7 +135,7 @@ void emucall_Obj_WBValue(Emu86FunCtx& ctx, void *)
 void emucall_Osiris_TimerExists(Emu86FunCtx& ctx, void *)
 {
 	int handle = ctx.arg<int>(0);
-	ctx.set_return(osipf_OsirisTimerExists(handle));
+	ctx.set_return(Osiris_TimerExists(handle));
 }
 
 void emucall_osipf_MatcenReset(Emu86FunCtx& ctx, void *)
@@ -185,7 +189,7 @@ void emucall_Obj_SetCustomAnim(Emu86FunCtx& ctx, void *)
 	char flags = ctx.arg<char>(4);
 	int sound_handle = ctx.arg<int>(5);
 	char next_anim_type = ctx.arg<char>(6);
-	osipf_ObjSetCustomAnim(handle, start, end, time, flags, sound_handle, next_anim_type);
+	osipf_ObjectCustomAnim(handle, start, end, time, flags, sound_handle, next_anim_type);
 }
 
 void emucall_osipf_PlayerAddHudMessage(Emu86FunCtx& ctx, void *)
@@ -274,7 +278,7 @@ void emucall_AI_GetNearbyObjs(Emu86FunCtx& ctx, void *)
 
 void emucall_Cinematic_Stop(Emu86FunCtx& ctx, void *)
 {
-	osipf_CinematicStop();
+	Cinematic_Stop();
 }
 
 void emucall_osipf_GetTriggerRoom(Emu86FunCtx& ctx, void *)
@@ -296,13 +300,13 @@ void emucall_Game_CreateRandomSparks(Emu86FunCtx& ctx, void *)
 	int roomnum = ctx.arg<int>(2);
 	int which_index = ctx.arg<int>(3);
 	float force_scalar = ctx.arg<float>(4);
-	osipf_GameCreateRandomSparks(num_sparks, pos, roomnum, which_index, force_scalar);
+	osipf_CreateRandomSparks(num_sparks, pos, roomnum, which_index, force_scalar);
 }
 
 void emucall_Osiris_CancelTimerID(Emu86FunCtx& ctx, void *)
 {
 	int id = ctx.arg<int>(0);
-	osipf_OsirisCancelTimerID(id);
+	Osiris_CancelTimerID(id);
 }
 
 void emucall_osipf_EnableShip(Emu86FunCtx& ctx, void *)
@@ -369,7 +373,7 @@ void emucall_osipf_PathValue(Emu86FunCtx& ctx, void *)
 	osipf_PathValue(path_id, node_id, op, changes, ptr);
 }
 
-const emu86_ctx_fun_t kOsirisWrapperFuns2[] = {
+emu86_ctx_fun_t kOsirisWrapperFuns2[] = {
 	{"osipf_SoundTouch", emucall_osipf_SoundTouch, 1, nullptr},
 	{"osipf_ObjectFindID", emucall_osipf_ObjectFindID, 1, nullptr},
 	{"osipf_ObjectFindType", emucall_osipf_ObjectFindType, 1, nullptr},
@@ -418,3 +422,5 @@ const emu86_ctx_fun_t kOsirisWrapperFuns2[] = {
 	{"osipf_GetLanguageSetting", emucall_osipf_GetLanguageSetting, 0, nullptr},
 	{"osipf_PathValue", emucall_osipf_PathValue, 5, nullptr},
 };
+
+size_t kOsirisWrapperFuns2Count = sizeof(kOsirisWrapperFuns2) / sizeof(kOsirisWrapperFuns2[0]);

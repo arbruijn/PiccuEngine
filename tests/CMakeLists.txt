@@ -40,9 +40,11 @@ target_include_directories(osiris_event_golden_test PRIVATE
 
 include(FetchContent)
 set(BUILD_TESTS OFF CACHE BOOL "Disable emu86 self-tests when vendored into PiccuEngine" FORCE)
-FetchContent_Declare(emu86
-	SOURCE_DIR "${CMAKE_SOURCE_DIR}/../emu86")
-FetchContent_MakeAvailable(emu86)
+if (NOT TARGET emu86)
+	FetchContent_Declare(emu86
+		SOURCE_DIR "${CMAKE_SOURCE_DIR}/../emu86")
+	FetchContent_MakeAvailable(emu86)
+endif()
 
 find_program(OWCC_EXECUTABLE owcc REQUIRED)
 

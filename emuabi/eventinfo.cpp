@@ -348,4 +348,31 @@ void encode_event_info(int event, const tOSIRISEventInfo& src, void *dstbuf, con
 	memcpy(dstbuf, &dst, sizeof(dst));
 }
 
+void encode_event_info_with_file_handle(int event, const tOSIRISEventInfo& src, void *dstbuf, const VmPtrEncoder& vm, uint32_t file_handle)
+{
+	tOSIRISEventInfo adjusted = src;
+	if (event == EVT_SAVESTATE)
+		adjusted.evt_savestate.fileptr = 0;
+	else if (event == EVT_RESTORESTATE)
+		adjusted.evt_restorestate.fileptr = 0;
+
+	encode_event_info(event, adjusted, dstbuf, vm);
+
+	if (!dstbuf)
+		return;
+
+	tOSIRISEventInfo32& dst = *reinterpret_cast<tOSIRISEventInfo32*>(dstbuf);
+	switch (event)
+	{
+	case EVT_SAVESTATE:
+		dst.evt_savestate.fileptr = file_handle;
+		break;
+	case EVT_RESTORESTATE:
+		dst.evt_restorestate.fileptr = file_handle;
+		break;
+	default:
+		break;
+	}
+}
+
 }
