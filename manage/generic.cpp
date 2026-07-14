@@ -1114,6 +1114,65 @@ void GenericPageSetPowerupDefaultAmmo(object_info *ip)
 		ip->ammo_count = 100;
 }
 
+// assumes buf is aligned
+static int buf_is_zero (void *buf,size_t size)
+{
+	uint64_t *buf64 = (uint64_t *)buf;
+	for (; size >= sizeof (uint64_t); size -= sizeof (uint64_t))
+		if (*buf64++)
+			return 0;
+	uint8_t *buf8 = (uint8_t *)buf64;
+	for (; size; size--)
+		if (*buf8++)
+			return 0;
+	return 1;
+}
+
+// returns 1 if the file contains count empty strings,
+// otherwise file position is restored to before the strings
+int read_empty_strings (CFILE *infile,int count)
+{
+	void *buf;
+	int n_read;
+
+	if (!(buf = malloc (count)))
+		return 0;
+	n_read = cf_ReadBytes ((ubyte *)buf, count, infile);
+	if (n_read == count && buf_is_zero (buf, count)) {
+		free (buf);
+		return 1;
+	}
+	cfseek (infile, -n_read, SEEK_CUR);
+	free (buf);
+	return 0;
+}
+
+int read_same_strings (CFILE *infile,const char *str,int count)
+{
+	char *buf;
+	int str_size = strlen(str) + 1;
+	int buf_size = str_size * count;
+	int n_read;
+
+	if (!(buf = (char *)malloc (buf_size)))
+		return 0;
+	n_read = cf_ReadBytes ((ubyte *)buf, buf_size, infile);
+	if (n_read == buf_size) {
+		const char *p = buf;
+		while (count--) {
+			if (memcmp (p, str, str_size))
+				goto fail;
+			p += str_size;
+		}
+		free (buf);
+		return 1;
+	}
+fail:
+	cfseek (infile, -n_read, SEEK_CUR);
+	free (buf);
+	return 0;
+}
+
 // Reads a generic page from an open file.  Returns 0 on error.  
 int mng_ReadNewGenericPage (CFILE *infile,mngs_generic_page *genericpage)
 {
@@ -1334,13 +1393,18 @@ int mng_ReadNewGenericPage (CFILE *infile,mngs_generic_page *genericpage)
 	}
 
 	// read weapon names
-	for(i = 0; i < MAX_WBS_PER_OBJ; i++)
-	{
-		for(j = 0; j < MAX_WB_GUNPOINTS; j++)
-			cf_ReadString (genericpage->weapon_name[i][j],PAGENAME_LEN,infile);
+	if (read_same_strings(infile, "Laser", MAX_WBS_PER_OBJ * MAX_WB_GUNPOINTS)) {
+		for(i = 0; i < MAX_WBS_PER_OBJ; i++)
+			for(j = 0; j < MAX_WB_GUNPOINTS; j++)
+				strcpy (genericpage->weapon_name[i][j], "Laser");
+	} else {
+		for(i = 0; i < MAX_WBS_PER_OBJ; i++)
+		{
+			for(j = 0; j < MAX_WB_GUNPOINTS; j++)
+				cf_ReadString (genericpage->weapon_name[i][j],PAGENAME_LEN,infile);
+		}
 	}
 
-		
 	// read sounds 
 	ASSERT(MAX_OBJ_SOUNDS == 2);
 	for (i=0;i<MAX_OBJ_SOUNDS;i++)
@@ -1349,21 +1413,29 @@ int mng_ReadNewGenericPage (CFILE *infile,mngs_generic_page *genericpage)
 		char temp_sound_name[PAGENAME_LEN];
 		cf_ReadString (temp_sound_name,PAGENAME_LEN,infile);
 	}
-		
-
 	for (i=0;i<MAX_AI_SOUNDS;i++)
 		cf_ReadString (genericpage->ai_sound_name[i],PAGENAME_LEN,infile);
 
-	for(i = 0; i < MAX_WBS_PER_OBJ; i++)
-	{
-		for(j = 0; j < MAX_WB_FIRING_MASKS; j++)
-			cf_ReadString (genericpage->fire_sound_name[i][j],PAGENAME_LEN,infile);
-	}
+	if (read_same_strings(infile, "Default",
+		MAX_WBS_PER_OBJ * MAX_WB_FIRING_MASKS + NUM_MOVEMENT_CLASSES * NUM_ANIMS_PER_CLASS)) {
+		for(i = 0; i < MAX_WBS_PER_OBJ; i++)
+			for(j = 0; j < MAX_WB_FIRING_MASKS; j++)
+				strcpy (genericpage->fire_sound_name[i][j], "Default");
+		for(i = 0; i < NUM_MOVEMENT_CLASSES; i++)
+			for(j = 0; j < NUM_ANIMS_PER_CLASS; j++)
+				strcpy (genericpage->anim_sound_name[i][j], "Default");
+	} else {
+		for(i = 0; i < MAX_WBS_PER_OBJ; i++)
+		{
+			for(j = 0; j < MAX_WB_FIRING_MASKS; j++)
+				cf_ReadString (genericpage->fire_sound_name[i][j],PAGENAME_LEN,infile);
+		}
 
-	for(i = 0; i < NUM_MOVEMENT_CLASSES; i++)
-	{
-		for(j = 0; j < NUM_ANIMS_PER_CLASS; j++)
-			cf_ReadString (genericpage->anim_sound_name[i][j],PAGENAME_LEN,infile);
+		for(i = 0; i < NUM_MOVEMENT_CLASSES; i++)
+		{
+			for(j = 0; j < NUM_ANIMS_PER_CLASS; j++)
+				cf_ReadString (genericpage->anim_sound_name[i][j],PAGENAME_LEN,infile);
+		}
 	}
 
 	// Read respawn scalar
