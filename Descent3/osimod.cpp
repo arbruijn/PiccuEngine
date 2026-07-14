@@ -108,13 +108,15 @@ static void vm_temp_free(Emu* vm, emu_ptr_t ptr)
 	heap_free(vm, vm->process_heap, 0, ptr);
 }
 
-static void* vm_to_host_ptr(Emu* vm, emu_ptr_t ptr)
+static void* vm_to_host_ptr(Emu* vm, emu_ptr_t ptr, size_t size)
 {
-	if (!vm || !ptr || ptr >= vm->as.size)
+	if (!vm || !ptr)
 		return 0;
+	emu86_check_ptr(vm, ptr, size);
 	return vm->as.base + ptr;
 }
 
+/*
 template <typename Fn>
 static void bridge_msafe_struct(Emu86FunCtx& ctx, int type, emu_ptr_t guest_struct_ptr, Fn&& fn)
 {
@@ -130,6 +132,7 @@ static void bridge_msafe_struct(Emu86FunCtx& ctx, int type, emu_ptr_t guest_stru
 		emuabi::encode_msafe_struct(type, mstruct, host_struct_ptr, encoder);
 	}
 }
+*/
 
 static void emucall_msafe_CallFunction(Emu86FunCtx& ctx, void *)
 {
@@ -137,7 +140,7 @@ static void emucall_msafe_CallFunction(Emu86FunCtx& ctx, void *)
 	const emu_ptr_t guest_struct_ptr = ctx.arg<emu_ptr_t>(1);
 
 	msafe_struct mstruct;
-	void* host_struct_ptr = vm_to_host_ptr(ctx.emu86, guest_struct_ptr);
+	void* host_struct_ptr = vm_to_host_ptr(ctx.emu86, guest_struct_ptr, emuabi::msafe_struct_size_32);
 	emuabi::VmPtrDecoder vm = { ctx.emu86 ? ctx.emu86->as.base : nullptr };
 	emuabi::decode_msafe_struct(type, host_struct_ptr, mstruct, vm);
 
@@ -150,7 +153,7 @@ static void emucall_msafe_GetValue(Emu86FunCtx& ctx, void *)
 	const emu_ptr_t guest_struct_ptr = ctx.arg<emu_ptr_t>(1);
 
 	msafe_struct mstruct;
-	void* host_struct_ptr = vm_to_host_ptr(ctx.emu86, guest_struct_ptr);
+	void* host_struct_ptr = vm_to_host_ptr(ctx.emu86, guest_struct_ptr, emuabi::msafe_struct_size_32);
 	emuabi::VmPtrDecoder vm = { ctx.emu86 ? ctx.emu86->as.base : nullptr };
 	emuabi::decode_msafe_struct(type, host_struct_ptr, mstruct, vm);
 
@@ -164,7 +167,7 @@ static void emucall_msafe_DoPowerup(Emu86FunCtx& ctx, void *)
 {
 	const emu_ptr_t guest_struct_ptr = ctx.arg<emu_ptr_t>(0);
 	msafe_struct mstruct;
-	void* host_struct_ptr = vm_to_host_ptr(ctx.emu86, guest_struct_ptr);
+	void* host_struct_ptr = vm_to_host_ptr(ctx.emu86, guest_struct_ptr, emuabi::msafe_struct_size_32);
 	emuabi::VmPtrDecoder vm = { ctx.emu86 ? ctx.emu86->as.base : nullptr };
 	emuabi::decode_msafe_do_powerup_struct(host_struct_ptr, mstruct, vm);
 	msafe_DoPowerup(&mstruct);
@@ -181,7 +184,7 @@ static void emucall_Osiris_CreateTimer(Emu86FunCtx& ctx, void *)
 {
 	const emu_ptr_t guest_timer_ptr = ctx.arg<emu_ptr_t>(0);
 	tOSIRISTIMER timer;
-	void* host_timer_ptr = vm_to_host_ptr(ctx.emu86, guest_timer_ptr);
+	void* host_timer_ptr = vm_to_host_ptr(ctx.emu86, guest_timer_ptr, emuabi::osiris_timer_struct_size_32);
 	emuabi::decode_osiris_timer_struct(host_timer_ptr, timer);
 	ctx.set_return(Osiris_CreateTimer(&timer));
 }
@@ -557,8 +560,8 @@ int osimod_GetCOScriptList(osimod_t *om, int** list, int** id_list)
 	const emu_ptr_t guest_list = *reinterpret_cast<uint32_t*>(om->vm->as.base + list_slot);
 	const emu_ptr_t guest_id_list = *reinterpret_cast<uint32_t*>(om->vm->as.base + id_slot);
 
-	*list = static_cast<int*>(vm_to_host_ptr(om->vm, guest_list));
-	*id_list = static_cast<int*>(vm_to_host_ptr(om->vm, guest_id_list));
+	*list = static_cast<int*>(vm_to_host_ptr(om->vm, guest_list, 0));
+	*id_list = static_cast<int*>(vm_to_host_ptr(om->vm, guest_id_list, 0));
 
 	vm_temp_free(om->vm, list_slot);
 	vm_temp_free(om->vm, id_slot);

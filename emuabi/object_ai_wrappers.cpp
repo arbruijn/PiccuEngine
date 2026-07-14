@@ -33,8 +33,8 @@ void emucall_Obj_GetGunPos(Emu86FunCtx& ctx, void *)
 {
 	int objhandle = ctx.arg<int>(0);
 	int gun_number = ctx.arg<int>(1);
-	vector *gun_pnt = ctx.arg<vector *>(2);
-	vector *gun_normal = ctx.arg<vector *>(3);
+	vector *gun_pnt = ctx.arg<vector *>(2, sizeof(vector));
+	vector *gun_normal = ctx.arg<vector *>(3, sizeof(vector));
 	osipf_GetGunPos(objhandle, gun_number, gun_pnt, gun_normal);
 }
 
@@ -43,8 +43,8 @@ void emucall_Obj_GetGroundPos(Emu86FunCtx& ctx, void *)
 {
 	int objhandle = ctx.arg<int>(0);
 	int ground_number = ctx.arg<int>(1);
-	vector *ground_pnt = ctx.arg<vector *>(2);
-	vector *ground_normal = ctx.arg<vector *>(3);
+	vector *ground_pnt = ctx.arg<vector *>(2, sizeof(vector));
+	vector *ground_normal = ctx.arg<vector *>(3, sizeof(vector));
 	osipf_GetGroundPos(objhandle, ground_number, ground_pnt, ground_normal);
 }
 
@@ -101,6 +101,7 @@ void emucall_osipf_RayCast(Emu86FunCtx& ctx, void *)
 // int osipf_AIGetPathID(char *string);
 void emucall_osipf_AIGetPathID(Emu86FunCtx& ctx, void *)
 {
+	emu86_check_cstr(ctx.emu86, ctx.arg<emu_ptr_t>(0));
 	char *string = ctx.arg<char *>(0);
 	ctx.set_return(osipf_AIGetPathID(string));
 }
@@ -130,7 +131,7 @@ void emucall_osipf_AIValue(Emu86FunCtx& ctx, void *)
 	int objhandle = ctx.arg<int>(0);
 	char op = ctx.arg<char>(1);
 	char vtype = ctx.arg<char>(2);
-	void *ptr = ctx.arg<void *>(3);
+	void *ptr = ctx.arg<void *>(3, 4);
 	osipf_AIValue(objhandle, op, vtype, ptr);
 }
 
@@ -140,7 +141,8 @@ void emucall_Obj_Value(Emu86FunCtx& ctx, void *)
 	int objhandle = ctx.arg<int>(0);
 	char op = ctx.arg<char>(1);
 	char vtype = ctx.arg<char>(2);
-	void *ptr = ctx.arg<void *>(3);
+	void *ptr = ctx.arg<void *>(3,
+		vtype == OBJV_V_POS ? sizeof(vector) : vtype == OBJV_M_ORIENT ? sizeof(matrix) : sizeof(emu_ptr_t));
 	int index = ctx.arg<int>(4);
 	osipf_ObjectValue(objhandle, op, vtype, ptr, index);
 }
@@ -149,8 +151,8 @@ void emucall_Obj_Value(Emu86FunCtx& ctx, void *)
 void emucall_osipf_AITurnTowardsVectors(Emu86FunCtx& ctx, void *)
 {
 	int objhandle = ctx.arg<int>(0);
-	vector *fvec = ctx.arg<vector *>(1);
-	vector *uvec = ctx.arg<vector *>(2);
+	vector *fvec = ctx.arg<vector *>(1, sizeof(vector));
+	vector *uvec = ctx.arg<vector *>(2, sizeof(vector));
 	ctx.set_return(osipf_AITurnTowardsVectors(objhandle, fvec, uvec));
 }
 
@@ -171,7 +173,7 @@ void emucall_osipf_AIFindHidePos(Emu86FunCtx& ctx, void *)
 	int hideobjhandle = ctx.arg<int>(1);
 	int viewobjhandle = ctx.arg<int>(2);
 	float time = ctx.arg<float>(3);
-	int *hide_room = ctx.arg<int *>(4);
+	int *hide_room = ctx.arg<int *>(4, sizeof(emu_ptr_t));
 	if (!ret_vector)
 		return;
 	*ret_vector = osipf_AIFindHidePos(hideobjhandle, viewobjhandle, time, hide_room);
@@ -296,7 +298,7 @@ void emucall_osipf_AIGoalAdd(Emu86FunCtx& ctx, void *)
 
 	case AIG_FACE_DIR:
 	{
-		vector *v_value = ctx.arg<vector *>(6);
+		vector *v_value = ctx.arg<vector *>(6, sizeof(vector));
 		ctx.set_return(osipf_AIGoalAdd(objhandle, goal_type, level, influence, guid, flags, v_value));
 		return;
 	}

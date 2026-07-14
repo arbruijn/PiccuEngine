@@ -21,6 +21,8 @@ static const char *resolve_vm_string(Emu86FunCtx& ctx, emu_ptr_t addr)
 	if (!addr)
 		return 0;
 
+	emu86_check_cstr(ctx.emu86, addr);
+
 	if (ctx.emu86 && ctx.emu86->as.base && addr < ctx.emu86->as.size)
 		return reinterpret_cast<const char *>(ctx.emu86->as.base + addr);
 

@@ -20,12 +20,11 @@ void Cinematic_StartCannedScript(tCannedCinematicInfo* info);
 namespace
 {
 template <typename T>
-static T *vm_ptr(Emu86FunCtx& ctx, emu_ptr_t addr)
+static T *vm_ptr(Emu86FunCtx& ctx, emu_ptr_t addr, size_t size = 0)
 {
-	if (!ctx.emu86 || !ctx.emu86->as.base)
+	if (!addr)
 		return nullptr;
-	if (addr >= ctx.emu86->as.size)
-		return nullptr;
+	emu86_check_ptr(ctx.emu86, addr, size);
 	return reinterpret_cast<T *>(ctx.emu86->as.base + addr);
 }
 }
@@ -141,7 +140,7 @@ void emucall_Matcen_Value(Emu86FunCtx& ctx, void *)
 
 void emucall_Osiris_AllocateMemory(Emu86FunCtx& ctx, void *)
 {
-	void *memchunk_ptr = ctx.arg<void *>(0);
+	void *memchunk_ptr = ctx.arg<void *>(0, emuabi::memchunk_struct_size_32);
 	tOSIRISMEMCHUNK memchunk;
 	emuabi::decode_osiris_memchunk_struct(memchunk_ptr, memchunk);
 
@@ -354,7 +353,7 @@ void emucall_Cinematic_Start(Emu86FunCtx& ctx, void *)
 	emu_ptr_t info_ptr = ctx.arg<emu_ptr_t>(0);
 	char *text_string = ctx.arg<char *>(1);
 	tGameCinematic info;
-	void *host_info = vm_ptr<void>(ctx, info_ptr);
+	void *host_info = vm_ptr<void>(ctx, info_ptr, emuabi::game_cinematic_struct_size_32);
 	emuabi::VmPtrDecoder vm = { ctx.emu86 ? ctx.emu86->as.base : nullptr };
 	emuabi::decode_game_cinematic_struct(host_info, info, vm);
 	ctx.set_return(Cinematic_Start(&info, text_string));
@@ -364,7 +363,7 @@ void emucall_Cinematic_StartCannedScript(Emu86FunCtx& ctx, void *)
 {
 	emu_ptr_t info_ptr = ctx.arg<emu_ptr_t>(0);
 	tCannedCinematicInfo info;
-	void *host_info = vm_ptr<void>(ctx, info_ptr);
+	void *host_info = vm_ptr<void>(ctx, info_ptr, emuabi::canned_cinematic_info_struct_size_32);
 	emuabi::VmPtrDecoder vm = { ctx.emu86 ? ctx.emu86->as.base : nullptr };
 	emuabi::decode_canned_cinematic_info_struct(host_info, info, vm);
 	Cinematic_StartCannedScript(&info);

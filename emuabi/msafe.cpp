@@ -477,6 +477,8 @@ namespace
 
 }
 
+static_assert(sizeof(msafe_struct32) == msafe_struct_size_32, "msafe_struct ABI size mismatch");
+
 void decode_msafe_struct(int type, const void* srcbuf, msafe_struct& dst, const VmPtrDecoder& vm)
 {
 	memset(&dst, 0, sizeof(dst));

@@ -103,8 +103,8 @@ void emucall_osipf_CFReadDouble(Emu86FunCtx& ctx, void *)
 // CFReadString wrapper
 void emucall_osipf_CFReadString(Emu86FunCtx& ctx, void *)
 {
-	char *buf = ctx.arg<char *>(0);
 	size_t n = static_cast<size_t>(ctx.arg<int>(1));
+	char *buf = ctx.arg<char *>(0, n);
 	emu_ptr_t fileptr = ctx.arg<emu_ptr_t>(2);
 	CFILE *native_fileptr = emuabi::resolve_file_handle(fileptr);
 	ctx.set_return(osipf_CFReadString(buf, n, native_fileptr));
@@ -186,6 +186,8 @@ void emucall_osipf_CFWriteDouble(Emu86FunCtx& ctx, void *)
 // CFopen wrapper
 void emucall_osipf_CFopen(Emu86FunCtx& ctx, void *)
 {
+	emu86_check_cstr(ctx.emu86, ctx.arg<emu_ptr_t>(0));
+	emu86_check_cstr(ctx.emu86, ctx.arg<emu_ptr_t>(1));
 	const char *filename = ctx.arg<const char *>(0);
 	const char *mode = ctx.arg<const char *>(1);
 	CFILE *result = reinterpret_cast<CFILE *>(osipf_CFopen(filename, mode));
