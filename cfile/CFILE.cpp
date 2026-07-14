@@ -237,17 +237,17 @@ int cf_SetSearchPath(const char *path,char *ext,...)
 		paths[N_paths].specific = 0;
 	else 
 	{
-		char **ep = &ext;
+		va_list vp;
+		va_start(vp, ext);
 		paths[N_paths].specific = 1;
-		while (*ep != NULL) 
-		{
+		do {
 			if (N_extensions >= MAX_EXTENSIONS)
 				return 0;
-			strncpy(extensions[N_extensions].ext,*ep,_MAX_EXT);
+			strncpy(extensions[N_extensions].ext,ext,_MAX_EXT);
 			extensions[N_extensions].pathnum = N_paths;
 			N_extensions++;
-			ep++;
-		}
+		} while ((ext = va_arg(vp, char *)));
+		va_end(vp);
 	}
 	//This path successfully set
 	N_paths++;
