@@ -136,7 +136,7 @@ void ddio_SplitPath(const char* srcPath, char* path, char* filename, char* ext)
     // Check for an extension
     ///////////////////////////////////////
     int t = totalLen - 1;
-    while ((srcPath[t] != '.') && !ddio_IsSeparator(srcPath[t]) && (t >= 0)) t--;
+    while ((t >= 0) && (srcPath[t] != '.') && !ddio_IsSeparator(srcPath[t])) t--;
     //see if we are at an extension
     if ((t >= 0) && (srcPath[t] == '.')) 
     {
@@ -284,7 +284,7 @@ void ddio_MakePath(char* newPath, const char* absolutePathHeader, const char* su
 
     // Add the first sub directory
     pathLength = strlen(newPath);
-    if (newPath[pathLength - 1] != delimiter)
+    if (pathLength && newPath[pathLength - 1] != delimiter)
     {
         newPath[pathLength] = delimiter;		// add the delimiter
         newPath[pathLength + 1] = 0;				// terminate the string

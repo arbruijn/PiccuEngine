@@ -123,9 +123,9 @@ public:
 
 
 private:
-	int m_NumControls;						// number of controllers available
-	int m_Suspended;							// is controller polling suspended?
-	bool m_JoyActive, m_MouseActive;		// enables or disables mouse, joystick control
+	int m_NumControls = 0;						// number of controllers available
+	int m_Suspended = 0;							// is controller polling suspended?
+	bool m_JoyActive = false, m_MouseActive = false;		// enables or disables mouse, joystick control
 
 	struct t_controller {
 		int id;
