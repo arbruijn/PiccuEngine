@@ -409,6 +409,8 @@ char osimod_InitializeDLL(osimod_t *om, tOSIRISModuleInit* function_list)
 	if (!guest)
 		return 0;
 
+	encoded.game_checksum = 2273873307UL; // 32-bit checksum
+
 	std::memcpy(om->vm->as.base + guest, &encoded, sizeof(encoded));
 	const unsigned ret = emu86fun_call(om->vm, om->vm_initialize_dll, 1, guest);
 	vm_temp_free(om->vm, guest);
