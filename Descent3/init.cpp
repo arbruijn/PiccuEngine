@@ -549,8 +549,7 @@ void LoadGameSettings()
 	Database->read_int("RS_windowwidth", &Game_window_res_width);
 	Database->read_int("RS_windowheight", &Game_window_res_height);
 	int temp;
-	Database->read_int("RS_fovdesired", &temp);
-	if (temp < D3_DEFAULT_FOV)
+	if (!Database->read_int("RS_fovdesired", &temp) || temp < D3_DEFAULT_FOV)
 		temp = D3_DEFAULT_FOV;
 	Render_FOV_desired = Render_FOV = temp;
 	Database->read_int("RS_bilear",&Render_preferred_state.filtering);
@@ -563,8 +562,8 @@ void LoadGameSettings()
 	Database->read("EnableJoystickFF",&D3Use_force_feedback);
 	Database->read("ForceFeedbackAutoCenter",&D3Force_auto_center);
 	ubyte force_gain;
-	Database->read("ForceFeedbackGain",&force_gain,sizeof(force_gain));
-	if(force_gain>100) force_gain = 100;
+	if (!Database->read("ForceFeedbackGain",&force_gain,sizeof(force_gain)) || force_gain>100)
+		force_gain = 100;
 	D3Force_gain = ((float)force_gain)/100.0f;
 	Database->read("LimitMousePolling", &Mouse_limitpolling);
 	Database->read_int("PreferredRenderer",&PreferredRenderer);
@@ -586,7 +585,8 @@ void LoadGameSettings()
 	Database->read("DetailFog",&Detail_settings.Fog_enabled);
 	Database->read("DetailCoronas",&Detail_settings.Coronas_enabled);
 	Database->read("DetailProcedurals",&Detail_settings.Procedurals_enabled);
-	Database->read_int("DetailObjectComp",&tempint);
+	if (!Database->read_int("DetailObjectComp",&tempint))
+		tempint = 1;
 	Detail_settings.Object_complexity = tempint; 
 	if(Detail_settings.Object_complexity<0 || Detail_settings.Object_complexity>2) 
 		Detail_settings.Object_complexity = 1;
