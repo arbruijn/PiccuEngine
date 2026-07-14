@@ -520,7 +520,7 @@ void StartLevel()
 
 	//Initialize a bunch of stuff for this level
 	MakeBOA();
-	ComputeAABB(true);
+	ComputeAABB(false);
 
 	//Clear/reset objects & events
 	ClearAllEvents();
