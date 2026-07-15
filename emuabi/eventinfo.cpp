@@ -6,8 +6,6 @@
 
 namespace emuabi
 {
-namespace
-{
 #define ABI_COPY_I32(name) dst.name = src.name;
 #define ABI_COPY_U8(name) dst.name = src.name;
 #define ABI_COPY_F32(name) dst.name = src.name;
@@ -286,8 +284,6 @@ typedef struct{
 #undef OSIRIS_EVTLEVELGOALITEMCOMPLETE_FIELDS
 #undef OSIRIS_EVTPLAYERRESPAWN_FIELDS
 #undef OSIRIS_EVTPLAYERDIES_FIELDS
-}
-
 
 static_assert(sizeof(tOSIRISEventInfo32) == event_info_size_32, "Event interval ABI size mismatch");
 
