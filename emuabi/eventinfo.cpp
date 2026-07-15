@@ -460,11 +460,22 @@ void encode_event_info(int event, const tOSIRISEventInfo& src, void *dstbuf, con
 		encode_union_event<tOSIRISEVTAINOTIFY32, tOSIRISEVTAINOTIFY, tOSIRISEVTAINOTIFY32>(dst.evt_ai_notify, src.evt_ai_notify, vm, encode_tOSIRISEVTAINOTIFY32);
 		if (event == EVT_AI_NOTIFY && src.evt_ai_notify.notify_type == AIN_USER_DEFINED)
 		{
-			const uint32_t command_buffer = src.extra_info ? vm.alloc_temp(sizeof(gb_com32)) : 0;
+			const gb_com* command = static_cast<const gb_com*>(src.extra_info);
+			const bool has_menu_output = command && command->action == COM_GET_MENU && command->ptr;
+			const size_t command_buffer_size = sizeof(gb_com32) + (has_menu_output ? sizeof(gb_menu) : 0);
+			const uint32_t command_buffer = command ? vm.alloc_temp(command_buffer_size) : 0;
 			if (command_buffer)
 			{
 				gb_com32 encoded_command;
-				encode_gb_com(*static_cast<const gb_com*>(src.extra_info), encoded_command, vm);
+				encode_gb_com(*command, encoded_command, vm);
+				if (has_menu_output)
+				{
+					// ptr is an output buffer owned by the host.  Give the VM a
+					// guest-addressable scratch buffer instead; it is copied back
+					// by copy_event_info_temp_buffers after the VM call.
+					encoded_command.ptr = command_buffer + sizeof(gb_com32);
+					memset(const_cast<uint8_t*>(vm.base) + encoded_command.ptr, 0, sizeof(gb_menu));
+				}
 				memcpy(const_cast<uint8_t*>(vm.base) + command_buffer, &encoded_command, sizeof(encoded_command));
 				dst.extra_info = command_buffer;
 				if (temp_buffer)
@@ -510,6 +521,22 @@ void encode_event_info(int event, const tOSIRISEventInfo& src, void *dstbuf, con
 		break;
 	}
 	memcpy(dstbuf, &dst, sizeof(dst));
+}
+
+void copy_event_info_temp_buffers(int event, const tOSIRISEventInfo& src, const VmPtrDecoder& vm, uint32_t temp_buffer)
+{
+	if (!temp_buffer || event != EVT_AI_NOTIFY || src.evt_ai_notify.notify_type != AIN_USER_DEFINED || !src.extra_info)
+		return;
+
+	const gb_com* command = static_cast<const gb_com*>(src.extra_info);
+	if (command->action != COM_GET_MENU || !command->ptr || !vm.base)
+		return;
+
+	const gb_com32* encoded_command = vm.decode_ptr32<gb_com32>(temp_buffer);
+	if (!encoded_command || encoded_command->ptr != temp_buffer + sizeof(gb_com32))
+		return;
+
+	memcpy(command->ptr, vm.base + encoded_command->ptr, sizeof(gb_menu));
 }
 
 void encode_event_info_with_file_handle(int event, const tOSIRISEventInfo& src, void *dstbuf, const VmPtrEncoder& vm, uint32_t file_handle, uint32_t* temp_buffer)

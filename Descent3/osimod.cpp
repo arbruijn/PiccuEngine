@@ -515,6 +515,8 @@ short osimod_CallInstanceEvent(osimod_t *om, int id, void* ptr, int event, tOSIR
 		static_cast<unsigned>(reinterpret_cast<uintptr_t>(ptr)),
 		static_cast<unsigned>(event),
 		guest_event);
+	if (data)
+		emuabi::copy_event_info_temp_buffers(event, encoded, {om->vm->as.base}, guest_extra_info);
 	vm_temp_free(om->vm, guest_extra_info);
 	vm_temp_free(om->vm, guest_event);
 	return static_cast<short>(ret);

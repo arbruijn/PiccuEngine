@@ -206,6 +206,7 @@ short OSIRIS_CALLEVENT_CDECL CallInstanceEvent(int id, void* ptr, int event, tOS
 			static_cast<unsigned>(reinterpret_cast<uintptr_t>(ptr)),
 			static_cast<unsigned>(event),
 			data_ptr);
+		emuabi::copy_event_info_temp_buffers(event, encoded, {g_emu86->as.base}, temp_buffer);
 		if (temp_buffer)
 			heap_free(g_emu86, g_emu86->process_heap, 0, temp_buffer);
 		return static_cast<short>(ret);

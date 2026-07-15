@@ -60,6 +60,7 @@ void emucall_osipf_CallObjectEvent(Emu86FunCtx& ctx, void *)
 		emuabi::VmPtrEncoder encoder = { ctx.emu86->as.base, vm_temp_alloc_callback, ctx.emu86 };
 		uint32_t temp_buffer = 0;
 		emuabi::encode_event_info(event, event_info, host_event_info, encoder, &temp_buffer);
+		emuabi::copy_event_info_temp_buffers(event, event_info, {ctx.emu86->as.base}, temp_buffer);
 		if (temp_buffer)
 			heap_free(ctx.emu86, ctx.emu86->process_heap, 0, temp_buffer);
 	}
@@ -82,6 +83,7 @@ void emucall_osipf_CallTriggerEvent(Emu86FunCtx& ctx, void *)
 		emuabi::VmPtrEncoder encoder = { ctx.emu86->as.base, vm_temp_alloc_callback, ctx.emu86 };
 		uint32_t temp_buffer = 0;
 		emuabi::encode_event_info(event, event_info, host_event_info, encoder, &temp_buffer);
+		emuabi::copy_event_info_temp_buffers(event, event_info, {ctx.emu86->as.base}, temp_buffer);
 		if (temp_buffer)
 			heap_free(ctx.emu86, ctx.emu86->process_heap, 0, temp_buffer);
 	}
