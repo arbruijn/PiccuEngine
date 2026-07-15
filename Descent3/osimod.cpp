@@ -252,7 +252,6 @@ static bool resolve_vm_exports(osimod_t* om, osimod_type type)
 
 static bool load_vm_backend(osimod_t* om, const char* fullpath, osimod_type type)
 {
-	emu86_init();
 	om->vm = emu86_create();
 	if (!om->vm)
 	{
