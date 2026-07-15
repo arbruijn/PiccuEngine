@@ -323,188 +323,258 @@ namespace
 		switch (type)
 		{
 		case MSAFE_SHOW_ENABLED_CONTROLS:
+			dst.objhandle = src.objhandle;
 			dst.state = src.state;
 			break;
 		case MSAFE_OBJECT_PLAYER_CMASK:
+			dst.objhandle = src.objhandle;
 			dst.control_mask = src.control_mask;
 			break;
 		case MSAFE_OBJECT_POS:
+			dst.objhandle = src.objhandle;
 			encode_vector(dst.pos, src.pos);
 			break;
 		case MSAFE_OBJECT_ORIENT:
+			dst.objhandle = src.objhandle;
 			encode_matrix(dst.orient, src.orient);
 			break;
 		case MSAFE_OBJECT_ROOMNUM:
+			dst.objhandle = src.objhandle;
 			dst.roomnum = src.roomnum;
 			break;
 		case MSAFE_OBJECT_WORLD_POSITION:
+			dst.objhandle = src.objhandle;
 			encode_vector(dst.pos, src.pos);
 			encode_matrix(dst.orient, src.orient);
 			dst.roomnum = src.roomnum;
 			break;
 		case MSAFE_OBJECT_VELOCITY:
+			dst.objhandle = src.objhandle;
 			encode_vector(dst.velocity, src.velocity);
 			break;
 		case MSAFE_OBJECT_ROTVELOCITY:
+			dst.objhandle = src.objhandle;
 			encode_vector(dst.rot_velocity, src.rot_velocity);
 			break;
 		case MSAFE_OBJECT_THRUST:
+			dst.objhandle = src.objhandle;
 			encode_vector(dst.thrust, src.thrust);
 			break;
 		case MSAFE_OBJECT_ROTTHRUST:
+			dst.objhandle = src.objhandle;
 			encode_vector(dst.rot_thrust, src.rot_thrust);
 			break;
 		case MSAFE_OBJECT_FLAGS:
+			dst.objhandle = src.objhandle;
 			dst.flags = src.flags;
 			break;
 		case MSAFE_OBJECT_SIZE:
+			dst.objhandle = src.objhandle;
 			dst.size = src.size;
 			break;
 		case MSAFE_OBJECT_CONTROL_TYPE:
+			dst.objhandle = src.objhandle;
 			dst.control_type = src.control_type;
 			break;
 		case MSAFE_OBJECT_MOVEMENT_TYPE:
+			dst.objhandle = src.objhandle;
 			dst.movement_type = src.movement_type;
 			break;
 		case MSAFE_OBJECT_CREATION_TIME:
+			dst.objhandle = src.objhandle;
 			dst.creation_time = src.creation_time;
 			break;
 		case MSAFE_OBJECT_PHYSICS_FLAGS:
+			dst.objhandle = src.objhandle;
 			dst.physics_flags = src.physics_flags;
 			break;
 		case MSAFE_OBJECT_ROTDRAG:
+			dst.objhandle = src.objhandle;
 			dst.rot_drag = src.rot_drag;
 			break;
 		case MSAFE_OBJECT_SHIELDS:
+			dst.objhandle = src.objhandle;
 			dst.shields = src.shields;
 			break;
 		case MSAFE_OBJECT_SHIELDS_ORIGINAL:
+			dst.objhandle = src.objhandle;
 			dst.shields = src.shields;
 			break;
 		case MSAFE_OBJECT_ENERGY:
+			dst.objhandle = src.objhandle;
 			dst.energy = src.energy;
 			break;
 		case MSAFE_OBJECT_MOVEMENT_SCALAR:
+			dst.objhandle = src.objhandle;
 			dst.scalar = src.scalar;
 			break;
 		case MSAFE_OBJECT_RECHARGE_SCALAR:
+			dst.objhandle = src.objhandle;
 			dst.scalar = src.scalar;
 			break;
 		case MSAFE_OBJECT_WSPEED_SCALAR:
+			dst.objhandle = src.objhandle;
 			dst.scalar = src.scalar;
 			break;
 		case MSAFE_OBJECT_ARMOR_SCALAR:
+			dst.objhandle = src.objhandle;
 			dst.scalar = src.scalar;
 			break;
 		case MSAFE_OBJECT_DAMAGE_SCALAR:
+			dst.objhandle = src.objhandle;
 			dst.scalar = src.scalar;
 			break;
 		case MSAFE_OBJECT_TYPE:
+			dst.objhandle = src.objhandle;
 			dst.type = src.type;
 			break;
 		case MSAFE_OBJECT_ID:
+			dst.objhandle = src.objhandle;
 			dst.id = src.id;
 			break;
 		case MSAFE_OBJECT_PARENT:
 			dst.objhandle = src.objhandle;
 			break;
 		case MSAFE_OBJECT_ENERGY_WEAPON:
+			dst.objhandle = src.objhandle;
 			dst.state = src.state;
 			dst.amount = src.amount;
 			break;
 		case MSAFE_OBJECT_DAMAGE_AMOUNT:
+			dst.objhandle = src.objhandle;
 			dst.amount = src.amount;
 			break;
 		case MSAFE_OBJECT_COUNT_TYPE:
+			dst.type = src.type;
+			dst.id = src.id;
 			dst.count = src.count;
 			break;
 		case MSAFE_OBJECT_INVULNERABLE:
+			dst.objhandle = src.objhandle;
 			dst.state = src.state;
 			dst.lifetime = src.lifetime;
 			break;
 		case MSAFE_OBJECT_CLOAK:
+			dst.objhandle = src.objhandle;
 			dst.state = src.state;
 			dst.lifetime = src.lifetime;
 			break;
 		case MSAFE_OBJECT_LIGHT_DIST:
+			dst.objhandle = src.objhandle;
 			dst.light_distance = src.light_distance;
 			break;
 		case MSAFE_OBJECT_PLAYER_HANDLE:
+			dst.slot = src.slot;
 			dst.objhandle = src.objhandle;
 			break;
 		case MSAFE_OBJECT_PLAYER_CONTROLAI:
+			dst.slot = src.slot;
 			dst.state = src.state;
 			break;
 		case MSAFE_DOOR_LOCK_STATE:
+			dst.objhandle = src.objhandle;
 			dst.state = src.state;
 			break;
 		case MSAFE_DOOR_OPENABLE:
+			dst.objhandle = src.objhandle;
+			dst.ithandle = src.ithandle;
 			dst.state = src.state;
 			break;
 		case MSAFE_DOOR_POSITION:
+			dst.objhandle = src.objhandle;
 			dst.scalar = src.scalar;
 			break;
 		case MSAFE_TRIGGER_SET:
+			dst.trigger_num = src.trigger_num;
 			dst.state = src.state;
 			break;
 		case MSAFE_ROOM_HAS_PLAYER:
+			dst.roomnum = src.roomnum;
 			dst.state = src.state;
 			break;
 		case MSAFE_ROOM_PORTAL_RENDER:
+			dst.roomnum = src.roomnum;
+			dst.portalnum = src.portalnum;
 			dst.state = src.state;
 			break;
 		case MSAFE_ROOM_PORTAL_BLOCK:
+			dst.roomnum = src.roomnum;
+			dst.portalnum = src.portalnum;
 			dst.state = src.state;
 			break;
 		case MSAFE_ROOM_DAMAGE:
+			dst.roomnum = src.roomnum;
 			dst.amount = src.amount;
 			dst.index = src.index;
 			break;
 		case MSAFE_MISC_ENABLE_SHIP:
+			memcpy(dst.name, src.name, MSAFE_NAME_LENGTH);
 			dst.state = src.state;
 			break;
 		case MSAFE_MISC_WAYPOINT:
 			dst.index = src.index;
 			break;
 		case MSAFE_MISC_GUIDEBOT_NAME:
+			dst.objhandle = src.objhandle;
 			memcpy(dst.name, src.name, MSAFE_NAME_LENGTH);
 			break;
 		case MSAFE_INVEN_CHECK:
-			dst.state = src.state;
-			break;
-		case MSAFE_COUNTERMEASURE_CHECK:
+			dst.objhandle = src.objhandle;
 			dst.state = src.state;
 			dst.type = src.type;
+			dst.id = src.id;
+			break;
+		case MSAFE_COUNTERMEASURE_CHECK:
+			dst.objhandle = src.objhandle;
+			dst.state = src.state;
+			dst.type = src.type;
+			dst.id = src.id;
 			break;
 		case MSAFE_INVEN_COUNT:
+			dst.objhandle = src.objhandle;
 			dst.count = src.count;
+			dst.type = src.type;
+			dst.id = src.id;
 			break;
 		case MSAFE_INVEN_SIZE:
+			dst.objhandle = src.objhandle;
 			dst.size = src.size;
 			break;
 		case MSAFE_INVEN_GET_TYPE_ID:
+			dst.objhandle = src.objhandle;
+			dst.index = src.index;
 			dst.count = src.count;
 			dst.type = src.type;
 			dst.id = src.id;
 			break;
 		case MSAFE_INVEN_CHECK_OBJECT:
+			dst.objhandle = src.objhandle;
+			dst.ithandle = src.ithandle;
 			dst.state = src.state;
 			break;
 		case MSAFE_COUNTERMEASURE_COUNT:
+			dst.objhandle = src.objhandle;
 			dst.count = src.count;
+			memcpy(dst.name, src.name, MSAFE_NAME_LENGTH);
 			break;
 		case MSAFE_COUNTERMEASURE_SIZE:
+			dst.objhandle = src.objhandle;
 			dst.size = src.size;
 			break;
 		case MSAFE_COUNTERMEASURE_GET:
+			dst.objhandle = src.objhandle;
+			dst.index = src.index;
 			dst.count = src.count;
 			dst.type = src.type;
 			dst.id = src.id;
 			break;
 		case MSAFE_ROOM_FOG_STATE:
+			dst.roomnum = src.roomnum;
 			dst.state = src.state;
 			break;
 		case MSAFE_WEAPON_CHECK:
+			dst.objhandle = src.objhandle;
+			dst.index = src.index;
 			dst.state = src.state;
 			dst.count = src.count;
 			break;
