@@ -467,14 +467,20 @@ void encode_event_info(int event, const tOSIRISEventInfo& src, void *dstbuf, con
 			if (command_buffer)
 			{
 				gb_com32 encoded_command;
-				encode_gb_com(*command, encoded_command, vm);
 				if (has_menu_output)
 				{
 					// ptr is an output buffer owned by the host.  Give the VM a
 					// guest-addressable scratch buffer instead; it is copied back
 					// by copy_event_info_temp_buffers after the VM call.
+					memset(&encoded_command, 0, sizeof(encoded_command));
+					encoded_command.action = static_cast<int8_t>(command->action);
+					encoded_command.index = static_cast<int8_t>(command->index);
 					encoded_command.ptr = command_buffer + sizeof(gb_com32);
 					memset(const_cast<uint8_t*>(vm.base) + encoded_command.ptr, 0, sizeof(gb_menu));
+				}
+				else
+				{
+					encode_gb_com(*command, encoded_command, vm);
 				}
 				memcpy(const_cast<uint8_t*>(vm.base) + command_buffer, &encoded_command, sizeof(encoded_command));
 				dst.extra_info = command_buffer;
