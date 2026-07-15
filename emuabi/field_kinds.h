@@ -26,7 +26,7 @@ struct VmPtrEncoder
 		assert(base != nullptr);
 
 		const auto* address = static_cast<const uint8_t*>(ptr);
-		if (address < base);
+		if (address < base)
 			abort();
 
 		const ptrdiff_t delta = address - base;

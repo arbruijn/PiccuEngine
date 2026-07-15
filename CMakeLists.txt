@@ -1,6 +1,7 @@
 CMAKE_MINIMUM_REQUIRED( VERSION 3.11 )
 
 option(BUILD_TESTS "Build tests" OFF)
+option(BUILD_EMU86_TESTS "Build emu86 integration tests" OFF)
 
 MARK_AS_ADVANCED(CMAKE_BACKWARDS_COMPATIBILITY)
 # allow more human readable "if then else" constructs
@@ -103,9 +104,14 @@ include_directories("${CMAKE_SOURCE_DIR}" "lib" "Descent3" "scripts" "netcon/inc
 
 include(FetchContent)
 if (NOT TARGET emu86)
+	# emu86 uses BUILD_TESTS for its own test suite. Preserve PiccuEngine's
+	# setting while ensuring vendored emu86 tests are not registered here.
+	set(PICCUENGINE_BUILD_TESTS ${BUILD_TESTS})
+	set(BUILD_TESTS OFF CACHE BOOL "Disable emu86 self-tests when vendored into PiccuEngine" FORCE)
 	FetchContent_Declare(emu86
 		SOURCE_DIR "${CMAKE_SOURCE_DIR}/../emu86")
 	FetchContent_MakeAvailable(emu86)
+	set(BUILD_TESTS ${PICCUENGINE_BUILD_TESTS} CACHE BOOL "Build tests" FORCE)
 endif()
 
 IF (WIN32)

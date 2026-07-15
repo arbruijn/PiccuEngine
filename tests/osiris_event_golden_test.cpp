@@ -1,4 +1,6 @@
 #include "osiris_event_callers.h"
+#include "emuabi/cfile_wrappers.h"
+#include "emuabi/eventinfo.h"
 
 #include <stdarg.h>
 #include <stdio.h>
@@ -10,9 +12,45 @@
 bool Debug_break = false;
 bool Debug_print_block = false;
 
+namespace emuabi
+{
+	CFILE* resolve_file_handle(emu_ptr_t)
+	{
+		return nullptr;
+	}
+}
+
 namespace
 {
 	static std::string g_log;
+
+	static void TestGbCom()
+	{
+		uint8_t vm_memory[256] = {};
+		gb_com source = {};
+		source.action = COM_DO_ACTION;
+		source.index = 17;
+		source.ptr = vm_memory + 0x24;
+
+		emuabi::gb_com32 encoded = {};
+		emuabi::VmPtrEncoder encoder = {vm_memory};
+		emuabi::encode_gb_com(source, encoded, encoder);
+
+		gb_com decoded = {};
+		emuabi::VmPtrDecoder decoder = {vm_memory};
+		emuabi::decode_gb_com(encoded, decoded, decoder);
+
+		g_log += "gb_com encoded.action=" + std::to_string(static_cast<int>(encoded.action)) +
+			" index=" + std::to_string(static_cast<int>(encoded.index)) +
+			" ptr=" + std::to_string(encoded.ptr) + "\n";
+		g_log += "gb_com decoded.action=" + std::to_string(static_cast<int>(decoded.action)) +
+			" index=" + std::to_string(static_cast<int>(decoded.index)) +
+			" ptr_offset=" + std::to_string(static_cast<uint8_t*>(decoded.ptr) - vm_memory) + "\n";
+
+		source.ptr = nullptr;
+		emuabi::encode_gb_com(source, encoded, encoder);
+		g_log += "gb_com null_ptr=" + std::to_string(encoded.ptr) + "\n";
+	}
 
 	static void AppendFormatted(const char* format, va_list args)
 	{
@@ -90,6 +128,7 @@ int main(int argc, char** argv)
 
 	g_log.clear();
 	RunAllOsirisEventTestCallers();
+	TestGbCom();
 
 	if (!WriteFile(actual_log_path, g_log))
 	{

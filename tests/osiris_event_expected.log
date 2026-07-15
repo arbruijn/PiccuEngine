@@ -33,3 +33,6 @@ EVT_PLAYER_MOVIE_START type=299 me_handle=-1
 EVT_PLAYER_MOVIE_END type=300 me_handle=-1
 EVT_PLAYER_RESPAWN type=301 me_handle=-1 it_handle=2002
 EVT_PLAYER_DIES type=302 me_handle=-1 it_handle=2002
+gb_com encoded.action=1 index=17 ptr=36
+gb_com decoded.action=1 index=17 ptr_offset=36
+gb_com null_ptr=0

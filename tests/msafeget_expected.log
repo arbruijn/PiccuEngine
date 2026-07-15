@@ -1,0 +1,23 @@
+object_pos encoded.objhandle=101
+object_pos encoded.pos=(1.25,-2.5,3.75)
+object_pos decoded.objhandle=101
+object_pos decoded.pos=(0,0,0)
+world_position encoded.objhandle=202 roomnum=17
+world_position encoded.pos=(-1,2,-3)
+world_position encoded.orient.rvec=(1,0,0)
+world_position decoded.pos=(0,0,0)
+world_position decoded.orient.rvec=(0,0,0)
+world_position decoded.orient.uvec=(0,0,0)
+world_position decoded.orient.fvec=(0,0,0)
+world_position decoded.roomnum=0
+cloak encoded.objhandle=303 state=1 lifetime=4.500000
+cloak decoded.objhandle=303 state=0 lifetime=0.000000
+count_type encoded.type=7 id=88 count=9
+count_type decoded.type=7 id=88 count=0
+portal encoded.roomnum=12 portalnum=4 state=1
+portal decoded.roomnum=12 portalnum=4 state=0
+door encoded.objhandle=404 ithandle=505 state=1
+door decoded.objhandle=404 ithandle=505
+enable_ship encoded.name=ship_alpha decoded.name=ship_alpha
+null_decode.objhandle=0
+unknown_encode.objhandle=0 first_byte=0

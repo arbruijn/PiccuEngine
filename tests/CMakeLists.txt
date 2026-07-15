@@ -19,7 +19,20 @@ add_executable(value_function_golden_test
 add_executable(osiris_event_golden_test
 	osiris_event_golden_test.cpp
 	osiris_event_test.cpp
-	osiris_event_callers.cpp)
+	osiris_event_callers.cpp
+	${CMAKE_SOURCE_DIR}/emuabi/eventinfo.cpp)
+add_executable(object_ai_wrappers_golden_test
+	object_ai_wrappers_golden_test.cpp
+	object_ai_wrappers_test.cpp
+	object_ai_wrappers_callers.cpp)
+add_executable(osiris_wrappers2_golden_test
+	osiris_wrappers2_golden_test.cpp
+	osiris_wrappers2_test.cpp
+	osiris_wrappers2_callers.cpp
+	${CMAKE_SOURCE_DIR}/emuabi/cannedcinematicinfo.cpp)
+add_executable(msafeget_golden_test
+	msafeget_golden_test.cpp
+	${CMAKE_SOURCE_DIR}/emuabi/msafeget.cpp)
 #add_executable(osiris_import_golden_test
 #	osiris_import_golden_test.cpp
 #	osiris_import_host.cpp
@@ -28,23 +41,33 @@ add_executable(osiris_event_golden_test
 target_compile_definitions(msafe_callfunction_golden_test PRIVATE MONO)
 target_compile_definitions(value_function_golden_test PRIVATE MONO)
 target_compile_definitions(osiris_event_golden_test PRIVATE MONO)
+target_compile_definitions(object_ai_wrappers_golden_test PRIVATE MONO)
+target_compile_definitions(osiris_wrappers2_golden_test PRIVATE MONO)
+target_compile_definitions(msafeget_golden_test PRIVATE MONO)
 #target_compile_definitions(osiris_import_golden_test PRIVATE MONO)
 target_include_directories(msafe_callfunction_golden_test PRIVATE
 	${PICCUENGINE_TEST_INCLUDE_DIRS})
 target_include_directories(value_function_golden_test PRIVATE
 	${PICCUENGINE_TEST_INCLUDE_DIRS})
 target_include_directories(osiris_event_golden_test PRIVATE
+	${PICCUENGINE_TEST_INCLUDE_DIRS}
+	${emu86_SOURCE_DIR}/include)
+target_include_directories(object_ai_wrappers_golden_test PRIVATE
+	${PICCUENGINE_TEST_INCLUDE_DIRS})
+target_include_directories(osiris_wrappers2_golden_test PRIVATE
+	${PICCUENGINE_TEST_INCLUDE_DIRS})
+target_include_directories(msafeget_golden_test PRIVATE
 	${PICCUENGINE_TEST_INCLUDE_DIRS})
 #target_include_directories(osiris_import_golden_test PRIVATE
 #	${PICCUENGINE_TEST_INCLUDE_DIRS})
 
-include(FetchContent)
-set(BUILD_TESTS OFF CACHE BOOL "Disable emu86 self-tests when vendored into PiccuEngine" FORCE)
-if (NOT TARGET emu86)
-	FetchContent_Declare(emu86
-		SOURCE_DIR "${CMAKE_SOURCE_DIR}/../emu86")
-	FetchContent_MakeAvailable(emu86)
-endif()
+if (BUILD_EMU86_TESTS)
+	include(FetchContent)
+	if (NOT TARGET emu86)
+		FetchContent_Declare(emu86
+			SOURCE_DIR "${CMAKE_SOURCE_DIR}/../emu86")
+		FetchContent_MakeAvailable(emu86)
+	endif()
 
 find_program(OWCC_EXECUTABLE owcc REQUIRED)
 
@@ -175,18 +198,9 @@ add_executable(osiris_event_emu86_test
 	osiris_event_emu86_test.cpp
 	osiris_event_callers.cpp
 	${CMAKE_SOURCE_DIR}/emuabi/eventinfo.cpp)
-add_executable(object_ai_wrappers_golden_test
-	object_ai_wrappers_golden_test.cpp
-	object_ai_wrappers_test.cpp
-	object_ai_wrappers_callers.cpp)
 add_executable(object_ai_wrappers_emu86_test
 	object_ai_wrappers_emu86_test.cpp
 	object_ai_wrappers_test.cpp)
-add_executable(osiris_wrappers2_golden_test
-	osiris_wrappers2_golden_test.cpp
-	osiris_wrappers2_test.cpp
-	osiris_wrappers2_callers.cpp
-	${CMAKE_SOURCE_DIR}/emuabi/cannedcinematicinfo.cpp)
 add_executable(osiris_wrappers2_emu86_test
 	osiris_wrappers2_emu86_test.cpp
 	osiris_wrappers2_test.cpp
@@ -196,9 +210,7 @@ add_executable(osiris_wrappers2_emu86_test
 #	osiris_import_host.cpp)
 target_compile_definitions(msafe_callfunction_emu86_test PRIVATE MONO)
 target_compile_definitions(osiris_event_emu86_test PRIVATE MONO)
-target_compile_definitions(object_ai_wrappers_golden_test PRIVATE MONO)
 target_compile_definitions(object_ai_wrappers_emu86_test PRIVATE MONO)
-target_compile_definitions(osiris_wrappers2_golden_test PRIVATE MONO)
 target_compile_definitions(osiris_wrappers2_emu86_test PRIVATE MONO)
 #target_compile_definitions(osiris_import_emu86_test PRIVATE MONO)
 target_include_directories(msafe_callfunction_emu86_test PRIVATE
@@ -213,16 +225,12 @@ target_include_directories(osiris_event_emu86_test PRIVATE
 	${emu86_SOURCE_DIR}/src/cpu
 	${emu86_SOURCE_DIR}/src/cpu/include
 	${emu86_SOURCE_DIR}/include)
-target_include_directories(object_ai_wrappers_golden_test PRIVATE
-	${PICCUENGINE_TEST_INCLUDE_DIRS})
 target_include_directories(object_ai_wrappers_emu86_test PRIVATE
 	${PICCUENGINE_TEST_INCLUDE_DIRS}
 	${emu86_SOURCE_DIR}/src
 	${emu86_SOURCE_DIR}/src/cpu
 	${emu86_SOURCE_DIR}/src/cpu/include
 	${emu86_SOURCE_DIR}/include)
-target_include_directories(osiris_wrappers2_golden_test PRIVATE
-	${PICCUENGINE_TEST_INCLUDE_DIRS})
 target_include_directories(osiris_wrappers2_emu86_test PRIVATE
 	${PICCUENGINE_TEST_INCLUDE_DIRS}
 	${emu86_SOURCE_DIR}/src
@@ -251,6 +259,7 @@ add_dependencies(osiris_event_emu86_test osiris_event_emu86_dll)
 add_dependencies(object_ai_wrappers_emu86_test object_ai_wrappers_emu86_dll)
 add_dependencies(osiris_wrappers2_emu86_test osiris_wrappers2_emu86_dll)
 #add_dependencies(osiris_import_emu86_test osiris_import_emu86_dll)
+endif()
 
 set(MSAFE_CALLFUNCTION_EXPECTED_LOG "${CMAKE_CURRENT_SOURCE_DIR}/msafe_callfunction_expected.log")
 set(MSAFE_CALLFUNCTION_ACTUAL_LOG "${CMAKE_CURRENT_BINARY_DIR}/msafe_callfunction_actual.log")
@@ -265,6 +274,8 @@ set(OBJECT_AI_WRAPPERS_ACTUAL_LOG "${CMAKE_CURRENT_BINARY_DIR}/object_ai_wrapper
 set(OBJECT_AI_WRAPPERS_EMU86_ACTUAL_LOG "${CMAKE_CURRENT_BINARY_DIR}/object_ai_wrappers_emu86_actual.log")
 set(OSIRIS_WRAPPERS2_EXPECTED_LOG "${CMAKE_CURRENT_SOURCE_DIR}/osiris_wrappers2_expected.log")
 set(OSIRIS_WRAPPERS2_ACTUAL_LOG "${CMAKE_CURRENT_BINARY_DIR}/osiris_wrappers2_actual.log")
+set(MSAFEGET_EXPECTED_LOG "${CMAKE_CURRENT_SOURCE_DIR}/msafeget_expected.log")
+set(MSAFEGET_ACTUAL_LOG "${CMAKE_CURRENT_BINARY_DIR}/msafeget_actual.log")
 set(OSIRIS_WRAPPERS2_EMU86_ACTUAL_LOG "${CMAKE_CURRENT_BINARY_DIR}/osiris_wrappers2_emu86_actual.log")
 #set(OSIRIS_IMPORT_EXPECTED_LOG "${CMAKE_CURRENT_SOURCE_DIR}/osiris_import_expected.log")
 #set(OSIRIS_IMPORT_ACTUAL_LOG "${CMAKE_CURRENT_BINARY_DIR}/osiris_import_actual.log")
@@ -282,12 +293,14 @@ add_test(
 		"${VALUE_FUNCTION_EXPECTED_LOG}"
 		"${VALUE_FUNCTION_ACTUAL_LOG}")
 
+if (BUILD_EMU86_TESTS)
 add_test(
 	NAME msafe_callfunction_emu86
 	COMMAND msafe_callfunction_emu86_test
 		"${MSAFE_CALLFUNCTION_EXPECTED_LOG}"
 		"${MSAFE_CALLFUNCTION_EMU86_ACTUAL_LOG}"
 		"${MSAFE_CALLFUNCTION_EMU86_DLL}")
+endif()
 
 add_test(
 	NAME osiris_event_golden
@@ -307,12 +320,19 @@ add_test(
 		"${OSIRIS_WRAPPERS2_EXPECTED_LOG}"
 		"${OSIRIS_WRAPPERS2_ACTUAL_LOG}")
 
+add_test(
+	NAME msafeget_golden
+	COMMAND msafeget_golden_test
+		"${MSAFEGET_EXPECTED_LOG}"
+		"${MSAFEGET_ACTUAL_LOG}")
+
 #add_test(
 #	NAME osiris_import_golden
 #	COMMAND osiris_import_golden_test
 #		"${OSIRIS_IMPORT_EXPECTED_LOG}"
 #		"${OSIRIS_IMPORT_ACTUAL_LOG}")
 
+if (BUILD_EMU86_TESTS)
 add_test(
 	NAME osiris_event_emu86
 	COMMAND osiris_event_emu86_test
@@ -333,6 +353,7 @@ add_test(
 		"${OSIRIS_WRAPPERS2_EXPECTED_LOG}"
 		"${OSIRIS_WRAPPERS2_EMU86_ACTUAL_LOG}"
 		"${OSIRIS_WRAPPERS2_EMU86_DLL}")
+endif()
 
 #add_test(
 #	NAME osiris_import_emu86
