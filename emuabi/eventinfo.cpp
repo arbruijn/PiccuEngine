@@ -3,9 +3,25 @@
 
 #include <stddef.h>
 #include <string.h>
+#include <new>
 
 namespace emuabi
 {
+void decode_gb_com(const gb_com32& src, gb_com& dst, const VmPtrDecoder& vm)
+{
+	dst.action = static_cast<char>(src.action);
+	dst.index = static_cast<char>(src.index);
+	dst.ptr = vm.decode_ptr32(src.ptr);
+}
+
+void encode_gb_com(const gb_com& src, gb_com32& dst, const VmPtrEncoder& vm)
+{
+	memset(&dst, 0, sizeof(dst));
+	dst.action = static_cast<int8_t>(src.action);
+	dst.index = static_cast<int8_t>(src.index);
+	dst.ptr = vm.encode_ptr32(src.ptr);
+}
+
 #define ABI_COPY_I32(name) dst.name = src.name;
 #define ABI_COPY_U8(name) dst.name = src.name;
 #define ABI_COPY_F32(name) dst.name = src.name;
@@ -339,7 +355,18 @@ void decode_event_info(int event, const void* srcbuf, tOSIRISEventInfo& dst, con
 	case EVT_AIN_MOVIE_END:
 		decode_tOSIRISEVTAINOTIFY32(src.evt_ai_notify, dst.evt_ai_notify, vm);
 		if (event == EVT_AI_NOTIFY && src.evt_ai_notify.notify_type == AIN_USER_DEFINED)
-			dst.extra_info = vm.decode_ptr32(src.extra_info);
+		{
+			const gb_com32* encoded_command = vm.decode_ptr32<gb_com32>(src.extra_info);
+			if (encoded_command)
+			{
+				gb_com* command = new (std::nothrow) gb_com;
+				if (command)
+				{
+					decode_gb_com(*encoded_command, *command, vm);
+					dst.extra_info = command;
+				}
+			}
+		}
 		break;
 	case EVT_CHANGESEG:
 		decode_tOSIRISEVTCHANGESEG32(src.evt_changeseg, dst.evt_changeseg, vm);
@@ -382,8 +409,11 @@ void decode_event_info(int event, const void* srcbuf, tOSIRISEventInfo& dst, con
 	}
 }
 
-void encode_event_info(int event, const tOSIRISEventInfo& src, void *dstbuf, const VmPtrEncoder& vm)
+void encode_event_info(int event, const tOSIRISEventInfo& src, void *dstbuf, const VmPtrEncoder& vm, uint32_t* temp_buffer)
 {
+	if (temp_buffer)
+		*temp_buffer = 0;
+
 	tOSIRISEventInfo32 dst;
 	memset(&dst, 0, sizeof(dst));
 	dst.me_handle = src.me_handle;
@@ -429,7 +459,18 @@ void encode_event_info(int event, const tOSIRISEventInfo& src, void *dstbuf, con
 	case EVT_AIN_MOVIE_END:
 		encode_union_event<tOSIRISEVTAINOTIFY32, tOSIRISEVTAINOTIFY, tOSIRISEVTAINOTIFY32>(dst.evt_ai_notify, src.evt_ai_notify, vm, encode_tOSIRISEVTAINOTIFY32);
 		if (event == EVT_AI_NOTIFY && src.evt_ai_notify.notify_type == AIN_USER_DEFINED)
-			dst.extra_info = vm.encode_ptr32(src.extra_info);
+		{
+			const uint32_t command_buffer = src.extra_info ? vm.alloc_temp(sizeof(gb_com32)) : 0;
+			if (command_buffer)
+			{
+				gb_com32 encoded_command;
+				encode_gb_com(*static_cast<const gb_com*>(src.extra_info), encoded_command, vm);
+				memcpy(const_cast<uint8_t*>(vm.base) + command_buffer, &encoded_command, sizeof(encoded_command));
+				dst.extra_info = command_buffer;
+				if (temp_buffer)
+					*temp_buffer = command_buffer;
+			}
+		}
 		break;
 	case EVT_CHANGESEG:
 		encode_union_event<tOSIRISEVTCHANGESEG32, tOSIRISEVTCHANGESEG, tOSIRISEVTCHANGESEG32>(dst.evt_changeseg, src.evt_changeseg, vm, encode_tOSIRISEVTCHANGESEG32);
@@ -471,7 +512,7 @@ void encode_event_info(int event, const tOSIRISEventInfo& src, void *dstbuf, con
 	memcpy(dstbuf, &dst, sizeof(dst));
 }
 
-void encode_event_info_with_file_handle(int event, const tOSIRISEventInfo& src, void *dstbuf, const VmPtrEncoder& vm, uint32_t file_handle)
+void encode_event_info_with_file_handle(int event, const tOSIRISEventInfo& src, void *dstbuf, const VmPtrEncoder& vm, uint32_t file_handle, uint32_t* temp_buffer)
 {
 	tOSIRISEventInfo adjusted = src;
 	if (event == EVT_SAVESTATE)
@@ -479,7 +520,7 @@ void encode_event_info_with_file_handle(int event, const tOSIRISEventInfo& src, 
 	else if (event == EVT_RESTORESTATE)
 		adjusted.evt_restorestate.fileptr = 0;
 
-	encode_event_info(event, adjusted, dstbuf, vm);
+	encode_event_info(event, adjusted, dstbuf, vm, temp_buffer);
 
 	if (!dstbuf)
 		return;

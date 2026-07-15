@@ -8,9 +8,13 @@
 
 namespace emuabi
 {
+typedef uint32_t (*VmTempAllocFn)(void* context, size_t size);
+
 struct VmPtrEncoder
 {
 	const uint8_t* base;
+	VmTempAllocFn temp_alloc = nullptr;
+	void* temp_alloc_context = nullptr;
 
 	uint32_t encode_ptr32(const void* ptr) const
 	{
@@ -32,6 +36,11 @@ struct VmPtrEncoder
 			abort();
 
 		return static_cast<uint32_t>(delta);
+	}
+
+	uint32_t alloc_temp(size_t size) const
+	{
+		return temp_alloc ? temp_alloc(temp_alloc_context, size) : 0;
 	}
 };
 

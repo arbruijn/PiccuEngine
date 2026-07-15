@@ -100,6 +100,11 @@ static emu_ptr_t vm_temp_alloc(Emu* vm, size_t size)
 	return heap_alloc(vm, vm->process_heap, 0, static_cast<emu_ptr_t>(size));
 }
 
+static uint32_t vm_temp_alloc_callback(void* context, size_t size)
+{
+	return vm_temp_alloc(static_cast<Emu*>(context), size);
+}
+
 static void vm_temp_free(Emu* vm, emu_ptr_t ptr)
 {
 	if (!vm || !ptr)
@@ -490,7 +495,7 @@ short osimod_CallInstanceEvent(osimod_t *om, int id, void* ptr, int event, tOSIR
 	if (!guest_event)
 		return 0;
 
-	emuabi::VmPtrEncoder vm = { om->vm->as.base };
+	emuabi::VmPtrEncoder vm = { om->vm->as.base, vm_temp_alloc_callback, om->vm };
 	tOSIRISEventInfo encoded;
 	std::memset(&encoded, 0, sizeof(encoded));
 	if (data)
@@ -500,14 +505,17 @@ short osimod_CallInstanceEvent(osimod_t *om, int id, void* ptr, int event, tOSIR
 	else if (event == EVT_RESTORESTATE)
 		encoded.evt_restorestate.fileptr = 0;
 
+	emu_ptr_t guest_extra_info = 0;
 	emuabi::encode_event_info_with_file_handle(event, encoded, om->vm->as.base + guest_event, vm,
-		(data && (event == EVT_SAVESTATE || event == EVT_RESTORESTATE)) ? emuabi::register_file_handle(data->evt_savestate.fileptr) : 0);
+		(data && (event == EVT_SAVESTATE || event == EVT_RESTORESTATE)) ? emuabi::register_file_handle(data->evt_savestate.fileptr) : 0,
+		&guest_extra_info);
 
 	const unsigned ret = emu86fun_call(om->vm, om->vm_call_instance_event, 4,
 		static_cast<unsigned>(id),
 		static_cast<unsigned>(reinterpret_cast<uintptr_t>(ptr)),
 		static_cast<unsigned>(event),
 		guest_event);
+	vm_temp_free(om->vm, guest_extra_info);
 	vm_temp_free(om->vm, guest_event);
 	return static_cast<short>(ret);
 }

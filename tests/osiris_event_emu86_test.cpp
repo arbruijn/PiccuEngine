@@ -24,6 +24,11 @@ namespace
 	static emu_ptr_t g_call_instance_event = 0;
 	static emu_ptr_t g_event_info_buffer = 0;
 
+	static uint32_t VmTempAlloc(void* context, size_t size)
+	{
+		return heap_alloc(static_cast<Emu*>(context), static_cast<Emu*>(context)->process_heap, 0, static_cast<emu_ptr_t>(size));
+	}
+
 	static void AppendFormatted(const char* format, va_list args)
 	{
 		char buffer[4096];
@@ -113,7 +118,8 @@ namespace
 	static tOSIRISEventInfo PrepareEventInfoForVmEncoding(int event, const tOSIRISEventInfo& src)
 	{
 		tOSIRISEventInfo encoded = src;
-		encoded.extra_info = AliasVmOpaquePointer(encoded.extra_info);
+		if (!(event == EVT_AI_NOTIFY && encoded.evt_ai_notify.notify_type == AIN_USER_DEFINED))
+			encoded.extra_info = AliasVmOpaquePointer(encoded.extra_info);
 
 		switch (event)
 		{
@@ -187,10 +193,22 @@ short OSIRIS_CALLEVENT_CDECL CallInstanceEvent(int id, void* ptr, int event, tOS
 	unsigned data_ptr = 0u;
 	if (data)
 	{
-		emuabi::VmPtrEncoder vm = { g_emu86->as.base };
+		emuabi::VmPtrEncoder vm = { g_emu86->as.base, VmTempAlloc, g_emu86 };
 		const tOSIRISEventInfo encoded = PrepareEventInfoForVmEncoding(event, *data);
-		emuabi::encode_event_info(event, encoded, g_emu86->as.base + g_event_info_buffer, vm);
+		emu_ptr_t temp_buffer = 0;
+		emuabi::encode_event_info(event, encoded, g_emu86->as.base + g_event_info_buffer, vm, &temp_buffer);
 		data_ptr = g_event_info_buffer;
+		const unsigned ret = emu86fun_call(
+			g_emu86,
+			g_call_instance_event,
+			4,
+			static_cast<unsigned>(id),
+			static_cast<unsigned>(reinterpret_cast<uintptr_t>(ptr)),
+			static_cast<unsigned>(event),
+			data_ptr);
+		if (temp_buffer)
+			heap_free(g_emu86, g_emu86->process_heap, 0, temp_buffer);
+		return static_cast<short>(ret);
 	}
 
 	return static_cast<short>(emu86fun_call(

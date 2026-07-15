@@ -7,6 +7,7 @@
 #include "msafe.h"
 #include "osiris_predefs.h"
 #include "osiris_dll.h"
+#include "heap.h"
 #include "gamecinematics.h"
 #include "vecmat_external.h"
 #include "osiris_common.h"
@@ -19,6 +20,20 @@ void Cinematic_StartCannedScript(tCannedCinematicInfo* info);
 
 namespace
 {
+static uint32_t vm_temp_alloc_callback(void* context, size_t size)
+{
+	Emu* vm = static_cast<Emu*>(context);
+	return vm ? heap_alloc(vm, vm->process_heap, 0, static_cast<emu_ptr_t>(size)) : 0;
+}
+
+static void release_decoded_gb_com(int event, gb_com* command)
+{
+	if (event == EVT_AI_NOTIFY)
+	{
+		delete command;
+	}
+}
+
 template <typename T>
 static T *vm_ptr(Emu86FunCtx& ctx, emu_ptr_t addr, size_t size = 0)
 {
@@ -38,12 +53,17 @@ void emucall_osipf_CallObjectEvent(Emu86FunCtx& ctx, void *)
 	void *host_event_info = vm_ptr<void>(ctx, event_info_ptr);
 	emuabi::VmPtrDecoder vm = { ctx.emu86 ? ctx.emu86->as.base : nullptr };
 	emuabi::decode_event_info(event, host_event_info, event_info, vm);
+	gb_com* decoded_command = (event == EVT_AI_NOTIFY && event_info.evt_ai_notify.notify_type == AIN_USER_DEFINED) ? static_cast<gb_com*>(event_info.extra_info) : nullptr;
 	ctx.set_return(osipf_CallObjectEvent(objnum, event, &event_info));
 	if (host_event_info && ctx.emu86 && ctx.emu86->as.base)
 	{
-		emuabi::VmPtrEncoder encoder = { ctx.emu86->as.base };
-		emuabi::encode_event_info(event, event_info, host_event_info, encoder);
+		emuabi::VmPtrEncoder encoder = { ctx.emu86->as.base, vm_temp_alloc_callback, ctx.emu86 };
+		uint32_t temp_buffer = 0;
+		emuabi::encode_event_info(event, event_info, host_event_info, encoder, &temp_buffer);
+		if (temp_buffer)
+			heap_free(ctx.emu86, ctx.emu86->process_heap, 0, temp_buffer);
 	}
+	release_decoded_gb_com(event, decoded_command);
 }
 
 void emucall_osipf_CallTriggerEvent(Emu86FunCtx& ctx, void *)
@@ -55,12 +75,17 @@ void emucall_osipf_CallTriggerEvent(Emu86FunCtx& ctx, void *)
 	void *host_event_info = vm_ptr<void>(ctx, event_info_ptr);
 	emuabi::VmPtrDecoder vm = { ctx.emu86 ? ctx.emu86->as.base : nullptr };
 	emuabi::decode_event_info(event, host_event_info, event_info, vm);
+	gb_com* decoded_command = (event == EVT_AI_NOTIFY && event_info.evt_ai_notify.notify_type == AIN_USER_DEFINED) ? static_cast<gb_com*>(event_info.extra_info) : nullptr;
 	ctx.set_return(osipf_CallTriggerEvent(trignum, event, &event_info));
 	if (host_event_info && ctx.emu86 && ctx.emu86->as.base)
 	{
-		emuabi::VmPtrEncoder encoder = { ctx.emu86->as.base };
-		emuabi::encode_event_info(event, event_info, host_event_info, encoder);
+		emuabi::VmPtrEncoder encoder = { ctx.emu86->as.base, vm_temp_alloc_callback, ctx.emu86 };
+		uint32_t temp_buffer = 0;
+		emuabi::encode_event_info(event, event_info, host_event_info, encoder, &temp_buffer);
+		if (temp_buffer)
+			heap_free(ctx.emu86, ctx.emu86->process_heap, 0, temp_buffer);
 	}
+	release_decoded_gb_com(event, decoded_command);
 }
 
 void emucall_osipf_SoundTouch(Emu86FunCtx& ctx, void *)
