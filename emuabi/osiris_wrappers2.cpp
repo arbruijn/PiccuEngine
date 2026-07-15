@@ -65,24 +65,28 @@ void emucall_osipf_CallTriggerEvent(Emu86FunCtx& ctx, void *)
 
 void emucall_osipf_SoundTouch(Emu86FunCtx& ctx, void *)
 {
+	emu86_check_cstr(ctx.emu86, ctx.arg<emu_ptr_t>(0));
 	char *sound_name = ctx.arg<char *>(0);
 	osipf_SoundTouch(sound_name);
 }
 
 void emucall_osipf_ObjectFindID(Emu86FunCtx& ctx, void *)
 {
+	emu86_check_cstr(ctx.emu86, ctx.arg<emu_ptr_t>(0));
 	char *object_name = ctx.arg<char *>(0);
 	ctx.set_return(osipf_ObjectFindID(object_name));
 }
 
 void emucall_osipf_ObjectFindType(Emu86FunCtx& ctx, void *)
 {
+	emu86_check_cstr(ctx.emu86, ctx.arg<emu_ptr_t>(0));
 	char *object_name = ctx.arg<char *>(0);
 	ctx.set_return(osipf_ObjectFindType(object_name));
 }
 
 void emucall_osipf_WeaponFindID(Emu86FunCtx& ctx, void *)
 {
+	emu86_check_cstr(ctx.emu86, ctx.arg<emu_ptr_t>(0));
 	char *weapon_name = ctx.arg<char *>(0);
 	ctx.set_return(osipf_WeaponFindID(weapon_name));
 }
@@ -92,7 +96,7 @@ void emucall_Room_Value(Emu86FunCtx& ctx, void *)
 	int roomnum = ctx.arg<int>(0);
 	char op = ctx.arg<char>(1);
 	char vhandle = ctx.arg<char>(2);
-	void *ptr = ctx.arg<void *>(3);
+	void *ptr = ctx.arg<void *>(3, sizeof(emu_ptr_t));
 	int index = ctx.arg<int>(4);
 	osipf_RoomValue(roomnum, op, vhandle, ptr, index);
 }
@@ -165,10 +169,10 @@ void emucall_Obj_Create(Emu86FunCtx& ctx, void *)
 	ubyte type = static_cast<ubyte>(ctx.arg<int>(0));
 	ushort id = static_cast<ushort>(ctx.arg<int>(1));
 	int roomnum = ctx.arg<int>(2);
-	vector *pos = ctx.arg<vector *>(3);
-	const matrix *orient = ctx.arg<const matrix *>(4);
+	vector *pos = ctx.arg<vector *>(3, sizeof(vector));
+	const matrix *orient = ctx.arg<const matrix *>(4, sizeof(matrix));
 	int parent_handle = ctx.arg<int>(5);
-	vector *initial_velocity = ctx.arg<vector *>(6);
+	vector *initial_velocity = ctx.arg<vector *>(6, sizeof(vector));
 	ctx.set_return(osipf_ObjCreate(type, id, roomnum, pos, orient, parent_handle, initial_velocity));
 }
 
@@ -188,7 +192,7 @@ void emucall_Obj_WBValue(Emu86FunCtx& ctx, void *)
 	char wb_index = ctx.arg<char>(1);
 	char op = ctx.arg<char>(2);
 	char vtype = ctx.arg<char>(3);
-	void *ptr = ctx.arg<void *>(4);
+	void *ptr = ctx.arg<void *>(4, sizeof(emu_ptr_t));
 	char g_index = ctx.arg<char>(5);
 	osipf_ObjWBValue(obj_handle, wb_index, op, vtype, ptr, g_index);
 }
@@ -214,12 +218,14 @@ void emucall_osipf_MatcenCopy(Emu86FunCtx& ctx, void *)
 
 void emucall_osipf_MatcenFindId(Emu86FunCtx& ctx, void *)
 {
+	emu86_check_cstr(ctx.emu86, ctx.arg<emu_ptr_t>(0));
 	char *str = ctx.arg<char *>(0);
 	ctx.set_return(osipf_MatcenFindId(str));
 }
 
 void emucall_osipf_MatcenCreate(Emu86FunCtx& ctx, void *)
 {
+	emu86_check_cstr(ctx.emu86, ctx.arg<emu_ptr_t>(0));
 	char *name = ctx.arg<char *>(0);
 	ctx.set_return(osipf_MatcenCreate(name));
 }
@@ -242,7 +248,7 @@ void emucall_Player_Value(Emu86FunCtx& ctx, void *)
 	int obj_handle = ctx.arg<int>(0);
 	char op = ctx.arg<char>(1);
 	char vhandle = ctx.arg<char>(2);
-	void *ptr = ctx.arg<void *>(3);
+	void *ptr = ctx.arg<void *>(3, sizeof(emu_ptr_t));
 	int index = ctx.arg<int>(4);
 	osipf_PlayerValue(obj_handle, op, vhandle, ptr, index);
 }
@@ -261,6 +267,7 @@ void emucall_Obj_SetCustomAnim(Emu86FunCtx& ctx, void *)
 
 void emucall_osipf_PlayerAddHudMessage(Emu86FunCtx& ctx, void *)
 {
+	emu86_check_cstr(ctx.emu86, ctx.arg<emu_ptr_t>(1));
 	int handle = ctx.arg<int>(0);
 	char *str = ctx.arg<char *>(1);
 	osipf_PlayerAddHudMessage(handle, str);
@@ -334,7 +341,7 @@ void emucall_AI_GetNearbyObjs(Emu86FunCtx& ctx, void *)
 	vector *pos = ctx.arg<vector *>(0);
 	int init_roomnum = ctx.arg<int>(1);
 	float rad = ctx.arg<float>(2);
-	int *object_handle_list = ctx.arg<int *>(3);
+	int *object_handle_list = ctx.arg<int *>(3, sizeof(emu_ptr_t));
 	int max_elements = ctx.arg<int>(4);
 	bool f_lightmap_only = ctx.arg<bool>(5);
 	bool f_only_players_and_ais = ctx.arg<bool>(6);
@@ -351,6 +358,7 @@ void emucall_Cinematic_Stop(Emu86FunCtx& ctx, void *)
 void emucall_Cinematic_Start(Emu86FunCtx& ctx, void *)
 {
 	emu_ptr_t info_ptr = ctx.arg<emu_ptr_t>(0);
+	emu86_check_cstr(ctx.emu86, ctx.arg<emu_ptr_t>(1));
 	char *text_string = ctx.arg<char *>(1);
 	tGameCinematic info;
 	void *host_info = vm_ptr<void>(ctx, info_ptr, emuabi::game_cinematic_struct_size_32);
@@ -384,7 +392,7 @@ void emucall_osipf_GetTriggerFace(Emu86FunCtx& ctx, void *)
 void emucall_Game_CreateRandomSparks(Emu86FunCtx& ctx, void *)
 {
 	int num_sparks = ctx.arg<int>(0);
-	vector *pos = ctx.arg<vector *>(1);
+	vector *pos = ctx.arg<vector *>(1, sizeof(vector));
 	int roomnum = ctx.arg<int>(2);
 	int which_index = ctx.arg<int>(3);
 	float force_scalar = ctx.arg<float>(4);
@@ -399,6 +407,7 @@ void emucall_Osiris_CancelTimerID(Emu86FunCtx& ctx, void *)
 
 void emucall_osipf_EnableShip(Emu86FunCtx& ctx, void *)
 {
+	emu86_check_cstr(ctx.emu86, ctx.arg<emu_ptr_t>(0));
 	char *ship_name = ctx.arg<char *>(0);
 	bool enable = ctx.arg<bool>(1);
 	osipf_EnableShip(ship_name, enable);
@@ -406,6 +415,7 @@ void emucall_osipf_EnableShip(Emu86FunCtx& ctx, void *)
 
 void emucall_osipf_IsShipEnabled(Emu86FunCtx& ctx, void *)
 {
+	emu86_check_cstr(ctx.emu86, ctx.arg<emu_ptr_t>(0));
 	char *ship_name = ctx.arg<char *>(0);
 	ctx.set_return(osipf_IsShipEnabled(ship_name));
 }
@@ -414,9 +424,9 @@ void emucall_Path_GetInformation(Emu86FunCtx& ctx, void *)
 {
 	int pathid = ctx.arg<int>(0);
 	int point = ctx.arg<int>(1);
-	vector *pos = ctx.arg<vector *>(2);
+	vector *pos = ctx.arg<vector *>(2, sizeof(vector));
 	int *room = ctx.arg<int *>(3);
-	matrix *orient = ctx.arg<matrix *>(4);
+	matrix *orient = ctx.arg<matrix *>(4, sizeof(matrix));
 	ctx.set_return(osipf_PathGetInformation(pathid, point, pos, room, orient));
 }
 
@@ -424,7 +434,7 @@ void emucall_LGoal_Value(Emu86FunCtx& ctx, void *)
 {
 	char op = ctx.arg<char>(0);
 	char vtype = ctx.arg<char>(1);
-	void *ptr = ctx.arg<void *>(2);
+	void *ptr = ctx.arg<void *>(2, sizeof(emu_ptr_t));
 	int g_index = ctx.arg<int>(3);
 	int i_index = ctx.arg<int>(4);
 	osipf_LGoalValue(op, vtype, ptr, g_index, i_index);
