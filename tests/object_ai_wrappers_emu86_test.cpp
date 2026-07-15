@@ -104,12 +104,10 @@ int main(int argc, char** argv)
 
 	ObjectAI_ResetLog();
 
-	emu86_init();
 	g_emu86 = emu86_load(dll_path);
 	if (!g_emu86)
 	{
 		fprintf(stderr, "failed to load emu86 DLL: %s\n", dll_path);
-		emu86_done();
 		return 2;
 	}
 
@@ -123,7 +121,6 @@ int main(int argc, char** argv)
 		fprintf(stderr, "failed to register object AI host callbacks\n");
 		emu86_free(g_emu86);
 		g_emu86 = 0;
-		emu86_done();
 		return 2;
 	}
 
@@ -131,7 +128,6 @@ int main(int argc, char** argv)
 	{
 		emu86_free(g_emu86);
 		g_emu86 = 0;
-		emu86_done();
 		return 2;
 	}
 
@@ -141,7 +137,6 @@ int main(int argc, char** argv)
 		fprintf(stderr, "failed to find required DLL export\n");
 		emu86_free(g_emu86);
 		g_emu86 = 0;
-		emu86_done();
 		return 2;
 	}
 
@@ -150,13 +145,11 @@ int main(int argc, char** argv)
 		fprintf(stderr, "run_all_object_ai_test_callers failed\n");
 		emu86_free(g_emu86);
 		g_emu86 = 0;
-		emu86_done();
 		return 2;
 	}
 
 	emu86_free(g_emu86);
 	g_emu86 = 0;
-	emu86_done();
 
 	if (!ObjectAI_WriteLog(actual_log_path))
 	{

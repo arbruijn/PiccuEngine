@@ -117,12 +117,10 @@ int main(int argc, char** argv)
 
 	OsirisWrappers2_ResetLog();
 
-	emu86_init();
 	g_emu86 = emu86_load(dll_path);
 	if (!g_emu86)
 	{
 		fprintf(stderr, "failed to load emu86 DLL: %s\n", dll_path);
-		emu86_done();
 		return 2;
 	}
 
@@ -136,7 +134,6 @@ int main(int argc, char** argv)
 		fprintf(stderr, "failed to register osiris wrappers2 host callbacks\n");
 		emu86_free(g_emu86);
 		g_emu86 = 0;
-		emu86_done();
 		return 2;
 	}
 
@@ -144,7 +141,6 @@ int main(int argc, char** argv)
 	{
 		emu86_free(g_emu86);
 		g_emu86 = 0;
-		emu86_done();
 		return 2;
 	}
 
@@ -154,7 +150,6 @@ int main(int argc, char** argv)
 		fprintf(stderr, "failed to find required DLL export\n");
 		emu86_free(g_emu86);
 		g_emu86 = 0;
-		emu86_done();
 		return 2;
 	}
 
@@ -163,13 +158,11 @@ int main(int argc, char** argv)
 		fprintf(stderr, "run_all_osiris_wrappers2_test_callers failed\n");
 		emu86_free(g_emu86);
 		g_emu86 = 0;
-		emu86_done();
 		return 2;
 	}
 
 	emu86_free(g_emu86);
 	g_emu86 = 0;
-	emu86_done();
 
 	if (!OsirisWrappers2_WriteLog(actual_log_path))
 	{

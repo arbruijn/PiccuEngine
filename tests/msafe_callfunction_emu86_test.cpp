@@ -138,12 +138,10 @@ int main(int argc, char** argv)
 
 	g_log.clear();
 
-	emu86_init();
 	Emu* emu86 = emu86_load(dll_path);
 	if (!emu86)
 	{
 		fprintf(stderr, "failed to load emu86 DLL: %s\n", dll_path);
-		emu86_done();
 		return 2;
 	}
 
@@ -152,7 +150,6 @@ int main(int argc, char** argv)
 	{
 		fprintf(stderr, "failed to register msafe_CallFunction wrapper\n");
 		emu86_free(emu86);
-		emu86_done();
 		return 2;
 	}
 
@@ -173,7 +170,6 @@ int main(int argc, char** argv)
 	{
 		fprintf(stderr, "failed to find required DLL exports\n");
 		emu86_free(emu86);
-		emu86_done();
 		return 2;
 	}
 
@@ -181,7 +177,6 @@ int main(int argc, char** argv)
 	{
 		fprintf(stderr, "set_msafe_CallFunction failed\n");
 		emu86_free(emu86);
-		emu86_done();
 		return 2;
 	}
 
@@ -189,12 +184,10 @@ int main(int argc, char** argv)
 	{
 		fprintf(stderr, "run_all_msafe_callfunction_test_callers failed\n");
 		emu86_free(emu86);
-		emu86_done();
 		return 2;
 	}
 
 	emu86_free(emu86);
-	emu86_done();
 
 	if (!WriteFile(actual_log_path, g_log))
 	{

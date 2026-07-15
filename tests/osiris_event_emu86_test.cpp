@@ -235,12 +235,10 @@ int main(int argc, char** argv)
 
 	g_log.clear();
 
-	emu86_init();
 	g_emu86 = emu86_load(dll_path);
 	if (!g_emu86)
 	{
 		fprintf(stderr, "failed to load emu86 DLL: %s\n", dll_path);
-		emu86_done();
 		return 2;
 	}
 
@@ -250,7 +248,6 @@ int main(int argc, char** argv)
 		fprintf(stderr, "failed to register osiris event logger wrapper\n");
 		emu86_free(g_emu86);
 		g_emu86 = 0;
-		emu86_done();
 		return 2;
 	}
 
@@ -272,7 +269,6 @@ int main(int argc, char** argv)
 		fprintf(stderr, "failed to find required DLL exports\n");
 		emu86_free(g_emu86);
 		g_emu86 = 0;
-		emu86_done();
 		return 2;
 	}
 
@@ -282,7 +278,6 @@ int main(int argc, char** argv)
 		fprintf(stderr, "failed to allocate emu86 event info buffer\n");
 		emu86_free(g_emu86);
 		g_emu86 = 0;
-		emu86_done();
 		return 2;
 	}
 
@@ -291,7 +286,6 @@ int main(int argc, char** argv)
 		fprintf(stderr, "set_osiris_event_logger failed\n");
 		emu86_free(g_emu86);
 		g_emu86 = 0;
-		emu86_done();
 		return 2;
 	}
 
@@ -301,7 +295,6 @@ int main(int argc, char** argv)
 	g_emu86 = 0;
 	g_call_instance_event = 0;
 	g_event_info_buffer = 0;
-	emu86_done();
 
 	if (!WriteFile(actual_log_path, g_log))
 	{
