@@ -155,12 +155,12 @@ static void emucall_msafe_GetValue(Emu86FunCtx& ctx, void *)
 	msafe_struct mstruct;
 	void* host_struct_ptr = vm_to_host_ptr(ctx.emu86, guest_struct_ptr, emuabi::msafe_struct_size_32);
 	emuabi::VmPtrDecoder vm = { ctx.emu86 ? ctx.emu86->as.base : nullptr };
-	emuabi::decode_msafe_struct(type, host_struct_ptr, mstruct, vm);
+	emuabi::decode_msafe_getvalue_struct(type, host_struct_ptr, mstruct, vm);
 
 	msafe_GetValue(type, &mstruct);
 
 	emuabi::VmPtrEncoder encoder = { ctx.emu86->as.base };
-	emuabi::encode_msafe_struct(type, mstruct, host_struct_ptr, encoder);
+	emuabi::encode_msafe_getvalue_struct(type, mstruct, host_struct_ptr, encoder);
 }
 
 static void emucall_msafe_DoPowerup(Emu86FunCtx& ctx, void *)

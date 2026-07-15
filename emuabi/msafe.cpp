@@ -1,4 +1,5 @@
 #include "msafe.h"
+#include "msafe_struct32.h"
 
 #include <string.h>
 
@@ -29,20 +30,6 @@ namespace
 #define ABI_DECL_VECTOR(name) vector32 name;
 #define ABI_DECL_MATRIX(name) matrix32 name;
 #define ABI_DECL_CHAR_ARRAY(name, size) char name[size];
-
-	struct vector32
-	{
-		float x;
-		float y;
-		float z;
-	};
-
-	struct matrix32
-	{
-		vector32 rvec;
-		vector32 uvec;
-		vector32 fvec;
-	};
 
 	struct osiris_timer32
 	{
@@ -360,13 +347,6 @@ namespace
 #define MSAFE_FIELDS_OBJECT_PHYSICS_FLAGS(APPLY) APPLY(U32, objhandle) APPLY(I32, physics_flags)
 #define MSAFE_FIELDS_OBJECT_PARENT(APPLY) APPLY(U32, objhandle) APPLY(U32, ithandle)
 #define MSAFE_FIELDS_WEAPON_ADD(APPLY) APPLY(U32, objhandle) APPLY(I32, index) APPLY(U8, state) APPLY(I32, count)
-
-#define DECLARE_32_STRUCT_FIELD(kind, ...) ABI_DECL_##kind(__VA_ARGS__)
-	struct msafe_struct32
-	{
-		MSAFE_STRUCT_FIELDS(DECLARE_32_STRUCT_FIELD)
-	};
-#undef DECLARE_32_STRUCT_FIELD
 
 #define DECODE_STRUCT_FIELD(kind, ...) ABI_COPY_##kind(__VA_ARGS__)
 #define DECODE_CASE(type_value, fields_macro) \

@@ -3,6 +3,7 @@ SET (EMUABI_SOURCES
 		emuabi/cannedcinematicinfo.cpp
 		emuabi/eventinfo.cpp
 		emuabi/msafe.cpp
+		emuabi/msafeget.cpp
 		emuabi/mprintf_bridge.cpp
 		emuabi/object_ai_wrappers.cpp
 		emuabi/osiris_import_registry.cpp
