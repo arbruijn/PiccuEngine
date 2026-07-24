@@ -34,6 +34,8 @@ bool mod_FindRealFileNameCaseInsenstive(const char *directory,const char *filena
 #if defined(__LINUX__)
 #include "linux/linux_fix.h"
 #endif
+
+#if 0
 #if defined(WIN32) //INSTEAD OF MAKING MODULE HAVE DEPENDENCIES, PUT THE 2 DDIO FUNCTIONS I NEED HERE
 // Split a pathname into its component parts
 void ddio_SplitPath(const char* srcPath, char* path, char* filename, char* ext)
@@ -87,6 +89,7 @@ void ddio_MakePath(char* newPath, const char* absolutePathHeader, const char* su
 		}
 	va_end(args);	
 }
+#endif
 #endif
 
 int ModLastError = MODERR_NOERROR;
