@@ -16,6 +16,9 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifdef WIN32
+#include <ws2tcpip.h> // for socklen_t
+#endif
 #include "pstypes.h"
 #include "pserror.h"
 #include "player.h"
