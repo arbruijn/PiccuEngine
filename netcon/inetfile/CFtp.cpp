@@ -39,10 +39,18 @@ typedef int socklen_t;
 
 #include "CFtp.h"
 
-int FTPObjThread( void * obj )
+#ifdef WIN32
+typedef void thread_return_t;
+#define THREAD_RETURN_VALUE
+#else
+typedef int thread_return_t;
+#define THREAD_RETURN_VALUE 0
+#endif
+
+thread_return_t FTPObjThread( void * obj )
 {
 	((CFtpGet *)obj)->WorkerThread();
-	return 0;
+	return THREAD_RETURN_VALUE;
 }
 
 void CFtpGet::AbortGet()

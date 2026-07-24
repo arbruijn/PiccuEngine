@@ -52,21 +52,29 @@ inline void Sleep(int millis)
 }
 #endif
 
+#ifdef WIN32
+typedef void thread_return_t;
+#define THREAD_RETURN_VALUE
+#else
+typedef int thread_return;
+#define THREAD_RETURN_VALUE 0
+#endif
+
 #define NW_AGHBN_CANCEL		1
 #define NW_AGHBN_LOOKUP		2
 #define NW_AGHBN_READ		3
 
-int http_gethostbynameworker(void *parm);
+thread_return_t http_gethostbynameworker(void *parm);
 
 int http_Asyncgethostbyname(unsigned int *ip,int command, char *hostname);
 
-int HTTPObjThread( void * obj )
+thread_return_t HTTPObjThread( void * obj )
 {
 	((ChttpGet *)obj)->WorkerThread();
 	((ChttpGet *)obj)->m_Aborted = true;
 	//OutputDebugString("http transfer exiting....\n");
 
-	return 0;
+	return THREAD_RETURN_VALUE;
 }
 
 void ChttpGet::AbortGet()
@@ -778,7 +786,7 @@ typedef struct _async_dns_lookup
 async_dns_lookup httpaslu;
 async_dns_lookup *http_lastaslu = NULL;
 
-int http_gethostbynameworker(void *parm);
+thread_return_t http_gethostbynameworker(void *parm);
 
 int http_Asyncgethostbyname(unsigned int *ip,int command, char *hostname)
 {
@@ -855,14 +863,14 @@ int http_Asyncgethostbyname(unsigned int *ip,int command, char *hostname)
 }
 
 // This is the worker thread which does the lookup.
-int http_gethostbynameworker(void *parm)
+thread_return_t http_gethostbynameworker(void *parm)
 {
 	async_dns_lookup *lookup = (async_dns_lookup *)parm;
 	HOSTENT *he = gethostbyname(lookup->host);
 	if(he==NULL)
 	{
 		lookup->error = true;
-		return 0;
+		return THREAD_RETURN_VALUE;
 	}
 	else if(!lookup->abort)
 	{
@@ -872,5 +880,5 @@ int http_gethostbynameworker(void *parm)
 	}
 	mem_free(lookup);
 
-	return 0;
+	return THREAD_RETURN_VALUE;
 }
