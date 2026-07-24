@@ -459,7 +459,8 @@ GLint ShaderProgram::FindUniform(const char* uniform)
 void ShaderProgram::Destroy()
 {
 	ClearBinding();
-	glDeleteProgram(m_name);
+	if (m_name)
+		glDeleteProgram(m_name);
 	m_name = 0;
 }
 
@@ -474,6 +475,7 @@ void ShaderProgram::Use()
 
 void ShaderProgram::ClearBinding()
 {
+	if (lastshaderprog)
+		glUseProgram(0);
 	lastshaderprog = nullptr;
-	glUseProgram(0);
 }
