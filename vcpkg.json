@@ -1,5 +1,12 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json",
+  "vcpkg-configuration": {
+    "default-registry": {
+      "kind": "git",
+      "baseline": "40f3c709db80acf154ac4b17a1f83c564ebd022e",
+      "repository": "https://github.com/microsoft/vcpkg"
+    }
+  },
   "name": "piccuengine",
   "version": "1.0.0",
   "dependencies": [
