@@ -970,7 +970,7 @@ static const char *GetExceptionDescription(DWORD ExceptionCode)
 static void PrintFileTime(char *sztime, FILETIME ftime)
 {
 	SYSTEMTIME systime,fixtime;
-	*sztime = NULL;
+	*sztime = 0;
 	
 	if (FileTimeToSystemTime(&ftime,&fixtime))
 	{
