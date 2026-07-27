@@ -47,8 +47,8 @@ void con_Paint(HWND hWnd);
 void con_Destroy(HWND hWnd);
 void con_Puts(const char *str);
 void con_Scroll();
-int con_KeyDown(HWND hWnd, UINT vkey);
-int con_Char(HWND hWnd, UINT vkey);
+int con_KeyDown(HWND hWnd, UINT_PTR vkey);
+int con_Char(HWND hWnd, UINT_PTR vkey);
 
 
 void con_Printf(const char *fmt, ...)
@@ -127,7 +127,7 @@ void con_Defer()
 
 
 // console window.
-LRESULT WINAPI MyConProc( HWND hWnd,UINT msg,UINT wParam,LPARAM lParam)
+LRESULT WINAPI MyConProc( HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam)
 {
 	HDC hdc;
 
@@ -325,7 +325,7 @@ void con_Scroll()
 }
 
 
-int con_KeyDown(HWND hWnd, UINT vkey)
+int con_KeyDown(HWND hWnd, UINT_PTR vkey)
 {
 	//HDC hdc;
 	int x;
@@ -402,7 +402,7 @@ int con_KeyDown(HWND hWnd, UINT vkey)
 }
 
 
-int con_Char(HWND hWnd, UINT vkey)
+int con_Char(HWND hWnd, UINT_PTR vkey)
 {
 	HDC hdc;
 	char *ptr = &Con_buffer[Con_row * (CON_SCROLL_COLS+1)];
